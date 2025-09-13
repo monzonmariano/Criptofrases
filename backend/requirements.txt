@@ -1,0 +1,5 @@
+aiohttp
+asyncpg
+python-dotenv
+psycopg2-binary #librería para conectar Python con PostgreSQL
+unidecode

@@ -1,0 +1,41 @@
+A continuación, se presenta el criptograma a resolver, con los números separados por guiones para cada palabra:
+
+2-3 6-4-8-8-4 2-1 9-10 7-10-5-11-7-3 11-9-14 7-1-13-9-13-4
+
+    Traduciendo las pistas:
+       - 1 = s
+       - 2 = e
+       - 5 = i
+       - 6 = z
+       - 7 = a
+       - 15 = h
+       - 16 = b
+       - 18 = c
+
+    Sustituyendo los valores conocidos:
+       - La primera palabra, "2-3", comienza con "e" (2).
+       - La tercera palabra, "2-1", es "e-s", que se decodifica como "es".
+       - La quinta palabra, "7-10-5-11-7-3", contiene un "a" (7) y un "i" (5). Se decodifica parcialmente como "a-10-i-11-a-3".
+       - La última palabra, "7-1-13-9-13-4", contiene un "a" (7) y un "s" (1). Se decodifica parcialmente como "a-s-13-9-13-4".
+
+    Identificando patrones comunes:
+       Utilizaremos el análisis de frecuencia de letras, un método criptográfico que se basa en la frecuencia con la que las letras aparecen en un idioma. Por ejemplo, en español, las vocales 'e' y 'a' son las más comunes, seguidas por 'o', 's' y 'r'.
+       - Ya hemos decodificado la palabra "es". Esto confirma que '2' es 'e' y '1' es 's'.
+       - Ahora examinemos la primera palabra, "2-3". Es una palabra de dos letras que empieza con 'e'. Las palabras de dos letras comunes en español que encajan son "el", "en" o "es". Como ya sabemos que "es" es "2-1", esto nos deja con "el" o "en". La palabra siguiente es "el", lo que nos da 3 = l.
+       - Con 3 = l, la quinta palabra, "7-10-5-11-7-3", se convierte en a-10-i-11-a-l. Esta estructura se ajusta a la palabra "animal", lo que nos da 10 = n y 11 = m.
+       - Usando las nuevas letras, podemos deducir otras palabras. "9-10" se convierte en "9-n". Como '9' aparece varias veces, es probable que sea una vocal. La palabra de dos letras que encaja es "un", dándonos 9 = u.
+       - La última palabra, "7-1-13-9-13-4", ahora es a-s-13-u-13-4. La palabra que encaja es "astuto", lo que nos da 13 = t y 4 = o.
+       - Con '4 = o', la segunda palabra, "6-4-8-8-4", se decodifica como z-o-8-8-o. Esto debe ser "zorro", dándonos 8 = r.
+       - Finalmente, la sexta palabra, "11-9-14", se convierte en m-u-14. La palabra que encaja es "muy", lo que nos da 14 = y.
+
+Solución decodificada:
+
+EL ZORRO ES UN ANIMAL MUY ASTUTO
+
+----------------------------------------------------------------------------------------------------------------
+Ejemplo más complejo : 
+
+"1-2 3-4-1-1-4-5-2 4-6 4-6-4 7-8-6-9-4-10-8-11 12-4-10-7-11-6-11 13-14-4 15-11 16-4-6-17-8-18-10-2-15 15-8 1-2 19-6-8-17-11-1-11-20-8-2 15-8 1-2 10-4-9-11-10-8-17-2" . 
+Las pistas son : "3=b , 5=z, 7=m, 9=t" 
+
+La solución deberia ser : "LA BELLEZA ES ESE MISTERIO HERMOSO QUE NO DESCIFRAN NI LA PSICOLOGIA NI LA RETORICA"
