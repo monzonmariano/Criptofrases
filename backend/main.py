@@ -36,12 +36,6 @@ logging.basicConfig(level=logging.INFO, handlers=[console_handler])
 # Ahora importamos los módulos de nuestra aplicación
 from backend import api
 
-async def index_handler(request):
-    """
-    Maneja la solicitud a la ruta raíz y sirve el archivo index.html.
-    """
-    return web.FileResponse(os.path.join(os.path.dirname(__file__), '..', 'frontend', 'build', 'index.html'))
-
 async def start_server():
     """
     Inicia el servidor web, configurando las rutas.
@@ -50,15 +44,18 @@ async def start_server():
         app = web.Application()
         api.setup_routes(app)
         
-        app.router.add_get('/', index_handler)
-        app.router.add_static('/static', path=os.path.join(os.path.dirname(__file__), '..', 'frontend', 'build', 'static'), name='static')
+        
 
         runner = web.AppRunner(app)
         await runner.setup()
-        site = web.TCPSite(runner, 'localhost', 8080)
-        await site.start()
-        logging.info("Servidor iniciado en http://localhost:8080")
         
+        # Cambiamos 'localhost' a '0.0.0.0' para que sea accesible desde fuera del contenedor
+        site = web.TCPSite(runner, '0.0.0.0', 8080)
+        
+        await site.start()
+        logging.info("Servidor de Backend iniciado en http://0.0.0.0:8080")
+        
+        # Esta línea mantiene el servidor corriendo indefinidamente
         await asyncio.Event().wait()
 
     except Exception as e:

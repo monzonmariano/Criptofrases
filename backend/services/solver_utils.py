@@ -3,103 +3,75 @@ import json
 import unidecode
 from collections import defaultdict, Counter
 import os
+import logging
 
-# --- Configuración ---
-# Asegúrate de que esta ruta sea correcta desde la carpeta `backend`
+# Configuración de logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
-DATA_DIR = '../data'
+# --- Rutas robustas calculadas desde la ubicación del script ---
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+BACKEND_ROOT = os.path.dirname(SCRIPT_DIR) # Sube de 'services' a 'backend'
+DATA_DIR = os.path.join(BACKEND_ROOT, 'data')
+
+# Archivos de entrada y salida
 DICCIONARIO_ORIGEN = os.path.join(DATA_DIR, 'spanish_words_utf8.txt')
 OUTPUT_WORDS_BY_LENGTH = os.path.join(DATA_DIR, 'es_words_by_length.json')
 OUTPUT_LETTER_FREQUENCY = os.path.join(DATA_DIR, 'es_letter_frequency.json')
 
-
-# Lista de conectores, artículos, y palabras comunes que no suelen estar en diccionarios.
+# Lista de palabras comunes que no suelen estar en diccionarios.
 STOP_WORDS_ES = [
-    'a', 'ante', 'bajo', 'cabe', 'con', 'contra', 'de', 'desde', 'en', 'entre',
-    'hacia', 'hasta', 'para', 'por', 'segun', 'sin', 'so', 'sobre', 'tras', 'el',
+    'a', 'ante', 'bajo', 'con', 'contra', 'de', 'desde', 'en', 'entre',
+    'hacia', 'hasta', 'para', 'por', 'segun', 'sin', 'sobre', 'tras', 'el',
     'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'y', 'e', 'o', 'u', 'que',
-    'cual', 'cuales', 'quien', 'quienes', 'cuyo', 'cuya', 'cuyos', 'cuyas', 'mi',
-    'mis', 'tu', 'tus', 'su', 'sus', 'nuestro', 'nuestros', 'vuestro', 'vuestros',
-    'este', 'ese', 'aquel', 'estos', 'esos', 'aquellos', 'esta', 'esa', 'aquella',
-    'estas', 'esas', 'aquellas', 'lo', 'me', 'te', 'se', 'nos', 'os', 'le', 'les',
-    'pero', 'mas', 'sino', 'aunque', 'como', 'cuando', 'muy', 'del', 'al'
+    'mi', 'tu', 'su', 'se', 'del', 'al', 'muy', 'nos', 'lo'
 ]
 
 def normalize_word(word):
-    """
-    Convierte una palabra a minúsculas y elimina tildes y diacríticos.
-    Ejemplo: 'camión' -> 'camion'
-    """
-    return unidecode.unidecode(word.lower())
+    return unidecode.unidecode(word.lower().strip())
 
 def generate_resources():
-    """
-    Función principal que lee el diccionario, lo procesa y genera los archivos JSON.
-    """
-    print("🚀 Iniciando la generación de recursos para el solver...")
-
-    # --- 1. Cargar y enriquecer el diccionario ---
-    print(f"📖 Cargando diccionario desde '{DICCIONARIO_ORIGEN}'...")
+    logging.info("🚀 Iniciando la generación de recursos para el solver...")
+    
     try:
         with open(DICCIONARIO_ORIGEN, 'r', encoding='utf-8') as f:
-            # Usamos un set para procesar palabras únicas y normalizarlas
-            words = {normalize_word(line.strip()) for line in f if line.strip()}
+            words = {normalize_word(line) for line in f if line.strip()}
     except FileNotFoundError:
-        print(f"❌ ERROR: No se encontró el archivo de diccionario en '{DICCIONARIO_ORIGEN}'.")
-        print("Asegúrate de que la ruta y el nombre del archivo son correctos.")
+        logging.error(f"❌ ERROR: No se encontró el diccionario en '{DICCIONARIO_ORIGEN}'.")
         return
 
-    print(f"  -> Diccionario base cargado con {len(words)} palabras.")
-    
-    # Añadimos las stop words normalizadas
-    normalized_stop_words = {normalize_word(sw) for sw in STOP_WORDS_ES}
-    words.update(normalized_stop_words)
-    
-    print(f"  -> Diccionario enriquecido con {len(words)} palabras únicas.")
+    logging.info(f"  -> Diccionario base cargado con {len(words)} palabras.")
+    words.update({normalize_word(sw) for sw in STOP_WORDS_ES})
+    logging.info(f"  -> Diccionario enriquecido con {len(words)} palabras únicas.")
 
-    # --- 2. Procesar y agrupar ---
-    print("🧠 Procesando y agrupando palabras...")
     words_by_length = defaultdict(list)
     all_letters = ""
     
     for word in words:
-        if word: # Ignorar líneas vacías que pudieran quedar
+        if word:
             words_by_length[len(word)].append(word)
             all_letters += word
 
-    # Ordenar las listas de palabras alfabéticamente (opcional, pero buena práctica)
     for length in words_by_length:
         words_by_length[length].sort()
     
-    # Calcular frecuencia de letras
     total_letters = len(all_letters)
     letter_counts = Counter(all_letters)
     letter_frequency = {char: count / total_letters for char, count in letter_counts.items()}
-    
-    # Ordenar por frecuencia descendente
     letter_frequency = dict(sorted(letter_frequency.items(), key=lambda item: item[1], reverse=True))
 
-    print("  -> Palabras agrupadas por longitud.")
-    print("  -> Frecuencia de letras calculada.")
+    logging.info("  -> Palabras agrupadas y frecuencia de letras calculada.")
 
-    # --- 3. Guardar los recursos ---
-    # Asegurarse de que el directorio de datos existe
     os.makedirs(DATA_DIR, exist_ok=True)
 
-    print(f"💾 Guardando archivos de recursos en '{DATA_DIR}'...")
-    try:
-        with open(OUTPUT_WORDS_BY_LENGTH, 'w', encoding='utf-8') as f:
-            json.dump(words_by_length, f, ensure_ascii=False)
-        print(f"  -> Archivo '{OUTPUT_WORDS_BY_LENGTH}' generado con éxito.")
+    with open(OUTPUT_WORDS_BY_LENGTH, 'w', encoding='utf-8') as f:
+        json.dump(words_by_length, f, ensure_ascii=False)
+    logging.info(f"  -> Archivo '{OUTPUT_WORDS_BY_LENGTH}' generado con éxito.")
 
-        with open(OUTPUT_LETTER_FREQUENCY, 'w', encoding='utf-8') as f:
-            json.dump(letter_frequency, f, ensure_ascii=False, indent=4)
-        print(f"  -> Archivo '{OUTPUT_LETTER_FREQUENCY}' generado con éxito.")
-    except Exception as e:
-        print(f"❌ ERROR al guardar los archivos: {e}")
-        return
-
-    print("\n✅ ¡Proceso completado! Los recursos del solver están listos.")
+    with open(OUTPUT_LETTER_FREQUENCY, 'w', encoding='utf-8') as f:
+        json.dump(letter_frequency, f, ensure_ascii=False, indent=4)
+    logging.info(f"  -> Archivo '{OUTPUT_LETTER_FREQUENCY}' generado con éxito.")
+    
+    logging.info("\n✅ ¡Proceso completado!")
 
 if __name__ == '__main__':
     generate_resources()

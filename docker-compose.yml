@@ -2,11 +2,13 @@ version: '3.8'
 
 services:
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     ports:
-      - "8080:8080"
+      - "8080:8080" # <--- Crea un "tunel" que conecte el puerto 8080 de la PC con el puerto 8080 del contenedor
     volumes:
-      - ./backend:/app
+      - ./backend:/app/backend # <---   Sincroniza tu carpeta local './backend' con '/app/backend' dentro del contenedor
     environment:
       # Aquí leemos las variables desde el archivo .env
       - GEMINI_API_KEY=${GEMINI_API_KEY}
@@ -16,12 +18,14 @@ services:
       - DB_USER=${DB_USER}
       - DB_PASSWORD=${DB_PASSWORD}
     depends_on:
-      - db
+      - db  # <--- Si el contenedor del backend arranca antes de que el contenedor de la base de datos esté listo para aceptar conexiones, tu aplicación fallará con un error de "conexión rechazada".
 
   db:
-    image: postgres:14-alpine
+    image: postgres:14-alpine # <--- Usa una imagen pre-construida y oficial que alguien más ya preparó y subió a un registro público (Docker Hub)
+    ports:
+      - "5433:5432" # <--- Crea otro "tunel" que conecte 5433 de tu PC con el puerto 5432 del contenedor
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data/ # <--- crea un cajón de almacenamiento gestionado por Docker llamado postgres_data Luego, conecta este cajón al directorio /var/lib/postgresql/data/ dentro del contenedor de la base de datos, que es donde Postgres guarda todos sus archivos.
     environment:
       # Las variables que espera Postgres, leídas desde nuestro .env
       - POSTGRES_DB=${DB_NAME}

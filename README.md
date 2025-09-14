@@ -1,74 +1,210 @@
-Cryptograms & Authors
+Proyecto: Criptofrases & Autores
+1. Visión General
 
-Este proyecto es una herramienta web interactiva impulsada por inteligencia artificial (IA) diseñada para resolver, generar y encontrar autores de criptogramas. La aplicación ofrece una interfaz de usuario limpia y moderna, permitiendo a los usuarios interactuar con tres funcionalidades principales y mantener un historial de sus consultas.
-Características Principales
+Criptofrases & Autores es una aplicación web interactiva diseñada como una herramienta completa para entusiastas de los criptogramas y las frases célebres. El backend está construido con una arquitectura moderna, modular y completamente contenerizada con Docker.
+Funcionalidades Principales
 
-    Resolver Criptogramas: Descifra mensajes encriptados, aceptando pistas para mejorar la precisión de la IA.
+    Resolver Criptogramas: Utiliza un potente algoritmo de backtracking en Python para resolver criptogramas de sustitución numérica.
 
-    Encontrar Autor: Identifica el autor de una frase o cita conocida utilizando el poder de los modelos de lenguaje.
+    Generar Criptogramas: Convierte texto en un nuevo criptograma numérico usando la API de Google Gemini.
 
-    Generar Criptogramas: Convierte un texto original en un nuevo criptograma único, listo para ser compartido y resuelto.
+    Encontrar Autor: Identifica al autor probable de una frase célebre usando la API de Google Gemini.
 
-    Historial de Interacciones: Almacena y muestra un historial de todas las consultas y sus resultados, permitiendo a los usuarios revisar su actividad.
+    Historial de Actividad: Persiste todas las interacciones en una base de datos PostgreSQL, asociadas a un ID de usuario.
 
-Tecnologías Utilizadas
-Frontend
+2. Arquitectura Tecnológica
 
-    React: Biblioteca de JavaScript para construir la interfaz de usuario de manera modular y eficiente.
+Componente
+	
 
-    Tailwind CSS: Framework de CSS para un estilizado rápido y responsivo sin salir del código HTML/JSX.
+Tecnología / Librería
+	
 
-    Firebase Authentication: Maneja el inicio de sesión de los usuarios (en modo anónimo) para asociar las interacciones a una sesión única.
+Propósito
 
 Backend
+	
 
-    Python: Lenguaje de programación principal para el servidor.
+Python 3.10, aiohttp
+	
 
-    Aiohttp: Framework asíncrono para manejar las peticiones web de manera eficiente.
+Servidor web asíncrono de alto rendimiento.
 
-    PostgreSQL: Base de datos relacional para almacenar el historial de interacciones de los usuarios.
+Base de Datos
+	
 
-    Google Gemini API: El modelo de IA utilizado para la lógica de resolución, generación y búsqueda de autores.
+PostgreSQL 14
+	
 
-Estructura del Proyecto
+Almacenamiento de datos robusto y persistente.
 
-El proyecto sigue una arquitectura organizada y limpia, con una clara separación de responsabilidades entre el frontend y el backend.
+IA & Servicios
+	
 
-    frontend/: Contiene todo el código de la interfaz de usuario, organizado en componentes reutilizables (components/) y funciones de utilidad (utils/).
+Google Gemini API
+	
 
-    backend/: Implementa el servidor y la lógica de negocio. Sigue un patrón de arquitectura hexagonal, donde el api.py se encarga de las rutas, el api_manager.py orquesta la lógica, y los services/ contienen la lógica específica de cada funcionalidad (resolver, generar, encontrar). Las operaciones de base de datos se manejan a través del gestor (database_manager.py) y las operaciones atómicas (crud/).
+Asistente para tareas de lenguaje natural.
 
-Instalación y Uso
+Contenerización
+	
 
-Sigue estos pasos para configurar y ejecutar el proyecto en tu entorno local.
+Docker & Docker Compose
+	
 
-    Clonar el repositorio:
+Aislamiento y orquestación del entorno de desarrollo.
 
-    git clone [https://github.com/tu-usuario/nombre-del-repo.git](https://github.com/tu-usuario/nombre-del-repo.git)
-    cd nombre-del-repo
+Frontend
+	
 
-    Configurar el Backend:
+React.js, Tailwind CSS
+	
 
-        Crea un entorno virtual de Python.
+(Actualmente en desarrollo)
+3. Estructura Detallada del Proyecto
 
-        Instala las dependencias.
+La estructura está diseñada para una máxima separación de responsabilidades, facilitando la escalabilidad y el mantenimiento.
+Estructura en el PC (Host) vs. Contenedor Docker
 
-        Crea un archivo .env en el directorio backend/ con tus credenciales de base de datos.
+PC (Host)
+	
 
-        Ejecuta el servidor.
+Contenedor (backend-1)
+	
 
-    Configurar el Frontend:
+Descripción de la Carpeta (Host)
 
-        Navega al directorio del frontend.
+Criptofrases/
+	
 
-        Instala las dependencias de Node.js.
+/app/
+	
 
-        Inicia la aplicación de desarrollo.
+Raíz del proyecto. Contiene archivos de configuración global.
 
-    Acceder a la Aplicación:
+├── .env
+	
 
-        Una vez que ambos servidores (backend y frontend) estén en funcionamiento, abre tu navegador y visita http://localhost:8080 (o el puerto configurado).
+(No se copia)
+	
 
-Contacto
+Archivo local con credenciales y secretos (API Keys, contraseñas de BD).
 
-Para cualquier pregunta o sugerencia, por favor, abre un "issue" en este repositorio. ¡Agradecemos tus contribuciones!
+├── docker-compose.yml
+	
+
+(Configura el contenedor)
+	
+
+Plano Maestro: Orquesta los servicios de backend y base de datos.
+
+└── backend/
+	
+
+└── backend/
+	
+
+Paquete Principal de Python: Contiene toda la lógica de la aplicación.
+
+    ├── Dockerfile
+	
+
+    ├── Dockerfile
+	
+
+Plano del Backend: Instrucciones para construir la imagen de Python.
+
+    ├── main.py
+	
+
+    ├── main.py
+	
+
+Punto de Entrada: Inicia el servidor aiohttp.
+
+    ├── api.py
+	
+
+    ├── api.py
+	
+
+Capa de API: Define las rutas web (endpoints) y las conecta con los gestores.
+
+    ├── core/
+	
+
+    ├── core/
+	
+
+Núcleo de la Lógica: Orquesta las operaciones de negocio.
+
+    │   ├── api_manager.py
+	
+
+    │   ├── api_manager.py
+	
+
+Director de Orquesta: Delega tareas a los servicios y gestores.
+
+    │   └── database_manager.py
+	
+
+    │   └── database_manager.py
+	
+
+Gestor de BD: Centraliza la lógica de acceso a la base de datos, llamando al CRUD.
+
+    │   └── crud/
+	
+
+    │   └── crud/
+	
+
+Capa CRUD: Contiene las operaciones básicas (Crear, Leer, Actualizar, Borrar).
+
+    ├── data/
+	
+
+    ├── data/
+	
+
+Recursos Estáticos: Almacena los diccionarios y archivos JSON del solver.
+
+    └── services/
+	
+
+    └── services/
+	
+
+Herramientas Especializadas: Módulos con lógica específica.
+
+        ├── crypto_solver.py
+	
+
+        ├── crypto_solver.py
+	
+
+Implementa el algoritmo de backtracking para resolver criptogramas.
+
+        ├── gemini.py
+	
+
+        ├── gemini.py
+	
+
+Implementa las llamadas a la API de Google Gemini.
+
+        └── ...
+	
+
+        └── ...
+	
+
+Otros servicios como author_finder.py, crypto_generator.py, etc.
+4. Puesta en Marcha Rápida
+
+Para instrucciones detalladas sobre cómo configurar y ejecutar el entorno, por favor consulta las siguientes guías:
+
+    Guía de Docker (DOCKER_GUIDE.md): Pasos para construir, ejecutar e interactuar con los contenedores.
+
+    Guía de Base de Datos (DATABASE_GUIDE.md): Cómo configurar la base de datos y su estructura.
