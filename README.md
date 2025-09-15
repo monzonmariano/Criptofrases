@@ -205,6 +205,6 @@ Otros servicios como author_finder.py, crypto_generator.py, etc.
 
 Para instrucciones detalladas sobre cómo configurar y ejecutar el entorno, por favor consulta las siguientes guías:
 
-    Guía de Docker (DOCKER_GUIDE.md): Pasos para construir, ejecutar e interactuar con los contenedores.
+    Guía de Docker (GUIA_DOCKER.md): Pasos para construir, ejecutar e interactuar con los contenedores.
 
-    Guía de Base de Datos (DATABASE_GUIDE.md): Cómo configurar la base de datos y su estructura.
+    Guía de Base de Datos (GUIA_BASE_DE_DATOS.md): Cómo configurar la base de datos y su estructura.

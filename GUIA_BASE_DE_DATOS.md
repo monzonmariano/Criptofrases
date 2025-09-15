@@ -14,81 +14,35 @@ La base de datos se define como un servicio llamado db en el archivo docker-comp
 2. Estructura de la Base de Datos
 
 Actualmente, el proyecto utiliza una única tabla principal para almacenar toda la actividad.
-Tabla: history
+Tabla: entries
 
 Esta tabla guarda un registro de cada operación realizada por un usuario.
 
-Columna
-	
+Columna	Tipo de Dato	Descripción
+id	SERIAL PRIMARY KEY	Identificador único autoincremental para cada entrada.
+user_id	TEXT NOT NULL	El identificador único del usuario que realizó la acción.
+content	TEXT NOT NULL	Los datos de entrada, como el criptograma o la frase a analizar.
+result	TEXT NOT NULL	El resultado de la operación, como la frase resuelta o el autor encontrado.
+author	TEXT	El autor de la frase (si aplica). Puede ser nulo.
+is_cryptogram	BOOLEAN NOT NULL	true si la entrada fue una operación de criptograma, false en caso contrario.
+timestamp	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP	La fecha y hora exactas en que se creó el registro. Se inserta automáticamente.
 
-Tipo de Dato
-	
-
-Descripción
-
-id
-	
-
-SERIAL PRIMARY KEY
-	
-
-Identificador único autoincremental para cada entrada.
-
-user_id
-	
-
-VARCHAR(255)
-	
-
-El identificador único del usuario que realizó la acción.
-
-type
-	
-
-VARCHAR(50)
-	
-
-El tipo de operación (ej. solve, generate, find_author).
-
-input_data
-	
-
-JSONB
-	
-
-Un campo JSON que almacena los datos de entrada (ej. el criptograma y las pistas).
-
-output_data
-	
-
-JSONB
-	
-
-Un campo JSON que almacena el resultado (ej. la solución y el mapeo).
-
-timestamp
-	
-
-TIMESTAMP WITH TIME ZONE
-	
-
-La fecha y hora exactas en que se creó el registro. Se inserta automáticamente.
-Script de Inicialización (Shell Script)
-
-Para asegurar que la tabla history se cree automáticamente la primera vez que se levanta la base de datos, se puede usar un script de inicialización.
+Para asegurar que la tabla entries se cree automáticamente la primera vez que se levanta la base de datos, se puede usar un script de inicialización.
 
     Crear el script SQL:
     Crea un archivo llamado init.sql en un nuevo directorio, por ejemplo database/init.sql.
 
-    -- Archivo: database/init.sql
-    CREATE TABLE IF NOT EXISTS history (
-        id SERIAL PRIMARY KEY,
-        user_id VARCHAR(255) NOT NULL,
-        type VARCHAR(50) NOT NULL,
-        input_data JSONB,
-        output_data JSONB,
-        timestamp TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-    );
+    --- Archivo: database/init.sql
+    CREATE TABLE IF NOT EXISTS entries (
+    id SERIAL PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    content TEXT NOT NULL,
+    result TEXT NOT NULL,
+    author TEXT,
+    is_cryptogram BOOLEAN NOT NULL,
+    timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+);
+
 
     Montar el script en docker-compose.yml:
     Modifica el servicio db para que ejecute este script al iniciar.
@@ -119,7 +73,7 @@ Vía Línea de Comandos (psql)
     Una vez dentro, puedes usar comandos SQL:
 
     \dt -- para ver las tablas
-    SELECT * FROM history; -- para ver el contenido
+    SELECT * FROM entries; -- para ver el contenido
 
 Vía Herramienta Gráfica (ej. VS Code)
 

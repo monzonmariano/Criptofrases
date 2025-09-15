@@ -1,77 +1,77 @@
-# backend/services/solver_utils.py
+# backend/services/solver_utils.py (Versión Mejorada)
+
 import json
+import re
 import unidecode
 from collections import defaultdict, Counter
 import os
-import logging
-
-# Configuración de logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
-
-# --- Rutas robustas calculadas desde la ubicación del script ---
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-BACKEND_ROOT = os.path.dirname(SCRIPT_DIR) # Sube de 'services' a 'backend'
-DATA_DIR = os.path.join(BACKEND_ROOT, 'data')
-
-# Archivos de entrada y salida
-DICCIONARIO_ORIGEN = os.path.join(DATA_DIR, 'spanish_words_utf8.txt')
-OUTPUT_WORDS_BY_LENGTH = os.path.join(DATA_DIR, 'es_words_by_length.json')
-OUTPUT_LETTER_FREQUENCY = os.path.join(DATA_DIR, 'es_letter_frequency.json')
-
-# Lista de palabras comunes que no suelen estar en diccionarios.
-STOP_WORDS_ES = [
-    'a', 'ante', 'bajo', 'con', 'contra', 'de', 'desde', 'en', 'entre',
-    'hacia', 'hasta', 'para', 'por', 'segun', 'sin', 'sobre', 'tras', 'el',
-    'la', 'los', 'las', 'un', 'una', 'unos', 'unas', 'y', 'e', 'o', 'u', 'que',
-    'mi', 'tu', 'su', 'se', 'del', 'al', 'muy', 'nos', 'lo'
-]
-
-def normalize_word(word):
-    return unidecode.unidecode(word.lower().strip())
 
 def generate_resources():
-    logging.info("🚀 Iniciando la generación de recursos para el solver...")
+    """
+    Lee un archivo de corpus de texto grande, lo limpia y genera dos recursos:
+    1. Un JSON con palabras agrupadas por longitud.
+    2. Un JSON con la frecuencia de cada letra.
+    """
+    # Construye la ruta de forma segura, asumiendo que el script está en backend/services
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    data_dir = os.path.join(os.path.dirname(script_dir), 'data')
     
-    try:
-        with open(DICCIONARIO_ORIGEN, 'r', encoding='utf-8') as f:
-            words = {normalize_word(line) for line in f if line.strip()}
-    except FileNotFoundError:
-        logging.error(f"❌ ERROR: No se encontró el diccionario en '{DICCIONARIO_ORIGEN}'.")
+    corpus_path = os.path.join(data_dir, 'corpus.txt') # El archivo grande de palabras
+    words_by_length_path = os.path.join(data_dir, 'es_words_by_length.json')
+    letter_frequency_path = os.path.join(data_dir, 'es_letter_frequency.json')
+
+    print(f"Buscando corpus en: {corpus_path}")
+
+    if not os.path.exists(corpus_path):
+        print(f"ERROR: No se encontró el archivo '{corpus_path}'.")
+        print("Por favor, descarga una lista de palabras en español y guárdala en esa ruta.")
         return
 
-    logging.info(f"  -> Diccionario base cargado con {len(words)} palabras.")
-    words.update({normalize_word(sw) for sw in STOP_WORDS_ES})
-    logging.info(f"  -> Diccionario enriquecido con {len(words)} palabras únicas.")
+    words = set()
+    letter_counter = Counter()
 
+    print("Procesando corpus. Esto puede tardar unos segundos...")
+    with open(corpus_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            # 1. Limpiar la línea: convertir a minúsculas y quitar acentos.
+            normalized_line = unidecode.unidecode(line.lower())
+            
+            # 2. Encontrar todas las palabras que solo contienen letras.
+            #    Esto descarta números, puntuación y palabras extrañas.
+            found_words = re.findall(r'\b[a-z]+\b', normalized_line)
+            
+            for word in found_words:
+                # 3. Añadir palabras válidas (ej. de 2 a 16 letras) al conjunto para evitar duplicados.
+                if 2 <= len(word) <= 16:
+                    words.add(word)
+
+    if not words:
+        print("No se encontraron palabras válidas en el corpus.")
+        return
+
+    print(f"Se encontraron {len(words)} palabras únicas.")
+
+    # Agrupar palabras por longitud
     words_by_length = defaultdict(list)
-    all_letters = ""
+    for word in sorted(list(words)): # Ordenar alfabéticamente para un resultado consistente
+        words_by_length[str(len(word))].append(word)
+        # Contar letras para el análisis de frecuencia
+        for letter in word:
+            letter_counter[letter] += 1
+
+    # Guardar palabras por longitud
+    with open(words_by_length_path, 'w', encoding='utf-8') as f:
+        json.dump(words_by_length, f, ensure_ascii=False, indent=4)
+    print(f"Recurso 'es_words_by_length.json' generado exitosamente con {sum(len(v) for v in words_by_length.values())} palabras.")
+
+    # Calcular y guardar frecuencia de letras
+    total_letters = sum(letter_counter.values())
+    letter_frequency = {letter: count / total_letters for letter, count in letter_counter.items()}
     
-    for word in words:
-        if word:
-            words_by_length[len(word)].append(word)
-            all_letters += word
+    with open(letter_frequency_path, 'w', encoding='utf-8') as f:
+        json.dump(letter_frequency, f, ensure_ascii=False, indent=4, sort_keys=True)
+    print(f"Recurso 'es_letter_frequency.json' generado exitosamente.")
 
-    for length in words_by_length:
-        words_by_length[length].sort()
-    
-    total_letters = len(all_letters)
-    letter_counts = Counter(all_letters)
-    letter_frequency = {char: count / total_letters for char, count in letter_counts.items()}
-    letter_frequency = dict(sorted(letter_frequency.items(), key=lambda item: item[1], reverse=True))
-
-    logging.info("  -> Palabras agrupadas y frecuencia de letras calculada.")
-
-    os.makedirs(DATA_DIR, exist_ok=True)
-
-    with open(OUTPUT_WORDS_BY_LENGTH, 'w', encoding='utf-8') as f:
-        json.dump(words_by_length, f, ensure_ascii=False)
-    logging.info(f"  -> Archivo '{OUTPUT_WORDS_BY_LENGTH}' generado con éxito.")
-
-    with open(OUTPUT_LETTER_FREQUENCY, 'w', encoding='utf-8') as f:
-        json.dump(letter_frequency, f, ensure_ascii=False, indent=4)
-    logging.info(f"  -> Archivo '{OUTPUT_LETTER_FREQUENCY}' generado con éxito.")
-    
-    logging.info("\n✅ ¡Proceso completado!")
 
 if __name__ == '__main__':
     generate_resources()

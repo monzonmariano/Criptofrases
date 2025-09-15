@@ -26,6 +26,7 @@ services:
       - "5433:5432" # <--- Crea otro "tunel" que conecte 5433 de tu PC con el puerto 5432 del contenedor
     volumes:
       - postgres_data:/var/lib/postgresql/data/ # <--- crea un cajón de almacenamiento gestionado por Docker llamado postgres_data Luego, conecta este cajón al directorio /var/lib/postgresql/data/ dentro del contenedor de la base de datos, que es donde Postgres guarda todos sus archivos.
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql # <--- Toma el archivo init.sql que está en la carpeta database de mi proyecto y, virtualmente, colócalo dentro del contenedor en la carpeta especial /docker-entrypoint-initdb.d/
     environment:
       # Las variables que espera Postgres, leídas desde nuestro .env
       - POSTGRES_DB=${DB_NAME}

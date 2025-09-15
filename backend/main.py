@@ -36,6 +36,9 @@ logging.basicConfig(level=logging.INFO, handlers=[console_handler])
 # Ahora importamos los módulos de nuestra aplicación
 from backend import api
 
+#añade esta línea para decirle a Python que muestre todos los mensajes, incluidos los de depuración
+logging.basicConfig(level=logging.DEBUG)
+
 async def start_server():
     """
     Inicia el servidor web, configurando las rutas.
