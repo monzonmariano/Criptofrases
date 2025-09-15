@@ -3,7 +3,7 @@
 
 import os
 import psycopg2
-import logging
+from backend.logger_config import log
 from dotenv import load_dotenv
 
 # Cargar las variables de entorno
@@ -23,5 +23,5 @@ def get_db_connection():
         )
         return conn
     except psycopg2.Error as e:
-        logging.error(f"Error al conectar a la base de datos: {e}")
+        log.error(f"Error al conectar a la base de datos: {e}")
         return None

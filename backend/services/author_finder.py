@@ -3,7 +3,7 @@
 #-------------------- Delega la persistencia a los gestores --------------------
 
 # backend/services/author_finder.py
-import logging
+from backend.logger_config import log
 from . import gemini
 from backend.core import database_manager
 
@@ -22,7 +22,7 @@ async def find_and_save(data: dict):
         author, status = await gemini.find_author(phrase)
 
         if status != 200:
-            logging.error(f"Error de la API de Gemini: {author}")
+            log.error(f"Error de la API de Gemini: {author}")
             return author, status
         
         # 2. Prepara los datos para PostgreSQL
@@ -41,5 +41,5 @@ async def find_and_save(data: dict):
         return {"author": author}, 200
             
     except Exception as e:
-        logging.exception("Error al encontrar y guardar el autor.")
+        log.exception("Error al encontrar y guardar el autor.")
         return {"error": "An unexpected error occurred."}, 500

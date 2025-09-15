@@ -3,7 +3,7 @@
 #-------------------- Delega la persistencia a los gestores --------------------
 
 # backend/services/crypto_generator.py
-import logging
+from backend.logger_config import log
 from . import gemini
 from backend.core import database_manager
 
@@ -22,7 +22,7 @@ async def generate_and_save(data: dict):
         cryptogram, status = await gemini.generate_cryptogram(phrase)
     
         if status != 200:
-            logging.error(f"Error de la API de Gemini: {cryptogram}")
+            log.error(f"Error de la API de Gemini: {cryptogram}")
             return cryptogram, status
 
         # 2. Prepara los datos para PostgreSQL
@@ -41,5 +41,5 @@ async def generate_and_save(data: dict):
         return {"cryptogram": cryptogram}, 200
             
     except Exception as e:
-        logging.exception("Error al generar y guardar el criptograma.")
+        log.exception("Error al generar y guardar el criptograma.")
         return {"error": "An unexpected error occurred."}, 500

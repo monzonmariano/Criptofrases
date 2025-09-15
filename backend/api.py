@@ -5,7 +5,7 @@
 # --------------- "/api/history" "/api/clear-history" "/api/delete-entry"
 #---------------  y luego pasar los datos al siguiente nivel. No tiene lógica de negocio.
 
-import logging
+from backend.logger_config import log
 from aiohttp import web
 from backend.core import api_manager
 
@@ -16,7 +16,7 @@ async def handle_solve(request):
         response_data, status = await api_manager.solve_cryptogram(data)
         return web.json_response(response_data, status=status)
     except Exception as e:
-        logging.exception("Error en la ruta /api/solve.")
+        log.exception("Error en la ruta /api/solve.")
         return web.json_response({'error': str(e)}, status=500)
 
 async def handle_get_author(request):
@@ -26,7 +26,7 @@ async def handle_get_author(request):
         response_data, status = await api_manager.get_author_of_phrase(data)
         return web.json_response(response_data, status=status)
     except Exception as e:
-        logging.exception("Error en la ruta /api/author.")
+        log.exception("Error en la ruta /api/author.")
         return web.json_response({'error': str(e)}, status=500)
 
 async def handle_generate(request):
@@ -36,7 +36,7 @@ async def handle_generate(request):
         response_data, status = await api_manager.generate_cryptogram(data)
         return web.json_response(response_data, status=status)
     except Exception as e:
-        logging.exception("Error en la ruta /api/generate.")
+        log.exception("Error en la ruta /api/generate.")
         return web.json_response({'error': str(e)}, status=500)
 
 async def get_history(request):
@@ -46,7 +46,7 @@ async def get_history(request):
         response_data, status = await api_manager.get_history_by_user(user_id)
         return web.json_response(response_data, status=status)
     except Exception as e:
-        logging.exception("Error en la ruta /api/history.")
+        log.exception("Error en la ruta /api/history.")
         return web.json_response({'error': str(e)}, status=500)
 
 async def clear_history(request):
@@ -57,7 +57,7 @@ async def clear_history(request):
         response_data, status = await api_manager.clear_user_history(user_id)
         return web.json_response(response_data, status=status)
     except Exception as e:
-        logging.exception("Error en la ruta /api/clear-history.")
+        log.exception("Error en la ruta /api/clear-history.")
         return web.json_response({'error': str(e)}, status=500)
 
 async def delete_entry(request):
@@ -69,7 +69,7 @@ async def delete_entry(request):
         response_data, status = await api_manager.delete_entry_from_history(entry_id, user_id)
         return web.json_response(response_data, status=status)
     except Exception as e:
-        logging.exception("Error en la ruta /api/delete-entry.")
+        log.exception("Error en la ruta /api/delete-entry.")
         return web.json_response({'error': str(e)}, status=500)
 
 

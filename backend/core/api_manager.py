@@ -6,7 +6,7 @@
 # No tiene lógica de negocio propia.
 
 # backend/core/api_manager.py
-import logging
+from backend.logger_config import log
 from backend.services import crypto_solver, author_finder, crypto_generator
 from . import database_manager
 
@@ -14,21 +14,21 @@ async def solve_cryptogram(data):
     """
     ORQUESTADOR: Delega la resolución de un criptograma al servicio correspondiente.
     """
-    logging.info("API Manager: Petición de resolución recibida. Delegando a crypto_solver.")
+    log.info("API Manager: Petición de resolución recibida. Delegando a crypto_solver.")
     return await crypto_solver.solve_and_save(data)
 
 async def get_author_of_phrase(data):
     """
     ORQUESTADOR: Delega la búsqueda de autor al servicio correspondiente.
     """
-    logging.info("API Manager: Petición de autor recibida. Delegando a author_finder.")
+    log.info("API Manager: Petición de autor recibida. Delegando a author_finder.")
     return await author_finder.find_and_save(data)
 
 async def generate_cryptogram(data):
     """
     ORQUESTADOR: Delega la generación de un criptograma al servicio correspondiente.
     """
-    logging.info("API Manager: Petición de generación recibida. Delegando a crypto_generator.")
+    log.info("API Manager: Petición de generación recibida. Delegando a crypto_generator.")
     return await crypto_generator.generate_and_save(data)
 
 # --- El resto de tus funciones de api_manager se mantienen igual ---

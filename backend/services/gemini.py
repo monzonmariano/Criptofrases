@@ -5,7 +5,7 @@
 
 import json
 import re
-import logging
+from backend.logger_config import log
 import os
 import aiohttp
 from dotenv import load_dotenv
@@ -18,7 +18,7 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 PRO_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent"
 FLASH_API_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent"
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
 
 @retry_with_exponential_backoff(max_retries=3)
 async def _call_gemini_api_internal(payload: dict, url: str):
@@ -32,23 +32,23 @@ async def _call_gemini_api_internal(payload: dict, url: str):
         async with session.post(url, headers=headers, params=params, data=json.dumps(payload)) as response:
             response_text = await response.text()
             if response.status != 200:
-                logging.error(f"Error {response.status} de la API: {response_text}")
+                log.error(f"Error {response.status} de la API: {response_text}")
             response.raise_for_status()
             result = json.loads(response_text)
             
             if 'promptFeedback' in result and 'blockReason' in result['promptFeedback']:
                 reason = result['promptFeedback']['blockReason']
-                logging.error(f"La solicitud fue bloqueada por seguridad: {reason}")
+                log.error(f"La solicitud fue bloqueada por seguridad: {reason}")
                 return f"Respuesta bloqueada por seguridad: {reason}", 500
 
             if not result.get('candidates'):
-                logging.warning("La respuesta de la API no contiene 'candidates'.")
+                log.warning("La respuesta de la API no contiene 'candidates'.")
                 return "Respuesta vacía de la IA.", 500
 
             candidate = result['candidates'][0]
             if 'finishReason' in candidate and candidate['finishReason'] != 'STOP':
                 reason = candidate['finishReason']
-                logging.error(f"La respuesta fue detenida por la razón: {reason}")
+                log.error(f"La respuesta fue detenida por la razón: {reason}")
                 return f"Respuesta bloqueada por: {reason}", 500
                 
             text = candidate.get('content', {}).get('parts', [{}])[0].get('text', '')
@@ -86,7 +86,7 @@ Después de realizar tu análisis completo, proporciona **ÚNICAMENTE la frase d
         solution, status = await _call_gemini_api_internal(payload, PRO_API_URL)
         return solution.strip(), status
     except Exception as e:
-        logging.error(f"Excepción en el solver holístico: {e}")
+        log.error(f"Excepción en el solver holístico: {e}")
         return f"Error al procesar la solicitud: {e}", 500
 
 # Las funciones find_author y generate_cryptogram no necesitan cambios y usan el modelo Flash más rápido
