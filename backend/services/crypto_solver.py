@@ -1,4 +1,5 @@
-## backend/services/crypto_solver.py
+# backend/services/crypto_solver.py (Versión Final con N-gramas)
+
 import json
 import os
 import logging
@@ -8,15 +9,22 @@ from backend.core import database_manager
 # --- CONSTANTES DE RUTAS ---
 WORDS_BY_LENGTH_PATH = 'data/es_words_by_length.json'
 LETTER_FREQUENCY_PATH = 'data/es_letter_frequency.json'
+UNIGRAM_FREQUENCY_PATH = 'data/es_word_frequency.json'
+BIGRAM_FREQUENCY_PATH = 'data/es_bigram_frequency.json'
+TRIGRAM_FREQUENCY_PATH = 'data/es_trigram_frequency.json'
 
 # --- CLASE INTERNA DEL SOLVER ALGORÍTMICO ---
 class _BacktrackingSolver:
     def __init__(self):
-        """Inicializa el solver cargando los recursos."""
+        """Inicializa el solver cargando todos los recursos de lenguaje."""
         self.words_by_length = self._load_json_resource(WORDS_BY_LENGTH_PATH)
         self.letter_frequency = self._load_json_resource(LETTER_FREQUENCY_PATH)
-        self.crypto_freq = Counter() # Inicializamos el contador de frecuencia de números
-        logging.info("Instancia interna de _BacktrackingSolver creada y recursos cargados.")
+        self.unigram_frequency = self._load_json_resource(UNIGRAM_FREQUENCY_PATH)
+        self.bigram_frequency = self._load_json_resource(BIGRAM_FREQUENCY_PATH)
+        self.trigram_frequency = self._load_json_resource(TRIGRAM_FREQUENCY_PATH)
+        self.crypto_freq = Counter()
+        self.cryptogram_words_to_solve = []
+        logging.info("✅ Instancia de Solver creada y todos los recursos de n-gramas cargados.")
 
     def _load_json_resource(self, relative_path_from_backend_root):
         """Carga un recurso JSON de forma robusta."""
@@ -27,70 +35,41 @@ class _BacktrackingSolver:
             with open(full_path, 'r', encoding='utf-8') as f:
                 return json.load(f)
         except FileNotFoundError:
-            logging.error(f"❌ ERROR: No se encontró el archivo de recursos en la ruta: '{full_path}'")
+            # full_path no estará definido si la excepción ocurre antes, lo reconstruimos
+            script_path_on_error = os.path.abspath(__file__)
+            backend_root_path_on_error = os.path.dirname(os.path.dirname(script_path_on_error))
+            full_path_on_error = os.path.join(backend_root_path_on_error, relative_path_from_backend_root)
+            logging.error(f"❌ ERROR: No se encontró el archivo de recursos en la ruta: '{full_path_on_error}'")
             return {}
 
     def _analyze_crypto_frequencies(self, cryptogram_words):
         """Calcula la frecuencia de cada número en el criptograma completo."""
         all_numbers = [num for word in cryptogram_words for num in word]
         self.crypto_freq = Counter(all_numbers)
-        logging.info(f"Frecuencia de números analizada: {self.crypto_freq}")
-
-    def solve(self, cryptogram_words, initial_clues={}):
-        """Método principal para resolver, ordenando por longitud y usando frecuencia de letras."""
-        self._analyze_crypto_frequencies(cryptogram_words)
-        mapping = {str(k): v.upper() for k, v in initial_clues.items()}
-        unsolved_words = sorted(cryptogram_words, key=len, reverse=True)
-        return self._backtrack(unsolved_words, mapping)
-
-    def _backtrack(self, unsolved_words, mapping):
-        if not unsolved_words:
-            return mapping
-            
-        word_to_solve = unsolved_words[0]
-        remaining_words = unsolved_words[1:]
-        
-        candidate_words = self._get_candidate_words(word_to_solve, mapping)
-
-        for candidate in candidate_words:
-            new_mapping = self._create_new_mapping(word_to_solve, candidate, mapping)
-            # La comprobación 'if new_mapping' es redundante aquí pero no daña
-            if new_mapping:
-                result = self._backtrack(remaining_words, new_mapping)
-                if result is not None:
-                    return result
-        return None
 
     def _get_candidate_words(self, crypto_word, mapping):
-        """Obtiene y ordena los candidatos basándose en la frecuencia de las letras."""
+        """
+        Obtiene y ordena candidatos usando la heurística más simple y robusta:
+        la frecuencia pura de la palabra (unigrama).
+        """
         word_len_str = str(len(crypto_word))
         if word_len_str not in self.words_by_length:
             return []
-            
+
+        # 1. Filtra las palabras que son consistentes con el mapeo actual
         possible_words = [
             word.upper() for word in self.words_by_length[word_len_str]
             if self._is_consistent(crypto_word, word.upper(), mapping)
         ]
+
+        # 2. Ordena esa lista de candidatos únicamente por su frecuencia de uso.
+        #    La palabra más común siempre será la primera opción a probar.
+        possible_words.sort(
+            key=lambda word: self.unigram_frequency.get(word.lower(), 0.0000001), 
+            reverse=True
+        )
         
-        scored_candidates = []
-        for word in possible_words:
-            score = 0
-            temp_mapping = mapping.copy()
-            for i, num in enumerate(crypto_word):
-                letter = word[i]
-                if num not in temp_mapping:
-                    temp_mapping[num] = letter
-            
-            for num, letter in temp_mapping.items():
-                num_freq = self.crypto_freq.get(num, 0)
-                letter_freq = self.letter_frequency.get(letter.lower(), 0)
-                score += num_freq * letter_freq
-            
-            scored_candidates.append((word, score))
-            
-        scored_candidates.sort(key=lambda x: x[1], reverse=True)
-        
-        return [word for word, score in scored_candidates]
+        return possible_words
 
     def _is_consistent(self, crypto_word, plain_word, mapping):
         """Verifica si una palabra candidata es consistente con el mapeo actual."""
@@ -117,6 +96,69 @@ class _BacktrackingSolver:
                 new_map[num] = letter
         return new_map
 
+    def _score_solution(self, mapping):
+        """Calcula una puntuación para una solución usando un modelo ponderado de n-gramas."""
+        solved_phrase_words = [
+            "".join([mapping.get(num, '?') for num in word_nums])
+            for word_nums in self.cryptogram_words_to_solve
+        ]
+
+        unigram_score = sum(self.unigram_frequency.get(word.lower(), 0.0000001) for word in solved_phrase_words)
+        
+        bigram_score = 0
+        if len(solved_phrase_words) > 1:
+            for i in range(len(solved_phrase_words) - 1):
+                bigram = f"{solved_phrase_words[i].lower()} {solved_phrase_words[i+1].lower()}"
+                bigram_score += self.bigram_frequency.get(bigram, 0)
+        
+        trigram_score = 0
+        if len(solved_phrase_words) > 2:
+            for i in range(len(solved_phrase_words) - 2):
+                trigram = f"{solved_phrase_words[i].lower()} {solved_phrase_words[i+1].lower()} {solved_phrase_words[i+2].lower()}"
+                trigram_score += self.trigram_frequency.get(trigram, 0)
+
+        return (unigram_score * 1.0) + (bigram_score * 2.0) + (trigram_score * 3.0)
+
+    def _backtrack(self, unsolved_words, mapping, solutions_found, max_solutions):
+        if len(solutions_found) >= max_solutions:
+            return
+        if not unsolved_words:
+            solutions_found.append(mapping)
+            return
+
+        word_to_solve = unsolved_words[0]
+        remaining_words = unsolved_words[1:]
+        candidate_words = self._get_candidate_words(word_to_solve, mapping)
+
+        for candidate in candidate_words:
+            new_mapping = self._create_new_mapping(word_to_solve, candidate, mapping)
+            if new_mapping:
+                self._backtrack(remaining_words, new_mapping, solutions_found, max_solutions)
+                if len(solutions_found) >= max_solutions:
+                    return
+
+    def solve(self, cryptogram_words, initial_clues={}, max_solutions=5):
+        """
+        Versión final y optimizada. Usa la estrategia "La Palabra Más Larga Primero",
+        que es extremadamente rápida y efectiva.
+        """
+        self._analyze_crypto_frequencies(cryptogram_words)
+        self.cryptogram_words_to_solve = cryptogram_words
+        
+        initial_mapping = {str(k): v.upper() for k, v in initial_clues.items()}
+        
+        # --- ESTRATEGIA DE ORDENAMIENTO RÁPIDA Y EFECTIVA ---
+        unsolved_words = sorted(cryptogram_words, key=len, reverse=True)
+        
+        solutions_found = []
+        self._backtrack(unsolved_words, initial_mapping, solutions_found, max_solutions)
+        
+        if not solutions_found:
+            return []
+        
+        solutions_found.sort(key=self._score_solution, reverse=True)
+        return solutions_found
+
 # --- FUNCIÓN DE SERVICIO QUE ORQUESTA Y GUARDA ---
 solver_instance = _BacktrackingSolver()
 
@@ -134,25 +176,20 @@ async def solve_and_save(data: dict):
         return {'error': 'Formato de criptograma inválido.'}, 400
 
     logging.info(f"Servicio crypto_solver: Intentando resolver para el usuario {user_id}")
-    solution_mapping = solver_instance.solve(cryptogram_words, clues)
+    solutions_list = solver_instance.solve(cryptogram_words, clues)
     
-    db_data = {
-        'content': cryptogram_str, 'result': 'NO-SOLUTION', 'author': None,
-        'is_cryptogram': True, 'user_id': user_id
-    }
-    
-    if solution_mapping:
-        solved_words = ["".join([solution_mapping.get(num, '?') for num in word_nums]) for word_nums in cryptogram_words]
+    if solutions_list:
+        best_mapping = solutions_list[0]
+        solved_words = ["".join([best_mapping.get(num, '?') for num in word_nums]) for word_nums in cryptogram_words]
         final_solution_str = " ".join(solved_words)
-        db_data['result'] = final_solution_str
         logging.info(f"Servicio crypto_solver: Solución encontrada: {final_solution_str}")
-        response_data = {"solution": final_solution_str, "mapping": solution_mapping}
+        
+        # En el futuro, podríamos devolver la lista completa
+        response_data = {"solution": final_solution_str, "mapping": best_mapping}
         status = 200
     else:
         logging.warning(f"Servicio crypto_solver: No se encontró solución para el usuario {user_id}")
         response_data = {"error": "No se pudo encontrar una solución."}
         status = 404
-
-    # database_manager.create_new_entry(db_data)
     
     return response_data, status

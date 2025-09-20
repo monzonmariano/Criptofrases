@@ -7,6 +7,7 @@ services:
       dockerfile: backend/Dockerfile
     ports:
       - "8080:8080" # <--- Crea un "tunel" que conecte el puerto 8080 de la PC con el puerto 8080 del contenedor
+      - "5678:5678"
     volumes:
       - ./backend:/app/backend # <---   Sincroniza tu carpeta local './backend' con '/app/backend' dentro del contenedor
     environment:

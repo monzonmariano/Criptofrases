@@ -39,3 +39,68 @@ Ejemplo más complejo :
 Las pistas son : "3=b , 5=z, 7=m, 9=t" 
 
 La solución deberia ser : "LA BELLEZA ES ESE MISTERIO HERMOSO QUE NO DESCIFRAN NI LA PSICOLOGIA NI LA RETORICA"
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "test_user_01",
+    "cryptogram": "1-2 3-4-1-1-4-5-2 4-6 4-6-4 7-8-6-9-4-10-8-11 12-4-10-7-11-6-11 13-14-4 15-11 16-4-6-17-8-18-10-2-15 15-8 1-2 19-6-8-17-11-1-11-20-8-2 15-8 1-2 10-4-9-11-10-8-17-2",
+    "clues": {
+        "3": "b",
+        "5": "z",
+        "7": "m",
+        "9": "t"
+    }
+}' \
+http://localhost:8080/api/solve
+
+---------------------------------------------------------------------------------------
+Más ejemplos para pruebas : 
+
+Frase: "Pienso, luego existo."
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "test_user_02",
+    "cryptogram": "1-2-3-4-5-6 7-8-3-9-6 3-10-2-5-11-6",
+    "clues": {
+        "7": "l",
+        "8": "u"
+    }
+}' \
+http://localhost:8080/api/solve
+
+
+-------------------------------------------------------------------------------------
+
+Frase: "No por mucho madrugar amanece más temprano." 
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "test_user_03",
+    "cryptogram": "1-2 3-2-4 5-6-7-8-2 5-9-10-4-6-11-9-4 9-5-9-1-12-7-12 5-9-13 14-12-5-3-4-9-1-2",
+    "clues": {
+        "1": "n",
+        "2": "o"
+    }
+}' \
+http://localhost:8080/api/solve
+
+
+-------------------------------------------------------------------------------------
+
+3. Criptograma Complejo (Sin pistas)
+
+Frase: "La calidad nunca es un accidente, siempre es el resultado de un esfuerzo inteligente."
+
+curl -X POST -H "Content-Type: application/json" -d '{
+    "user_id": "test_user_04",
+    "cryptogram": "1-2 3-2-1-4-5-2-5 6-7-6-3-2 8-9 7-6 2-3-3-4-5-8-6-10-8 9-4-8-11-12-13-8 8-9 8-1 13-8-9-7-1-10-2-5-14 5-8 7-6 8-9-15-7-8-13-16-14 4-6-10-8-1-4-17-8-6-10-8",
+    "clues": {
+        "8": "e",
+        "2": "a"
+    }
+}' http://localhost:8080/api/solve
+{"error": "No se pudo encontrar una soluci\u00f3n."}

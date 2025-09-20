@@ -1,0 +1,345 @@
+
+Primera plataforma para encontrar estudios clínicos
+
+Creada por la médica argentina Georgina Sposetti, y elogiada por la revista The Lancet, conecta a pacientes con investigadores médicos en 11 países de América Latina. Ya se la conoce popularmente como "el Tinder de los ensayos clínicos".
+Toda vacuna, fármaco o dispositivo de salud que está disponible en el pasó, antes de ser aprobado por las autoridades regulatorias de un país o de una región, por una serie de etapas de estudios científicos que permiten verificar diversos parámetros. “Los estudios clínicos son investigaciones médicas en las que se evalúan medicamentos, tratamientos o dispositivos médicos, con el objetivo de diagnosticar su eficacia y seguridad. Requieren la participación voluntaria de personas tanto sanas como enfermas y tienen como finalidad evaluar nuevos tratamientos, contribuir al diagnóstico de enfermedades y encontrar maneras de prevención”, explica la Autoridad Nacional de Medicamentos, Alimentos y Tecnología Médica, ANMAT.
+
+Y prosigue: “Proporcionan evidencia científica sólida que constituye la base de las decisiones terapéuticas, contribuye a mejorar la atención de la salud de la población y a mejorar su calidad de vida”. 
+De hecho, en la página web de la ANMAT figuran los estudios clínicos aprobados en la Argentina, junto con su patrocinador local, en qué fase está (de 1 a 3) y un brevísimo resumen de las condiciones. En total, y tomando desde los años 2018 y junio de 2024, hay listados 1.245 ensayos clínicos. 
+Pero encontrar ensayos clínicos en otros lugares del mundo y saber si una persona con una determinada enfermedad está en condiciones de participar en alguno de ellos no es sencillo. “Luego de trabajar durante 15 años como médica investigadora y de co-fundar con otros dos médicos una institución dedicada a ensayos clínicos, la vida me puso “del otro lado del escritorio”: hace aproximadamente una década fui diagnosticada con una enfermedad muy rara, una EPOF (enfermedad poco frecuente) que se llama Síndrome de Lewis-Sumner, una polineuropatía desmilienizante. Lo primero que hice fue negar que algo me pasaba, trataba de pensar que no era nada. Con el tiempo, aprendí a aceptar lo que me tocó, levantarme y transitar la enfermedad”, describe Georgina Sposetti. 
+
+El síndrome de Lewis-Sumner es un trastorno autoinmune que afecta a los nervios, encargados de transportar los impulsos a los músculos y que permiten sentir los estímulos sensoriales, como por ejemplo el tacto. El daño se produce por una activación incorrecta del sistema inmunitario contra la mielina, sustancia que recubre los nervios. 
+
+“Hice todas las consultas médicas de rigor pero no existía cura ni tampoco tratamiento alguno”, recuerda Sposetti. Lo que le pasó a esta médica e investigadora argentina es que, ante la falta de una medicación disponible para su enfermedad, comenzó a buscar un ensayo clínico en el cual participar. Y se encontró viviendo en carne propia lo mismo que experimentaban sus pacientes: la dificultad para encontrar información confiable y comprensible. La mayoría de la información disponible no solo estaba en inglés, sino que era de difícil acceso e imposible de comprender para una persona que no tuviera formación médica.
+
+“Como investigadora solía invitar a mis pacientes a que participaran de ensayos clínicos. Un día, me tocó ser esa paciente que buscaba en un ensayo una oportunidad de tratamiento, una esperanza de encontrar esa medicación que me salvara o al menos que mejorara mi calidad de vida. Ahí me di cuenta que, aún con mis conocimientos técnicos, con una maestría en investigación y sabiendo inglés, buscar un ensayo clínico era una misión imposible. Y aún más conectar con el investigador. Sentí que la enfermedad había aparecido por algo y que había muchos pacientes como yo en toda América Latina sin acceso a esta información. En ese momento nace Un Ensayo para Mi. Hoy es una plataforma que conecta pacientes con investigadores médicos en 11 países de Latinoamérica, algo así como el Tinder de los ensayos clínicos”, resume la médica argentina, magíster en Investigación Clínica Farmacológica.
+
+Médico con paciente.
+El sitio UEPM es el primer buscador de ensayos clínicos de Latinoamérica en español y portugués con información “en lenguaje paciente”. En esta plataforma, figuran todos los estudios de investigación clínica abiertos que están ingresando pacientes en Latinoamérica, autorizados por las entidades regulatorias y comités de ética. Además de información relacionada con la molécula en investigación, también figuran los centros de investigación que llevan adelante estas investigaciones. De esta manera, los pacientes pueden contactar a los investigadores. Un Ensayo para Mí es totalmente gratuito tanto para los pacientes como para los investigadores médicos. En el año 2021 la revista especializada The Lancet Oncology publicó un artículo sobre el sitio creado por Sposetti. 
+
+Noticias: ¿Qué dificultades encontró en su búsqueda y qué intenta solucionar con su desarrollo?
+Georgina Sposetti: Un ensayo clínico es una oportunidad o al menos una esperanza para todos los pacientes que no encuentran solución con las drogas disponibles. Nadie te dice que te va a curar porque está en investigación pero es una alternativa más. Tengan una enfermedad oncológica, una enfermedad rara o una más frecuente.  De esta necesidad de convertir una enfermedad en una oportunidad nace Un Ensayo para Mí (UEPM) una plataforma que tiene como objetivo brindar información simple accesible y confiable acerca de ensayos clínicos y conectar a pacientes con investigadores médicos.
+Aunque a veces protesto y me enojo cada vez que tengo que internarme para recibir mi medicación, estoy agradecida: primero, porque tengo una medicación que me permitió hacer una vida casi normal estos últimos años; segundo, porque soy una privilegiada que pudo acceder a ella. Sin embargo mi enfermedad lentamente avanza y sigo buscando ensayos clínicos con nuevas medicaciones.
+En países como los nuestros, muchas veces los ensayos clínicos son una alternativa más que muchos desestiman porque desconocen, porque están rodeados de mitos, por ideologías o simplemente por falta de información. Los tomadores de decisiones deben saber que un ensayo clínico es una alternativa que debemos informar cuando existe; y los pacientes debemos ejercer nuestra autonomía para tomar decisiones: sin las alternativas en la mesa nos están vedando uno de los principios de la Ética.
+Todos debemos trabajar en el acceso a los medicamentos ya aprobados y también en el acceso a los ensayos clínicos. Mi misión y la de Un Ensayo para Mí es acercar esas oportunidades y ojalá se sumen muchos.
+Noticias: ¿Cómo es la experiencia de las personas de la Argentina que encuentran ensayos clínicos? ¿Se lo han comentado?
+Sposetti: Cada mes, más de 15 mil personas se postulan para participar de diferentes ensayos clínicos a través de nuestra web. Nuestro equipo de Asistencia a la Comunidad, que trabaja en 11 países de Latinoamérica, Comunidad latina en Estados Unidos y España, contacta a unos siete mil por mes, que son aquellos que cumplen con los principales criterios de inclusión y exclusión de los protocolos y los contacta con investigadores médicos.
+Tengo el caso de una paciente que recuerdo con mucho cariño: se llama Elisa, es de México. Ella contó cómo había cambiado su vida desde que un día encontró en Facebook un posteo de un ensayo clínico para su enfermedad y hoy está participando. Y lo que dice ella es ‘estoy igual de mi enfermedad, pero la esperanza y la oportunidad me están salvando la vida’.
+Testimonios así se repiten y resulta muy gratificante, porque es nuestra misión como compañía, vincular pacientes con los ensayos y darles una nueva esperanza. Hay miles de historias hermosas que nos llegan y que me hacen seguir adelante con todo esto. Porque también está la parte difícil de emprender y de llevar adelante una empresa donde hoy trabajan 75 personas.
+Noticias: ¿Y la recepción por parte de los laboratorios y profesionales médicos que llevan a cabo los ensayos?
+Sposetti: Hablar abiertamente de ensayos clínicos era completamente disruptivo. Y aún lo es, sobre todo en latinoamérica, donde hasta nuestra llegada, en países como Argentina, hacer campañas en Redes Sociales hablando de investigación científica era impensado. Pero Un Ensayo para Mí demostró que se puede hacer respetando las regulaciones vigentes. Eso llevó a que la comunidad médica nos viera como un eslabón valioso y necesario y hoy, en su gran mayoría, apoyan nuestra labor. Todo lo que encuentren en las redes sobre alguna investigación está aprobado por comités de ética y notificado a las entidades regulatorias.
+Tanto es así que acabamos de lanzar Un Ensayo para Mí Onco, un hub en el que médicos oncólogos de cabecera pueden buscar de una manera simple y muy precisa ensayos clínicos para sus pacientes y conectar al investigador clínico al cual quieren referirlos, o simplemente consultar. Hay una clara necesidad de los médicos de poder acceder a información de manera simple y rápida acerca de investigación clínica y tenerla disponible para brindar alternativas a sus pacientes dentro del consultorio.
+Fases de las investigaciones científicas
+
+Los ensayos clínicos son la última etapa antes de que un fármaco o un dispositivo médico puedan solicitar su registro e ingresar al mercado.
+
+Primero se realizan estudios con cultivos celulares (in vitro), luego investigaciones con animales (in vivo) y si esas pruebas arrojan resultados positivos un fármaco o un dispositivo médico pueden ser testeados en seres humanos. Cada una de estas etapas, además, deben cumplir con las buenas prácticas establecidas en particular.
+
+Los ensayos clínicos solo pueden ser iniciados después de que los investigadores hayan realizado un estudio en animales de laboratorio para determinar la toxicidad potencial, para confirmar que el fármaco o el dispositivo tienen un perfil de seguridad aceptable y después de que se haya demostrado su eficacia bajo condiciones ideales.
+
+Aunque en ocasiones los resultados de las pruebas in vitro y en animales sean prometedoras, no se sabe si el posible tratamiento médico es realmente beneficioso para los pacientes hasta que se complete la investigación clínica sobre dicho tratamiento. Y de hecho, recién se puede hablar de la efectividad de un tratamiento una vez que el mismo es aprobado y utilizado por la población en condiciones reales.
+
+
+El ayuno intermitente: ¿práctica milenaria adaptada al mundo moderno?
+
+Por Conrado Estol. Una variante más correcta es la ingesta durante tiempo restringido, que permite consumir todas las calorías deseadas durante una ventana horaria específica, durante unas 10 horas.
+
+Hace miles de años, nuestros antepasados enfrentaban una realidad muy distinta a la actual: encontrar comida era complejo y almacenarla aún más. Esto generaba incertidumbre sobre cuándo sería la próxima oportunidad de alimentarse, forzando al cuerpo a adaptarse a largos períodos sin comida. Así se generó una adaptación evolutiva a la posibilidad de tener que ayunar por períodos imprevisibles de tiempo. 
+El ayuno intermitente, una práctica que ha ganado popularidad en años recientes como método para bajar de peso, aprovecha esta adaptación natural. Esta forma de ayuno consiste en limitar las calorías según diferentes esquemas: desde ayunar varias horas por día, hasta evitar comer uno o dos días a la semana o al mes. Una variante más correcta y cada vez más recomendada es la llamada ingesta durante tiempo restringido, que permite consumir todas las calorías deseadas durante una ventana horaria específica, preferentemente desde las 7 u 8 de la mañana y durante unas 10 horas. De esta forma, logramos sincronizar los horarios de comida con los de nuestro reloj biológico, respetamos nuestra biología evolutiva y mejoramos la salud al permitir que el organismo funcione en forma alineada con sus ritmos naturales. 
+Los beneficios de esta restricción horaria son notables. Incluyen pérdida de peso, gracias al uso de las reservas grasas como fuente de energía en lugar de hidratos de carbono; mayor sensibilidad a la insulina lo que mejora el metabolismo de la glucosa; aumento de la hormona del crecimiento; reducción de la inflamación celular; disminución de la presión arterial; y mejoras en el estado anímico, entre otras. 
+En modelos animales, la ingesta durante tiempo restringido se asocia también con rejuvenecimiento celular. Esto ocurre gracias a la producción de NAD (nicotinamida adenosina dinucleótido), que activa proteínas llamadas sirtuinas 1 y 3. Estas proteínas mejoran la producción de energía mitocondrial, estimulan la autofagia -un proceso que elimina células disfuncionales y componentes tóxicos-, reparan el ADN y activan las vías de los genes FOXO asociados con la longevidad.
+
+Múltiples estudios científicos respaldan los beneficios de iniciar el período de ayuno temprano en la tarde, alrededor de las 18 o 19 horas, y evitar que supere las 14 horas. Sin embargo, un trabajo presentado en 2024 sugirió un posible aumento del riesgo cardiovascular en personas que restringían la ingesta a un período de solo 8 horas. Aunque este hallazgo es interesante, los autores del estudio no conocían las razones de esa elección horaria, lo que podría estar relacionado con problemas de salud preexistentes en los participantes.         
+Entonces, ¿cuál es el enfoque a seguir para lograr la alimentación más saludable? Más allá del ayuno intermitente, lo esencial es evitar productos procesados, priorizar los componentes de la dieta mediterránea -verduras, legumbres, frutas, carnes blancas, frutos secos, aceite de oliva-, comer porciones moderadas y evitar ingerir alimentos después de las 8 de la noche. Estos hábitos, junto con una ventana horaria adecuada para comer, contribuirán significativamente a marcar una gran diferencia en nuestra salud a corto y largo plazo. 
+
+La noche arrancó torcida para River. Cuando transcurrían apenas cinco minutos, Palmeiras ya se ponía en ventaja en el Monumental gracias a un cabezazo certero de Gustavo Gómez desde un córner, pero también por una insólita desatención del fondo del equipo de Marcelo Gallardo.
+
+Y es que cuando vino el envío de Andreas Pereira, el zaguero amagó con ir al primer palo y salió disparado hacia el segundo, logrando así soltarse de la marca de Lautaro Rivero. Por eso, Gómez cabeceó literalmente solo al borde del área chica y venció a Armani con total facilidad. Sí, Palmeiras consiguió el 1-0 ante River de una manera totalmente fácil.
+
+Belgrano le ganó a Newell's y jugará ante Argentinos Juniors por las semifinales de la Copa Argentina
+
+En el estadio Único del Parque La Pedrera y por los cuartos de final, el Pirata venció 3-1 a la Lepra con una actuación estelar de Jara con dos goles. Completaron el marcador Lisandro López y Cocoliso González.
+
+¡Belgrano, a semifinales de la Copa Argentina! En el estadio Único del Parque La Pedrera, le ganó 3-1 a Newell's. El cero se rompió a los 8 minutos con un tanto de Carlos González para la Lepra. Sin embargo, poco tiempo más tarde, Franco Jara lo empató de tijera. Luego, Lisandro López y nuevamente el Francotirador completaron el marcador. En la próxima instancia, el Pirata enfrentará a Argentinos Juniors, que viene de eliminar a Lanús.
+
+Russo habló con Palacios: le dio un 'correctivo' tras el reproche a Úbeda y podría salir del once de Boca
+
+El DT, que ya venía colmando su paciencia por reclamos de otros jugadores en tiempos recientes, no le dejó pasar el gesto al chileno y en la vuelta a los entrenamientos hubo una charla disciplinaria. 
+
+La levantada de Boca, con una visible mejora futbolística y resultados positivos después de meses a la deriva, llegó acompañada de un asterisco negativo: los reiterados reproches de los jugadores ante los cambios, con Claudio Úbeda como destinatario principal del enojo. 
+
+Pero eso se terminó, porque Miguel Ángel Russo se puso firme después del último episodio que tuvo a Carlos Palacios como protagonista de otra escena pública que dejó mal parado al cuerpo técnico en el Gigante de Arroyito y charló mano a mano con el chileno a modo de correctivo.
+"No puede volver a repetirse", fue, palabras más, palabras menos, lo que le dijo el entrenador de 69 años, ya de nuevo en la rutina diaria tras superar la infección urinaria, le pronunció al futbolista -cuyo historial de polémicas le juega en contra- en la vuelta a los entrenamientos del martes. 
+
+Fue una charla breve, concisa y contundente. Russo se cansó de que los jugadores (antes figuras como Miguel Merentiel y Edinson Cavani) hicieran gestos o expliciten verbalmente reclamos ante una decisión técnica y le dio una lección disciplinaria -en buenos términos- a Palacios. 
+
+El entrenador no quiere ver más estás cuestiones extrafutbolísticas en el foco de la agenda mediática -mucho menos cuando Boca está en franco ascenso- y por eso marcó las pautas cara a cara con Palacios, más allá de que en su momento también hubo un mensaje para todo el plantel.
+
+¿Esto afecta la consideración del chileno? No, ya que en situaciones similares que se dieron previamente no hubo castigo alguno. De todas formas, existe la posibilidad de que el ex Colo Colo salga del equipo para recibir a Central Córdoba el domingo, pero el motivo es netamente futbolístico.
+
+Russo no vio bien a Palacios en los últimos encuentros (lo sacó en todos a mediados del segundo tiempo) y tanto Williams Alarcón como Alan Velasco, en ese orden de prioridad, ganan terreno para reemplazarlo. Es una variante que el cuerpo técnico viene analizando por su bajo rendimiento y no tiene ninguna relación con el gesto a Úbeda, según revelan en Boca Predio.
+
+Merentiel y Cavani, los otros casos de reproches en Boca por los cambios
+
+Sin embargo, el accionar de Palacios no fue el primero de este estilo, sino que ya había sucedido algo similar con Cavani y Merentiel, dos de los líderes del plantel. En la victoria ante Independiente Rivadavia en Mendoza ocurrió una situación calcada, cuando el ex PSG le reprochó a Úbeda que lo haya reemplazado mientras se retiraba del campo de juego. 
+¿Por qué a mí?", le tiró al pasar mientras se dirigía al banco de suplentes. Un detalle no menor es que, luego de ese entredicho, el uruguayo completó los 90 minutos en todos los encuentros posteriores.
+Retrocediendo en el tiempo, más precisamente a la tercera fecha en la que Boca cayó con Huracán en el Ducó, está la insólita situación que protagonizó Merentiel, cuando el delantero saltó a la cancha para jugar el segundo tiempo pero en realidad había sido reemplazado por Russo. Cuando se percató de la variante, se fue corriendo al vestuario, lo que generó la sorpresa hasta de sus propios compañeros. Finalmente, el cuerpo técnico mantuvo una charla con él y la situación no pasó a mayores.
+Los motivos por los que Riquelme cambió de planes y Boca no tendrá mánager
+
+Los rumores quedaron en el camino y finalmente, ante la dificultad de sumar a alguien en plena competencia y la buena conducción del Chelo Delgado en el día a día, Román optó por mantener la estructura hasta el año que viene.
+Boca no tendrá la figura de mánager con la que tanto se especuló una vez que Juan Román Riquelme tomó la decisión de disolver el Consejo de Fútbol, es decir, abrirle la puerta de salida a Raúl Cascini y Mauricio Serna. El año bajará el telón con Marcelo Delgado como eje del fútbol y el plan es sumar una cara nueva para que lo acompañe recién en 2026.
+La información que trascendió desde el seno de Boca Predio entrado agosto, cuando ya era un hecho que desaparecía el CdF, indicaba que el presidente quería un hombre fuerte (José Pekerman era el de mayor asidero, pero quería dirigir) para reestructurar el área junto al Chelo. Se dispersaron varios nombres, funciones y objetivos, pero a un mes el panorama es otro y lo cierto es que todo seguirá igual.
+
+¿Por qué cambió la postura inicial? El motivo principal parte de la complejidad que implica incorporar a alguien nuevo a un rol tan trascendental en plena competencia. Con el equipo de Miguel Russo compenetrado en levantar cabeza en el Torneo Clausura y clasificarse a la Copa Libertadores del año que viene, internamente entienden que la adaptación iba a ser desprolija y por eso Riquelme puso la mira en 2026.
+
+ En otro orden, en Boca hablan de la necesidad de un "proceso" de rearmado después de la desaparición del Consejo de Fútbol, de un tiempo necesario para volver a configurar el esquema y ningún apuro, en gran parte también porque hay conformidad con la actual conducción 'en soledad' de Delgado. "Lleva bien el día a día", afirman en Ezeiza.
+
+La confirmación de que el club finalmente no contratará un secretario técnico surgió, casualmente, en paralelo con la reaparición de Cascini en el Mundo xeneize. El Mosquito estuvo en el empate de la Reserva del martes contra Defensa y Justicia, en Florencio Varela. Se lo vio sentado a un costado del campo de juego, tomando mate junto a Claudio Freire, trabajador del área de prensa de la institución, y Blas Giunta, quien es entrenador en inferiores.
+
+Aunque ya no tiene ningún tipo de injerencia en lo futbolístico, el autor del último penal de la serie ante el Milán por la Intercontinental 2003 quiere acompañar desde donde se pueda, por lo que no sería descabellado volver a verlo en algún otro compromiso.
+
+La pelea cabeza a cabeza de Costa y Pellegrino por el puesto de central en Boca
+
+El defensor de 23 años ya está recuperado de la lesión muscular grado II en el obturador externo izquierdo que padeció ante Banfield y peleará mano a mano con el ex Independiente por un lugar en el fondo.
+
+Con la mente puesta en el partido del próximo domingo ante Central Córdoba, Boca se entrenará en doble turno y tanto Marco Pellegrino como Ayrton Costa deberán dar lo mejor de sí mismos en las prácticas de esta semana, ya que se disputan cabeza a cabeza un lugar en el once titular.
+Lo cierto es que ya pasaron tres semanas de la victoria ante Banfield, en la que el ex Huracán sufrió una lesión muscular grado II en el obturador externo izquierdo, por lo que el jugador ya se encuentra en óptimas condiciones físicas para volver a saltar a la cancha.
+
+Vale la pena recordar que hasta su lesión, el zaguero de 23 años era uno de los valores más altos en la defensa xeneize. Su seguridad en la marca, su buen juego aéreo y su facilidad con la pelota en los pies le permitieron adueñarse rápidamente del puesto de segundo zaguero. De hecho, desde su debut ante el Auckland City en el Mundial de Clubes, fue titular en todos los partidos.
+
+Ante la lesión de Pellegrino, al que se le presentó la oportunidad de meterse nuevamente en el equipo fue a Costa. El ex Independiente arrastraba una larga inactividad, ya que no jugaba desde la derrota contra Bayern Munich en la que padeció un desgarro. Disputó los 90 minutos ante Aldosivi y Rosario Central y no desentonó.
+
+El defensor de 25 años, que llegó al club en enero proveniente del Royal Antwerp de Bélgica, ocupa un lugar importante en la consideración de Miguel Ángel Russo, ya que lo puso como titular en el inicio de su tercer ciclo al frente del club. Hasta que se lesionó contra los alemanes, Costa había demostrado un gran nivel con la azul y oro en la cita intercontinental.
+
+Con ambos futbolistas a disposición, será el entrenador de 69 años el encargado de definir al acompañante de Lautaro Di Lollo en la zaga central boquense para enfrentar al Ferroviario en La Bombonera. Seguramente, el ensayo formal de fútbol del próximo jueves por la tarde pueda dar varias pistas sobre quién de los dos se ganará un lugar.
+
+Hallaron muerta a la bicampeona olímpica Laura Dahlmeier tras un accidente en la montaña
+
+La alemana perdió la vida a los 31 años al ser alcanzada por rocas mientras en el pico Laila, ubicado en la cordillera del Karakórum, Pakistán.
+El deporte mundial está de luto por la trágica muerte de Laura Dahlmeier durante una travesía de alta montaña en Pakistán. La bicampeona olímpica, retirada del biatlón profesional en 2019, perdió la vida a los 31 años tras ser impactada por un desprendimiento de piedras mientras se encontraba escalando el pico Laila, de 6.069 metros, en la cordillera del Karakórum. Su cuerpo fue encontrado luego de dos días de intensas tareas de búsqueda en una zona remota y de difícil acceso.
+
+ El accidente se produjo el 28 de julio, cuando la exatleta se encontraba ascendiendo en estilo alpino junto a otro montañista. De acuerdo al comunicado oficial, "fue golpeada por varias rocas hacia el mediodía, a unos 5.700 metros de altitud", lo que provocó el pedido inmediato de auxilio por parte de su compañero. Sin embargo, la ayuda tardó más de un día en llegar debido a la lejanía del lugar y al mal tiempo.
+
+Un helicóptero pudo sobrevolar la zona recién al día siguiente, sin detectar señales de vida. Un vocero del operativo de rescate explicó que al ser localizada, Dahlmeier ya no respondía a estímulos y presentaba signos de haber sufrido heridas de gravedad.
+
+ Con amplia experiencia en montaña, la exbiatleta contaba con títulos oficiales como guía y era parte del servicio de rescate alemán. Desde fines de junio se encontraba en la región realizando una serie de ascensos y recientemente había logrado coronar la Gran Torre del Trango, ubicada a 6.287 metros sobre el nivel del mar. El pico Laila, de 6.069 metros, era su próximo desafío.
+
+Previo al accidente, las autoridades locales ya habían advertido sobre el mal clima en la región, afectada por lluvias intensas y vientos fuertes, que generaron riesgos de avalanchas y desprendimientos. Esas mismas condiciones impidieron el rápido acceso del equipo de rescate y provocaron retrasos.
+
+Ante la imposibilidad de recuperar el cuerpo, los organizadores informaron que un equipo de especialistas en montaña, incluidos alpinistas de Estados Unidos y Alemania, trabaja en un eventual operativo de recuperación, aunque sujeto a la evolución del clima.
+
+En medio de la conmoción, la familia y representantes de la doble campeona olímpica revelaron que había dejado instrucciones explícitas sobre este tipo de situaciones: "Era el deseo expreso y por escrito de Laura que nadie arriesgara su vida para rescatarla. Quería permanecer en la montaña en caso de un accidente fatal".
+
+Dahlmeier dejó una huella imborrable en el biatlón: en los Juegos Olímpicos de Pyeongchang 2018 logró dos medallas doradas y una de bronce, y a lo largo de su carrera acumuló siete títulos mundiales y una Copa del Mundo general. Tras retirarse en 2019, se mantuvo activa como guía, comentarista deportiva y aventurera. En 2023, batió un récord de velocidad en el ascenso al Ama Dablam, una cumbre de 6.812 metros en el Himalaya.
+
+La Justicia suspendió la cremación del cuerpo de la Locomotora Oliveras tras una denuncia
+
+Aldo Parodi, excampeón de fisicoculturismo, hizo una presentación judicial exigiendo que se investigue la posible incidencia de esteroides y anabólicos en el fallecimiento de la exboxeadora.
+
+La Justicia federal ordenó, luego de una denuncia, la suspensión de la cremación del cuerpo de Alejandra "Locomotora" Oliveras, emblemática exboxeadora quien falleció a sus 47 años este lunes, luego de permanecer internada por dos semanas tras sufrir un accidente cerebrovascular (ACV) isquémico. 
+
+Aldo Parodi, excampeón de fisicoculturismo, hizo una presentación judicial para solicitar que se evalúe el cuerpo de la jujeña, ante la sospecha de un "doping seguido de fallecimiento".
+
+Según detalló Infobae, la denuncia fue presentada en la Fiscalía Regional N°1 de Santa Fe. Parodi afirma que Oliveras presentaba indicios claros de consumir "esteroides anabólicos" y, según cree, podría haber influido en su fallecimiento.
+
+María José de la Torre, Auxiliar Fiscal de la Unidad Fiscal Santa Fe del Ministerio Público Fiscal de la Nación, firma el comunicado en el que le ordenan al cementerio que se "preserve el cuerpo en las condiciones adecuadas hasta recibir nuevas instrucciones". Y añadió: “Proceder a la cremación podría comprometer la obtención de evidencia relevante para el esclarecimiento de los hechos vinculados al fallecimiento”.
+
+Qué dijo el denunciante que solicitó que investiguen la muerte de la Locomotora Oliveras
+
+Parodi, quien presentó la denuncia que suspendió la cremación del cuerpo de Oliveras, aseguró que el fallecimiento de la emblemática exboxeadora "es un doping seguido de muerte".
+
+"Cuando veas un cuerpo así, no tengas duda”, lanzó en Crónica TV el excampeón de fisicoculturismo, quien asegura que lucha contra la "mafia del doping". Y añadió: "Tiene el cuerpo totalmente anabolizado. ¿Vos ves la diferencia entre una mujer normal y ese cuerpo? Dejá el lado del sentimentalismo, ese cuerpo tenía esteroides anabólicos. Los suplementos no te hacen eso".
+
+“Lo que no te dicen es que esto te mata a la larga. Hay un montón de efectos colaterales. Te destruye el cuerpo por dentro. Es testosterona sintetizada. Te rompe entero. Todo derivado de testosterona son esteroides, anabólicos que hoy día es un peligro porque los chicos los consiguen por internet”, sentenció.
+
+La muerte de la Locomotora Oliveras
+
+Alejandra "Locomotora" Oliveras falleció a sus 47 años, este lunes en el Hospital José María Cullen, en Santa Fe, donde permaneció internada desde el 14 de julio pasado, cuando sufrió un accidente cerebrovascular (ACV) isquémico.
+
+"La paciente Alejandra sufrió un shock con una hipoxemia severa, consecuencia de una embolia pulmonar masiva, que desencadenó en un paro cardiorrespiratorio refractario. Por más que se realizaron las medidas, lamentablenente sucedió el fallecimiento", expresó Bruno Moroni, director del Hospital, en una rueda de prensa. Y sentenció: "Nuestras condolencias a toda la familia. Lamentamos la pérdida". 
+
+El riesgo país supera los 1300 puntos y alcanza el valor más alto en un año
+Desde el 5 de septiembre el indicador trepó un 28,9%, mientras que en otros países de la región bajó entre 0,8% y 8,9% 
+
+Después de que Diputados rechazara ayer los vetos del presidente Javier Milei a las leyes que amplían el financiamiento del Hospital Garrahan y de las universidades públicas, los bonos vuelven a caer hasta un 10% y el Riesgo País figura en 1337 puntos básicos, confirmaron fuentes al tanto de esa cifra.
+
+De esta forma, el indicador elaborado por JP Morgan para la Argentina se acerca al valor de Bolivia, que se ubica en 1400 puntos básicos, el país peor calificado de la región sin contar a Venezuela, cuyo número es mucho más alto.
+
+Consultado por LA NACION, Iván Carrino, titular de Iván Carrino Consulting, señaló que el riesgo país puede subir porque la Argentina no acumuló aún reservas para afrontar los vencimientos de deuda de enero, que ascienden a US$8000 millones, pero también por el contexto electoral y debido a que el Congreso rechaza el plan fiscal del Presidente.
+
+“La última es la que tiene más peso para mí. El Congreso discute lo fiscal y ese es el eje del programa”, opinó, aunque también le asignó relevancia al resultado electoral en la provincia de Buenos Aires, ya que, según sus cálculos, el riesgo país argentino aumentó un 28,9% desde el 5 de septiembre, mientras que en la región retrocedió entre 0,8% y 8,9%.
+
+“Si queremos hacer responsable al Gobierno de algo podríamos decir que con su política económica no logró reducir lo suficiente el riesgo país para volver a los mercados de deuda, pero la pregunta es si existía un plan económico que pudiera lograr eso con minoría en el Congreso. El plan económico no puede funcionar mal por el resultado de unas elecciones, pero no hay un plan a prueba de eso”, agregó.
+
+Por otro lado, la economista Natalia Motyl consideró que, si el plan económico es sólido, unas elecciones legislativas no deberían afectar para nada.
+
+“Lo del riesgo K es una excusa para no admitir los errores en materia económica. El descalabro empezó antes de las elecciones: con la negociación con el FMI, el desarme de Leliqs, y en el medio los datos del sector externo empezaron a dar mal y eso empezó a disparar el nerviosismo. Además, antes de los comicios las encuestas le daban bien al oficialismo”, detalló.
+
+Más allá de esto, consideró que después el resultado en la provincia de Buenos Aires fue algo que se “sumó y agudizó la crisis de confianza, pero la base es económica”.
+
+Un trader con conocimiento de lo que piensan los inversores de Estados Unidos dijo, por su parte, que “el riesgo kuka es parte de la República Argentina como Vaca Muerta” y, cuando gobernás un país, tenés que pensar que eso existe, no es una invasión marciana.
+
+“Si vos hacés un plan antiinflacionario que es recesivo, podés perder las elecciones. Si tenés un problema de deuda serio, necesitás dólares y si los mercados no se te abren no llegás a los vencimientos. Este año era el de acumular reservas y ganar las elecciones de medio término. El próximo, el de las reformas y el 2027, el de ganar las elecciones presidenciales. Eso es lo que tenían en mente los inversores. Cualquier corrección sobre eso no es apetecible para ellos", completó.
+
+La apuesta detrás del lanzamiento
+
+La estrategia de la compañía se apoya en un diferencial claro: trasladar al formato helado la identidad original de cada golosina. Los Palitos de la Selva y Flynn Paff reproducen sus esencias clásicas, mientras que el resto de la línea se desarrolló con materias primas propias, como en el caso de Toddy, Full Maní y Mantecol.
+
+“El desarrollo de cada producto fue muy minucioso y con el cuidado de respetar al máximo el alma de cada una de nuestras marcas. Ingresamos a esta categoría para quedarnos y consolidarnos”, agregó Giménez.
+
+Aunque el foco inicial está puesto en la Argentina, Georgalos ya proyecta la expansión a países vecinos como Uruguay, Chile, Bolivia y Paraguay. El movimiento se enmarca en una estrategia más amplia de innovación, con la que la empresa busca ampliar su portfolio y reforzar su vínculo con consumidores cada vez más exigentes.
+
+Fundada por Miguel Georgalos, un inmigrante griego,hace más de 85 años, la compañía tiene una planta en Victoria, provincia de Buenos Aires -adquirida a Mondelēz en 2022-. La firma atravesó diferentes crisis económicas, en las que tuvo que achicar el negocio y hasta poner a la venta su producto insignia que luego recuperó, el postre de maní derivado del halvá: Mantecol.
+
+Para su nieto y hoy presidente de la compañía, Miguel Zonnaras, la fábrica siempre tuvo un propósito familiar. “Para mí es un punto de encuentro que nos permitió mantenernos unidos. Su sueño, como buen hacedor, fue hacer cada día las cosas mejor y con el orgullo de un producto que los argentinos incorporaron a sus hábitos: el Mantecol”, señaló recientemente en diálogo LA NACION..
+
+
+El sector cebollero de la Región Protegida Patagónica atraviesa un período de marcada preocupación. Un informe de la Fundación de la Barrera Patagónica (Funbapa), que abarca el período de enero a agosto de 2025, reveló una disminución significativa en el volumen de exportación. Este retroceso en los envíos al exterior, sumado a un inicio de temporada “muy tranquilo”, ha impactado negativamente en la rentabilidad de todos los eslabones de la cadena, consolidando una “campaña mala en términos económicos”.
+
+Según los datos, hasta fines de agosto de 2025, se alcanzó un total de 123.996 toneladas de cebollas empacadas en la Región Protegida Patagónica y comercializadas al exterior. Esta cifra, si bien supera a cinco de las últimas diez temporadas históricas, representó una caída del 38,26% frente a los volúmenes récord de años recientes, como las 200.840 toneladas exportadas en el mismo período de 2024, o las 163.344 toneladas de 2020 y las 156.670 toneladas de 2019. La diferencia con la campaña anterior es particularmente llamativa.
+
+
+La temporada de exportación de 2025 tuvo un comienzo inusualmente lento. El informe detalló un “inicio de temporada de exportación muy tranquilo, con apenas dos envíos en enero y 53 en febrero”.
+
+La demanda comenzó a mostrar un aumento recién en marzo, alcanzando su “momento de mayor salida en mayo”. Sin embargo, ya en agosto, los envíos “continuaron a ritmo lento, casi exclusivamente con destino a Uruguay”.
+
+Según dijeron en la Fundación de la Barrera Patagónica, una de las principales razones detrás de este “marcado desinterés por la cebolla en el primer trimestre de este año” se encuentra en Brasil, el principal mercado para la producción patagónica. En detalle, el estado brasileño de Santa Catarina tuvo “una elevada producción de cebolla, debido a la mayor superficie sembrada y los buenos rindes obtenidos”, lo que naturalmente “explica el escaso interés por nuestra mercadería durante el primer trimestre”.
+
+
+Brasil se mantiene como el cliente más importante para la cebolla patagónica, con más del 87% del volumen exportado y empacado en la región. Los datos muestran que 108.226,1 toneladas tuvieron como destino ese país. Le siguió Paraguay, aunque con un volumen menor al de años anteriores, de 11.148,4 toneladas empacadas en origen. Es importante destacar que una parte significativa de la mercadería con destino a ese país “sale de la zona sin pasar por los empaques locales, operatoria amparada por la Resolución Senasa Nº 133/2022”. En esta temporada se empacaron “en Clorinda (Formosa) 21.707 toneladas de cebolla producida en Río Negro, Villarino y Patagones”, lo que equivale a 606 cargas. Por lo tanto, el total exportado a Paraguay, sumando lo empacado en origen y lo enviado vía Clorinda ascendió a 32.855 toneladas.
+
+
+Además de Brasil y Paraguay, la cebolla patagónica llegó a otros ocho países. Uruguay recibió 2486,5 toneladas, mientras que volúmenes menores se destinaron a Noruega (520,7 t), Irlanda (104,7 t), Canadá (49,3 t), Reino Unido (920,2 t), Estados Unidos (149,8 t), España (205,4 t) y República Dominicana (185,2 t).
+
+En cuanto al origen de la producción dentro de la Región Protegida Patagónica, el documento describió que de las 123.996 toneladas exportadas, el 32% se cultivó en Río Negro; el 41%, en Patagones y el 27% en Villarino. En términos de procesamiento, los empaques bonaerenses de Patagones y Villarino fueron responsables de más del “89% del volumen de cebolla exportada desde la Región Protegida y el resto, en Río Negro”.
+
+Según comentaron, Funbapa juega un rol crucial en la certificación y control de calidad. Desde 1999, su “Programa de certificación en origen de cebolla para exportación coordinado por la fundación, controla la calidad de la cebolla de exportación en las plantas de empaque”. Técnicos de Funbapa inspeccionaron la mercadería en las plantas de Villarino, Patagones y las provincias patagónicas, en “estrecha comunicación con Senasa”.
+Costos de producción
+
+Más allá de los volúmenes de exportación, lo más preocupante es el impacto económico de esta campaña. Según dijeron, “esta campaña fue mala en términos económicos para todos los eslabones de la cadena cebollera”. El precio pagado al productor “en el campo osciló entre $25/kg y $70/kg y no alcanzó para cubrir los costos”. Las plantas de empaque vieron “márgenes de ganancias muy ajustados”, y los salarios de los empleados de empaque y campo “tampoco fueron satisfactorios”.
+
+
+Un factor adicional de pérdida fue la falta de salida para ciertos calibres. Quedó “una gran cantidad de cebolla grande (mayor a 90 mm de diámetro) sin comercializar en los lotes y galpones, por falta de demanda para ese calibre”.
+
+Los cálculos de costos de producción de Funbapa confirman la crisis. A pesar de que “los gastos no fueron mayores a años anteriores”, el precio “en pila fue tan bajo que el margen bruto dio negativo en todas las combinaciones de sistema de siembra y cosecha analizados”.
+
+Como ejemplo, una hectárea de cebolla temprana sembrada en tablón y cosechada con máquina tuvo un costo promedio de US$2500, con un “margen bruto negativo de US$840/ha”. Para la cebolla tardía, sembrada en surco y cosechada a mano, el costo fue de US$4400, resultando en un “margen bruto negativo de US$2980/ha”.
+
+En rigor, para cubrir los costos, con los precios obtenidos este año, el rendimiento por hectárea “tendría que haber sido muy superior al obtenido en la región”. Se estima que para la cebolla tardía habrían sido necesarios entre “100.000 y 133.000 kg/ha, suponiendo que se vendiera la totalidad de la producción”.
+
+Paralelamente a la exportación, el mercado interno absorbió un volumen considerable. Hasta fines de agosto, el volumen vendido al mercado interno desde Río Negro y el sur de Buenos Aires alcanzó las 290.000 toneladas, destinadas principalmente a provincias como Buenos Aires, Santa Fe, Misiones, Córdoba y Mendoza.
+
+En la entidad subrayaron la importancia de “procurar que la totalidad de la cebolla se procese en galpones locales” para resguardar la economía regional. Además, dijeron que resulta fundamental “lograr la apertura de nuevos mercados capaces de absorber la oferta de nuestra producción”, buscando alternativas para diversificar destinos y reducir la dependencia de mercados específicos que puedan fluctuar, como lo demostró la situación de Brasil a principios de 2025.
+
+
+En la antesala de las elecciones de octubre próximo, desde el campo advirtieron a los dirigentes políticos que no se olviden de quienes los votan una vez concluido el proceso electoral. “Es después de la asunción cuando comienzan las demandas que, lamentablemente, muchas veces no se pueden concretar”, señaló Lucas Magnano, presidente de la Confederación Intercooperativa Agropecuaria (Coninagro).
+
+El mensaje se dio en la 8va. edición del Congreso Internacional de la entidad ruralista, que se desarrolla en la Bolsa de Cereales de Buenos Aires. Allí, en su discurso inaugural, el dirigente remarcó: “Es necesario generar espacios de diálogos y consensos que permitan avanzar en todos los temas importantes para la producción y el desarrollo de las distintas cadenas productivas”.
+
+En ese sentido, Magnano se detuvo en un tema que, según dijo, lo sorprendió y que merece un análisis colectivo. “Ahora me gustaría hacerles un comentario o compartir una visión sobre algunas cosas sucedidas en estos últimos días, que debemos analizar en profundidad entre todos, porque no es una buena señal y se debe hacer algo con ello o al menos que no ocurra en las entidades del campo, a pesar de que algunas veces pasa”, advirtió.
+
+Concretamente, el dirigente habló del resultado de las recientes elecciones. “Puntualmente me refiero al resultado de una elección que dejó mucha tela para cortar, pero en esta ocasión solo quería comentar un detalle que me sorprende”, explicó. Con tono preocupado, remarcó que lo que más le llamó la atención no fue la disputa entre listas, sino la falta de interés. “Hubo un claro ganador y fue el desinterés. No debemos tomarlo como algo normal, todo lo contrario, creo que todos deberíamos manifestar esta preocupación”, sostuvo y planteó que, más allá de los nombres propios, el verdadero problema radica en la apatía generalizada. “Porque finalmente, a mi criterio, creo que no ganó ni perdió nadie. No debemos exponer a estos riesgos al sistema democrático“.
+
+Así pidió una mayor apertura al diálogo político: “Para esto, es necesario que los gobiernos en todos sus estamentos entiendan, compartan e incentiven para que esto ocurra, teniendo siempre presente que disentir no es una declaración de guerra y coincidir no es un acto de obsecuencia”.
+
+Magnano remarcó la importancia de la cohesión social como base para cualquier proyecto de desarrollo. “La mayor distancia que tenemos que recorrer todavía se encuentra dentro de nosotros. Los argentinos debemos ponernos de acuerdo por el bien de toda la Argentina, pues solo una sociedad bien cohesionada conseguirá poder cumplir todos sus objetivos”, afirmó.
+
+Con autocrítica hacia el rol dirigencial, agregó: “Siendo representantes, si me permiten aclarar, políticos-sectoriales, no podemos tapar el sol con las manos y debemos reconocer que algunas veces no conseguimos satisfacer definitivamente las demandas de nuestros productores. Créanme que lo sufrimos y no dejamos de buscar alternativas para lograr soluciones a esos pedidos”.
+
+En esa línea, señaló que el agro se encuentra en plena transformación. “El campo argentino está atravesando un cambio de época sumamente importante, no solo a nivel productivo y tecnológico, sino también en los mercados”, destacó.
+
+
+A la vez, sostuvo que este escenario puede convertirse en una oportunidad si se cuenta con el respaldo adecuado. “No tengo ninguna duda de que, si disponemos de las herramientas necesarias, podríamos transformarlo en una gran oportunidad. De la misma manera lo hizo la economía argentina este último tiempo, en donde un Gobierno nacional está poniendo en funcionamiento un sistema de déficit 0. En esto coincidimos con una economía ordenada porque es sumamente importante para todos”, subrayó.
+
+Por último, recordó que Coninagro cumple 69 años y rememoró una frase de Francisco Loewy en el momento de la fundación de la entidad, que refleja la visión que los guía desde entonces: “En ella reencarnarán los sueños de la primera hora, ingenuos y puros, pero engendrados por el mismo anhelo de tierra y libertad, de seguridad económica y acceso a los bienes de la civilización y de la cultura, cuya fuerza hoy, como siempre, constituye un resorte único que mueve el avance del campesino hacia metas ya visibles. El éxito o el fracaso de la joven confederación depende infaliblemente de su grado de fidelidad a este anhelo”.
+
+El deterioro de la salud de Bruce Willis, quien fue diagnosticado con demencia frontotemporal (DFT), sigue conmoviendo a sus seguidores y al mundo del cine. En una reciente entrevista con Fox News Digital, su esposa, Emma Heming Willis, compartió detalles inéditos sobre los años previos al diagnóstico y reveló que un accidente durante el rodaje de la icónica película Duro de Matar (1988) podría haber desencadenado uno de los síntomas más tempranos e irreversibles de su enfermedad: la pérdida auditiva.
+
+Según relató Emma, Bruce no utilizó protección auditiva durante una escena en la que disparaba debajo de una mesa. Esa omisión le costó una severa pérdida de audición en uno de sus oídos, una lesión que lo acompañó desde entonces. “Eso le quitó gran parte de la audición. Y con el tiempo, todos empezamos a notar que no escuchaba bien. Al principio creí que era eso, que simplemente estaba envejeciendo”, rememoró la mujer.
+
+Durante años, tanto su familia como sus compañeros asumieron que su dificultad para seguir conversaciones o responder con fluidez se debía a ese accidente. Incluso sus hijas con Demi Moore, Rumer y Tallulah Willis, hicieron referencia pública a este problema auditivo, y atribuyeron muchas de sus desconexiones o respuestas lentas a las consecuencias del rodaje de Duro de Matar.
+
+“Comenzó con una especie de vaga falta de respuesta, que la familia atribuía a la pérdida de audición de Hollywood: ‘¡Habla más fuerte! ¡Duro de Matar le arruinó los oídos a papá!’”, recordó Tallulah en una entrevista con Vogue en 2023. Esto fue uno de los primeros signos de algo mucho más profundo.
+¿Cuáles fueron los primeros síntomas que presentó Bruce Willis?
+
+En su nuevo libro, Emma and Bruce Willis: The Unexpected Journey (Emma y Bruce Willis: El viaje inesperado), la esposa de la estrella de Hollywood narra cómo comenzó a notar cambios sutiles pero persistentes en la conducta de su esposo. La desconexión durante las reuniones familiares, la dificultad para entablar conversaciones naturales y la reaparición de su tartamudez, que había logrado controlar desde niño, fueron signos que la alarmaron.
+
+“Todo se sentía extraño. Nuestra relación ya no era la misma, nuestras charlas no fluían como antes”, escribió. Aunque en un principio pensó que era parte del proceso natural de envejecimiento, luego comprendió que algo más grave estaba ocurriendo. También reconoció que desconocía que la falta de empatía podía ser uno de los primeros síntomas de la DFT, una forma poco común de demencia que afecta principalmente a personas jóvenes y que, en el caso de Willis, fue confirmada un año después de que se le diagnosticara afasia.
+
+Desde que la familia comunicó públicamente el estado de salud del actor en 2022, Emma Heming asumió un rol activo como cuidadora y vocera sobre la demencia frontotemporal a nivel mundial. Su testimonio no solo busca sensibilizar sobre la enfermedad, sino también destacar lo importante que es prestar atención a los primeros síntomas, incluso cuando parecen insignificantes o se confunden con otras condiciones. La detección temprana es una de las principales claves para que tanto la familia como el paciente puedan encarar una nueva forma de vivir del individuo. “Si hubiese sabido lo que era la DFT, habría actuado diferente. Pero nadie te prepara para esto”, subrayó la mujer.
+
+Semanas atrás se supo que el actor fue trasladado a un hogar de cuidados especiales con atención médica las 24 horas. “Es una de las decisiones más difíciles que tuve que tomar, pero sabía que Bruce habría querido eso para nuestras hijas por encima de cualquier cosa”, dijo Heming durante una entrevista con ABC News también con motivo de la presentación de su libro. De esta manera, buscó preservar un ambiente emocional más saludable para sus niñas en común, Mabel (13) y Evelyn (11), quienes lo visitan todas las semanas, al igual que sus hijas mayores -fruto de su matrimonio con Demi Moore- y su círculo más íntimo. 
+
+Cruce en Diputados: el encendido discurso de Nicolás Massot en defensa de Palestina que provocó la respuesta de Sabrina Ajmechet
+El legislador de Encuentro Federal cuestionó a los principales mandatarios de Israel y los acusó de “genocidio”; la diputada de Pro consideró que el estado israelí defiende a Occidente del advenimiento de las corrientes teocráticas totalitarias y ortodoxas
+
+Durante la tarde del miércoles, en medio del acalorado debate en la Cámara de Diputados, se vivió un tenso momento cuando el diputado Nicolás Massot (Encuentro Federal) y su par Sabrina Ajmechet (Pro) se cruzaron por la guerra en Medio Oriente, luego de que el legislador realizara un encendido discurso. Con fuertes críticas al gobierno israelí, en las que calificó al primer ministro Benjamín Netanyahu de “genocida”, cuestionó la decisión del canciller Gerardo Werthein de votar en contra de la creación del estado palestino en una reciente reunión de la Organización de las Naciones Unidas (ONU) y reclamó por las muertes de civiles en Gaza.
+
+Eran las 18 y la Cámara baja ya había rechazado el veto de Milei a la ley de Financiamiento Universitario, cuando Martín Menem (titular de Diputados) le cedió la palabra a Massot, tras un pedido por una cuestión de privilegio.
+
+El reclamo de Massot giró en torno al cambio en la postura histórica de la Argentina sobre la creación de dos estados: el palestino y el israelí. En Nueva York, hace seis días, Werthein votó en contra de una resolución de la Asamblea General ONU que impulsaba la formación de Palestina, pero además, obligaba al desarme de la organización terrorista Hamas. “Hubiera honrado esa declaración la historia del país”, reclamó el diputado.
+
+“Es una declaración apoyada por la comunidad internacional, muy justa y certera. Inequívoca, que condena a Hamas como organización, específicamente a los atentados de octubre, pidiendo y exigiendo la liberación de todos los rehenes. La exclusión fehaciente como un actor de un proceso de paz (...) fuerza a que Hamas entregue las armas y el poder a la Autoridad Palestina”, ponderó Massot y agregó: “Milei y Werthein confunden su propia agenda personal con la del Estado argentino“.
+
+“No ponemos el énfasis en el Estado ni en el pueblo de Israel, sino en el gobierno llevado adelante por criminales de guerra y genocidas supremacistas, que tienen más que ver con Joseph Goebbels que con Itzjak Rabin. Y esta resolución exige el abandono de Gaza y de la permanente instalación de asentamientos en Cisjordania, que diluyen la solución de dos estados”, apuntó el diputado.
+
+Fue entonces cuando pidió la condena de Hamas y la inmediata liberación de los rehenes También, reclamó por “el desagravio a la nación amiga de Qatar, que hizo mucho para que muchos rehenes hoy estén liberados. Pero el genocida de Netanyahu no tuvo mejor idea que, violando códigos de guerra como lo hace permanentemente, atacar a una nación que ha colaborado con un fin de toda la humanidad”.
+
+Y continuó: “Es un fin de toda la humanidad terminar con un genocidio que está perpetrando la muerte indiscriminada de niños, niñas, periodistas... Hace mucho tiempo no se ve un conflicto tan sanguinario donde mueran tantos periodistas. Un país que se ufana de tener la tecnología para perpetrar ataques minuciosos se equivoca en bombardear escuelas, hospitales, en asesinar indiscriminadamente inocentes, en matar a la marchanta a civiles en medio de la entrega de alimentos (...) lo único que buscan es conquistar territorio y limpiar etnias".
+
+Por último, el legislador cerró: “Tenemos que estar, como nación y todos los partidos políticos unidos, enfrente de esa barbaridad. Con el pueblo de Israel, con el Estado de Israel, pero enfrente de genocidas como Netanyahu, [Bezalel] Smotrich -ministro de Finanzas- y [Itamar] Ben Gvir -ministro de Seguridad Nacional-”.
+
+Las palabras de Massot encendieron a varios de los presentes, que respondieron tanto con aplausos por un lado, y con abucheos, por otro. Sin embargo, en medio de su discurso, mencionó a Ajmechet, por lo que, una vez finalizada su moción de privilegio, Menem le concedió la palabra a la diputada aludida, que respondió con contundencia.
+
+“Desde el 7 de octubre de 2023, Israel está viviendo una situación de guerra en la que ciudadanos israelíes jóvenes que bailaban por la paz fueron asesinados por un grupo terrorista. Un grupo que fue financiado por Qatar”, cuestionó, en alusión a lo expresado por Massot. “Digamos las cosas por su nombre, si no estamos lavándole la cara a aquellos que usan el petróleo de Medio Oriente para asesinar judíos y terminar con los valores liberales de Occidente”, esgrimió.
+
+
+"Hoy la guerra la está dando Israel y sus soldados, pero nos están defendiendo a todos nosotros. Está en juego una forma fanática de vida que no me dejaría a mí andar por la calle con el pelo como lo tengo acá; vestirme como estoy vestida; que no me daría la libertad de expresarme como en este momento”, continuó.
+
+“Tenemos la suerte de vivir en una democracia, y hoy Israel, que es la única democracia de Medio Oriente, está funcionando como una trinchera, frente al terrorismo que no solo quiere hacer desaparece a Israel, sino terminar con la forma de vida occidental. No hablo de los judíos, sino de aquellos que deciden vivir bajo las costumbres judeocristianas de la libertad y aquellos hermanos musulmanes que trabajan por la paz y que viven el pluralismo”, explicó Ajmechet, antes de criticar la comparación que hizo Massot de Netanyahu con Goebbels.
+
+“Es un error absoluto la comparación que hizo el diputado preopinante. No se puede decir que un político elegido democráticamente es igual a Goebbels, por más que no nos guste. No se puede comparar a un político elegido con uno de los máximos jerarcas del nazismo, que se ocupó de exterminar a 6.000.000 de judíos y a tantas más personas en el siglo XX”, subrayó la diputada de Pro.
+
+Y terminó: “Dejen de mentir. Acá no hay un país que quiera asesinar a un pueblo palestino. Lo que quiere hacer es evitar que se siga asesinando a su población. Entreguen a los secuestrados. Y esto se termina”.
+
+Bajaron los bonos, cayeron las acciones, el dólar oficial volvió al techo de la banda y las cotizaciones financieras superaron los $1500
+Los títulos argentinos recortaron hasta 13% y el riesgo país superó los 1400 puntos básicos; el tipo de cambio minorista se consiguió a $1500 en varios bancos privados 
+
+Fue un jueves negro para el mercado argentino. Mientras que el dólar oficial fue intervenido por el Banco Central en US$379 millones, el resto de las cotizaciones tendieron al alza y rompieron la barrera de los $1500. Con el ruido político de fondo, entre vetos que no prosperan en el Congreso, movilizaciones en la calle y toda la expectativa que se genera en torno a las elecciones legislativas de octubre, las acciones y los bonos siguieron en caída libre, mientras que el riesgo país superó la barrera de los 1400 puntos básicos.
+
+A poco más de un mes de los comicios de octubre, la mirada de los inversores está puesta en el tipo de cambio oficial mayorista y cuántos dólares tendrá que vender el Banco Central para poder defender el esquema cambiario. Ayer, el primer día en que se puso a prueba el poder de fuego de la autoridad monetaria, tuvo que deshacerse de US$53 millones. Hoy, la sangría fue de US$379 millones, siete veces más. 
+
+Este jueves, la cotización mayorista llegó a tocar al mediodía los $1476, equivalente a una suba diaria de $2 (+0,1%). Como las bandas cambiarias ajustan diariamente a un ritmo del 1% mensual, actualmente se contempla un piso a $948,76 y un techo a $1474,83, información que empezó a reportar diariamente el Banco Central. Esto hizo que se vuelva a activar el mecanismo de ventas del BCRA. Finalmente, el mayorista cerró a $1474,23.
+
+“El BCRA tiene para vender US$14.000 millones del FMI y faltan 26 días hábiles hasta las elecciones de octubre. En la previa, se va a ir secando el mercado, más si se descuenta que no se mantienen las bandas poselecciones”, dijo Fernando Marull, economista de FMyA.
+Al ver lo que sucedió en el mercado minorista, el dólar oficial se consiguió a $1495 en el homebanking del Banco Nación, una suba de $10 frente al cierre anterior (+0,7%). Si se le agrega el 30% de Ganancias para las compras o viajes que se hacen al exterior, el dólar tarjeta alcanzó los $1943,50.
+
+En otras entidades financieras, incluso se rompió la barrera de los $1500. Fue el caso del ICBC y Brubank, donde alcanzó los $1505; también se vendió a $1500 en Banco Macro, Santander, Hipotecario, BBVA y Galicia, de acuerdo con el relevamiento diario que hace el Banco Central (BCRA), con cierre de ventanilla a las 15 horas. El precio promedio del mercado fue de $1509,37.
+“Los mercados continúan asimilando el resultado electoral de la provincia de Buenos Aires. La reacción inicial subestimó lo que consideramos un resultado negativo para La Libertad Avanza, pero la reciente toma de ganancias refleja que los factores de contención inicial se están diluyendo”, dijeron desde el equipo de Research de Adcap Grupo Financiero.
+
+En primer lugar, según explicaron, la oferta de divisas de los agroexportadores empieza a menguar y esto reafirma que las ventas recientes fueron un efecto transitorio. Segundo, también se desvanecen las expectativas de un mejor resultado de cara a octubre. Si bien desde la sociedad de bolsa esperan que el Gobierno se asegure un tercio de la Cámara Baja, para defender decretos y vetos, hoy el mercado entró de lleno en la dinámica electoral. 
+
+Los tipos de cambio financieros tendieron fuertemente al alza y marcaron un nuevo récord nominal, ya que las intervenciones que hace el Gobierno no aplican a este mercado. El dólar MEP cerró en las pantallas del mercado de capitales a $1536,50, equivalente a una suba de $50 (+3,4%). El contado con liquidación (CCL), usado por las empresas para girar dólares al exterior, trepó $64,25 y alcanzó los $1564,10 (+4,3%). De esta manera, volvió la brecha con el mayorista, con una distancia del 6,1% frente al contado con liqui.
+
+Por fuera de las pantallas, en la informalidad de las cuevas que operan en la City porteña, el dólar blue escaló $20 y se negoció a $1510 (+1,4%). Se trató del valor nominal más alto del que se tenga registro, ya que supera los $1500 de julio del año pasado. 
+
+“El Gobierno viene con una muy mala racha, entre el mal desempeño de las elecciones en Buenos Aires y frenos puestos por el Congreso, además de errores no forzados como el desarme de LEFI. Lo político agregó presión cambiaria y sangría de divisas por parte del Tesoro primero, y ahora por parte de BCRA, incrementando las dudas sobre la sostenibilidad del esquema cambiario dada la dificultad de acumular reservas, lo que termina poniendo más presión a los activos locales", dijo Andrés Reschini, titular de F2 Soluciones Financieras.
+
+Para el analista, en las próximas semanas habrá que ver qué sucede con las votaciones en el Congreso. También el resultado de las elecciones de octubre y cómo el Gobierno “se las arregla para darle tranquilidad a los bonistas, si hay o no cambios en el esquema cambiario”. 
+
+Bonos y acciones en rojo
+
+Luego de que Diputados rechazara el veto presidencial para el financiamiento universitario y del Hospital Garrahan, en el mercado volvieron a aparecer dudas sobre cómo mantendrá el Gobierno el superávit fiscal y cómo conseguirá el apoyo necesario para llevar adelante algunas reformas. Con el Banco Central sosteniendo el techo de la banda, con la pérdida de reservas que esto implica, también se abrieron interrogantes sobre la capacidad de pago de los compromisos de deuda que tiene de cara a 2026.
+
+Ante todo ese detrás de escena, hoy los bonos soberanos volvieron a transitar la rueda en terreno negativo. Los Bonares cayeron 13,19% para el título con vencimiento a 2038 (AE38D) y los Globales lo hicieron hasta 10,87%, como es el caso del título que vence en 2041 (GD41D). 
+Esto tuvo su impacto directo en el riesgo país, que se ubicó en 1444 puntos básicos, el valor más alto desde septiembre de 2024. Solo en esta rueda, se disparó 198 unidades (+15,89%), y complica los planes del Gobierno de poder refinanciar la deuda en el mercado internacional.
+
+“El sell-off que atraviesa el mercado de deuda soberana local creemos que es la respuesta del mercado a un desgaste político que enfrenta el Gobierno, con derrotas legislativas que se acumulan y un frente cambiario bajo presión. El tipo de cambio, al rozar la banda, forzó una intervención oficial que solo sumó incertidumbre al clima económico. Con este telón de fondo, los 38 días que restan hasta las elecciones de octubre aparecen cargados de tensión y volatilidad: es allí donde el oficialismo intentará recuperar oxígeno político para encarar con algo más de solidez la segunda parte de su mandato", dijo Gustavo Araujo, head of research de Criteria.
+
+La sangría también se observó en la Bolsa porteña, que en lo que va del año perdió casi un 50% de su valor en dólares. Este jueves, el índice accionario S&P Merval retrocedió 4,9% y cotizó en 1.695.529 unidades, equivalentes a US$1084 (-8,8%).
+
+Al analizar lo que sucedió en el panel principal, conformado por las empresas con mayor volumen del mercado, las bajas más marcadas del día fueron para Transener (-11%), Transportadora de Gas del Norte (-10,8%), Metrogas (-9,7%), BYMA (-8,8%) y Sociedad Comercial del Plata (-8,2%).
+
+“A medida que crecen las dudas en torno a las elecciones de medio término de octubre y el nivel de apoyo que tendrá el gobierno, los bonos y las acciones caen con fuerza, la presión sobre el dólar aumenta y el Banco Central comienza a perder reservas para defender la banda superior. Esta dinámica aumenta la incertidumbre sobre la sostenibilidad del esquema cambiario y la capacidad de pago del soberano", sumaron los analistas de ConoSur Inversiones.
+
+Lo mismo sucedió con las acciones argentinas que cotizan en la Bolsa de Nueva York, también conocidas como ADR. Los papeles de Edenor se hundieron 8,5%, seguidos por los de Transportadora de Gas del Sur (-8,1%), Banco Supervielle (-7,6%) e YPF (-6,9%).

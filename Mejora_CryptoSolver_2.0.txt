@@ -1,0 +1,27 @@
+Documentación: Mejoras Planificadas para CryptoSolver v2.0
+
+Visión General
+
+La versión 2.0 del CryptoSolver introducirá dos mejoras fundamentales para aumentar su adaptabilidad y potencia, permitiendo resolver una gama aún más amplia de criptogramas y ofreciendo un mayor control al usuario.
+
+Mejora 1: Solver de "Lenguaje Vivo"
+
+    Descripción: Se implementará un sistema donde el diccionario maestro de palabras válidas no será estático. Se nutrirá y expandirá automáticamente con todas las palabras únicas encontradas en el corpus de frecuencia (novelas, noticias, subtítulos, etc.).
+
+    Beneficio: El solver será capaz de entender y resolver criptogramas que contengan lenguaje moderno, jergas, neologismos o "lunfardos" que no se encuentran en los diccionarios académicos estándar. El sistema "aprenderá" el lenguaje real a partir de los textos proporcionados.
+
+    Implementación Propuesta: Modificar el script solver_utils.py para que el conjunto master_words se popule primero desde el corpus.txt y luego se actualice con todas las palabras nuevas encontradas en frecuencia_corpus.txt.
+
+Mejora 2: Búsqueda en Haz (Exploración de "Universos Alternativos")
+
+    Descripción: Se reemplazará el algoritmo de backtracking de "profundidad primero" por una estrategia de Búsqueda en Haz (Beam Search). En lugar de comprometerse con un único camino de solución, el solver mantendrá y explorará en paralelo un número configurable de los N caminos más prometedores.
+
+    Beneficio: Supera el problema de la "tiranía de la primera decisión". Evita que el solver se quede atascado en un "universo alternativo" incorrecto pero estadísticamente atractivo (ej: el caso VANIDAD vs. CALIDAD). Esto permitirá resolver puzzles extremadamente ambiguos o complejos donde la palabra más frecuente no es necesariamente la correcta.
+
+    Implementación Propuesta: Refactorizar el método _backtrack para que, en lugar de una única llamada recursiva, gestione una lista ("haz") de los N mejores mapeos parciales, expandiéndolos y podándolos en cada nivel de la búsqueda.
+
+Característica de Frontend: Selector de Modo de Solver
+
+    Descripción: Se añadirá un componente en la interfaz de usuario (ej: un interruptor o selector) que permita al usuario elegir entre el "Solver v1.0 (Clásico)" y el "Solver v2.0 (Moderno)".
+
+    Beneficio: Ofrece una experiencia personalizada. Un usuario que intente resolver una cita de un texto antiguo podría preferir la precisión del diccionario clásico, mientras que alguien que resuelva un mensaje moderno se beneficiaría de la flexibilidad del solver de "lenguaje vivo".
