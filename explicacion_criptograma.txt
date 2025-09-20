@@ -91,16 +91,36 @@ http://localhost:8080/api/solve
 
 -------------------------------------------------------------------------------------
 
-3. Criptograma Complejo (Sin pistas)
+Suite de Pruebas de Corroboración Final (v1.0)
 
-Frase: "La calidad nunca es un accidente, siempre es el resultado de un esfuerzo inteligente."
+1. El Desafío del Pensador (Frase Larga y Natural) 🧠
 
-curl -X POST -H "Content-Type: application/json" -d '{
-    "user_id": "test_user_04",
-    "cryptogram": "1-2 3-2-1-4-5-2-5 6-7-6-3-2 8-9 7-6 2-3-3-4-5-8-6-10-8 9-4-8-11-12-13-8 8-9 8-1 13-8-9-7-1-10-2-5-14 5-8 7-6 8-9-15-7-8-13-16-14 4-6-10-8-1-4-17-8-6-10-8",
+    Objetivo: Probar el rendimiento en una frase larga y natural, donde el "juez" de n-gramas es crucial para elegir la combinación de palabras más coherente.
+
+    Frase Original: "La vida es aquello que te va sucediendo mientras estás ocupado haciendo otros planes." (Atribuida a John Lennon)
+
+~curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "test_user",
+    "cryptogram": "1-2 3-4-5-2 6-7 2-8-9-6-1-1-10 8-9-6 11-6 3-2 7-9-12-6-5-4-6-13-5-10 14-4-6-13-11-15-2-7 6-7-11-2-7 10-12-9-16-2-5-10 17-2-12-4-6-13-5-10 10-11-15-10-7 16-1-2-13-6-7",
     "clues": {
-        "8": "e",
-        "2": "a"
+        "9": "u",
+        "8": "q",
+        "6": "e"
     }
-}' http://localhost:8080/api/solve
-{"error": "No se pudo encontrar una soluci\u00f3n."}
+}' \
+http://localhost:8080/api/solve
+{"solution": "LA VIDA ES AQUELLO QUE TE VA SUCEDIENDO MIENTRAS ESTAS OCUPADO HACIENDO OTROS PLANES", "mapping": {"9": "U", "8": "Q", "6": "E", "7": "S", "12": "~
+
+------------------------------------------------------------------------------------------------
+
+2. El Desafío del Proverbio (Rápido y Simple) ✅
+
+    Objetivo: Asegurarse de que el solver resuelve un problema simple y común de forma casi instantánea, sin necesidad de pistas. Es una prueba de "salud" general.
+
+    Frase Original: "El saber no ocupa lugar."
+
+    
+
+

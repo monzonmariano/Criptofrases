@@ -91,7 +91,7 @@ Después de realizar tu análisis completo, proporciona **ÚNICAMENTE la frase d
 
 # Las funciones find_author y generate_cryptogram no necesitan cambios y usan el modelo Flash más rápido
 async def find_author(phrase: str):
-    full_prompt = f"¿Quién es el autor de la frase: '{phrase}'? Responde solo con el nombre."
+    full_prompt = f"¿Quién es el autor de la frase: '{phrase}'? Responde solo con el nombre completo."
     generation_config = {"temperature": 0.1, "maxOutputTokens": 256}
     safety_settings = [{"category": c, "threshold": "BLOCK_NONE"} for c in ["HARM_CATEGORY_HARASSMENT", "HARM_CATEGORY_HATE_SPEECH", "HARM_CATEGORY_SEXUALLY_EXPLICIT", "HARM_CATEGORY_DANGEROUS_CONTENT"]]
     payload = {"contents": [{"parts": [{"text": full_prompt}]}], "generationConfig": generation_config, "safetySettings": safety_settings}
