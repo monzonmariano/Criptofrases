@@ -1,45 +1,94 @@
-#-------------------- Archivo: crypto_generator.py ------------------------------
-#-------------------- Genera los criptogramas ---------------------------------
-#-------------------- Delega la persistencia a los gestores --------------------
+# backend/services/crypto_generator.py (Versión 3.0 con Pistas Aleatorias)
 
-# backend/services/crypto_generator.py
-from backend.logger_config import log
+import logging
+import unidecode
+import random # <--- 1. Importamos la librería random
 from . import gemini
 from backend.core import database_manager
+from backend.logger_config import log
+
+def _create_cryptogram_from_text(text: str):
+    """
+    Convierte un texto en un criptograma, su mapeo de solución completo,
+    y un conjunto aleatorio de pistas.
+    """
+    normalized_text = unidecode.unidecode(text.upper())
+    words = normalized_text.split()
+    
+    mapping = {}
+    char_counter = 1
+    crypted_words = []
+    
+    for word in words:
+        crypted_word = []
+        for char in word:
+            if not char.isalpha():
+                continue
+            if char not in mapping:
+                mapping[char] = str(char_counter)
+                char_counter += 1
+            crypted_word.append(mapping[char])
+        crypted_words.append("-".join(crypted_word))
+    
+    cryptogram_str = " ".join(crypted_words)
+    solution_mapping = {v: k for k, v in mapping.items()}
+    
+    # --- 2. Lógica para Pistas Aleatorias ---
+    clues = {}
+    # Decidimos una cantidad aleatoria de pistas (entre 1 y 3, por ejemplo)
+    # Nos aseguramos de no pedir más pistas que las letras disponibles
+    if len(solution_mapping) > 3:
+        num_clues = random.randint(1, 3)
+        # Elegimos al azar algunos números del mapa de la solución para dar como pista
+        clue_keys = random.sample(list(solution_mapping.keys()), num_clues)
+        for key in clue_keys:
+            clues[key] = solution_mapping[key].lower()
+
+    # Devolvemos los tres resultados
+    return cryptogram_str, solution_mapping, clues
 
 async def generate_and_save(data: dict):
     """
-    Genera un criptograma usando la API de Gemini y guarda el resultado.
+    Servicio orquestador:
+    1. Pide una frase a Gemini según un tema.
+    2. Convierte esa frase en un criptograma localmente, generando pistas.
     """
-    try:
-        phrase = data.get('phrase')
-        user_id = data.get('user_id')
-        
-        if not phrase or not user_id:
-            return {"error": "Phrase and User ID are required."}, 400
-        
-        # 1. Llama a la lógica real de la API de Gemini
-        cryptogram, status = await gemini.generate_cryptogram(phrase)
+    user_id = data.get('user_id')
+    theme = data.get('theme', 'sabiduría')
     
-        if status != 200:
-            log.error(f"Error de la API de Gemini: {cryptogram}")
-            return cryptogram, status
+    if not user_id:
+        return {"error": "user_id es requerido."}, 400
 
-        # 2. Prepara los datos para PostgreSQL
-        entry_data = {
-            'content': phrase,
-            'result': cryptogram,
-            'author': None,
-            'is_cryptogram': True,
-            'user_id': user_id,
-        }
-        
-        # 3. Guarda en PostgreSQL
-        database_manager.create_new_entry(entry_data)
-        
-        # 4. Devuelve la respuesta final
-        return {"cryptogram": cryptogram}, 200
-            
-    except Exception as e:
-        log.exception("Error al generar y guardar el criptograma.")
-        return {"error": "An unexpected error occurred."}, 500
+    log.info(f"Servicio crypto_generator: Petición para generar frase del tema '{theme}' para el usuario {user_id}")
+
+    original_phrase, status = await gemini.generate_phrase_by_theme(theme)
+    if status != 200:
+        log.warning(f"No se pudo obtener la frase de Gemini. Razón: {original_phrase}")
+        return {"error": original_phrase}, status
+
+    log.info(f"Frase obtenida de Gemini: '{original_phrase}'")
+
+    # --- 3. Obtenemos los 3 valores de nuestra función mejorada ---
+    new_cryptogram, solution_mapping, random_clues = _create_cryptogram_from_text(original_phrase)
+    log.info(f"Criptograma generado localmente: {new_cryptogram}")
+    log.info(f"Pistas generadas: {random_clues}")
+
+    db_data = {
+        'user_id': user_id,
+        'content': original_phrase,
+        'is_cryptogram': True,
+        'result': new_cryptogram,
+        'author': "Generado por IA"
+    }
+    database_manager.create_new_entry(db_data)
+    
+    # --- 4. Añadimos las pistas a la respuesta ---
+    response_data = {
+        "theme": theme,
+        "original_phrase": original_phrase,
+        "cryptogram": new_cryptogram,
+        "clues": random_clues, # <--- La nueva información
+        "solution_key": solution_mapping
+    }
+    
+    return response_data, 200

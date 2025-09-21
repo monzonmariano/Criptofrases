@@ -1,64 +1,57 @@
 #-------------------- Archivo: "database_manager.py" -----------------------
 #-------------------- Este archivo es el Gestionador de Base de Datos ----------------------------
 #-------------------- Llama a los archivos create.py update.py y delete.py -------------------------
-from .crud import create, read, update, delete
+# backend/core/database_manager.py (Versión Final Corregida)
+
+from backend.core.crud import create, read, delete, update
 from backend.logger_config import log
 
+# --- CREATE ---
 def create_new_entry(data):
     """
-    Crea una nueva entrada en la base de datos.
+    Gestor para crear una nueva entrada en la base de datos.
+    Delega la lógica a la capa CRUD.
     """
     try:
-        entry_id = create.create_entry(data)
-        if entry_id:
-            log.info(f"Entrada creada exitosamente con ID: {entry_id}")
-            return entry_id
-        else:
-            log.error("No se pudo crear la entrada.")
-            return None
+        return create.create_entry(data)
     except Exception as e:
         log.error(f"Error en el gestor al crear la entrada: {e}")
         return None
 
+# --- READ ---
 def get_user_history(user_id):
     """
-    Obtiene todo el historial de un usuario desde la base de datos.
+    Gestor para obtener todas las entradas de un usuario.
+    Delega la lógica a la capa CRUD.
     """
     try:
-        entries = read.get_entries_by_user(user_id)
-        return entries
+        return read.get_entries_by_user(user_id)
     except Exception as e:
-        log.error(f"Error en el gestor al obtener el historial para el usuario {user_id}: {e}")
+        log.error(f"Error en el gestor al leer el historial: {e}")
         return []
 
+# --- DELETE (UNA ENTRADA) ---
 def delete_existing_entry(entry_id, user_id):
     """
-    Elimina una entrada de la base de datos por su ID y usuario.
+    Gestor para eliminar una entrada específica de un usuario.
+    Delega la lógica a la capa CRUD.
     """
     try:
-        success = delete.delete_entry(entry_id, user_id)
-        if success:
-            log.info(f"Entrada con ID {entry_id} eliminada para el usuario {user_id}.")
-            return True
-        else:
-            log.warning(f"Fallo al eliminar la entrada con ID {entry_id} para el usuario {user_id}.")
-            return False
+        return delete.delete_entry(entry_id, user_id)
     except Exception as e:
         log.error(f"Error en el gestor al eliminar la entrada: {e}")
         return False
 
-def clear_all_user_entries(user_id):
+# --- DELETE (TODAS LAS ENTRADAS) ---
+def clear_all_entries(user_id):
     """
-    Elimina todas las entradas de un usuario de la base de datos.
+    Gestor para borrar todas las entradas de un usuario.
+    Delega la lógica a la capa CRUD.
     """
     try:
-        success = delete.delete_entry(user_id)
-        if success:
-            log.info(f"Todas las entradas para el usuario {user_id} han sido eliminadas.")
-            return True
-        else:
-            log.warning(f"Fallo al borrar todas las entradas para el usuario {user_id}.")
-            return False
+        # ¡AQUÍ ESTÁ LA CORRECCIÓN!
+        # Llamamos a la función correcta para borrar todo el historial.
+        return delete.delete_all_user_entries(user_id)
     except Exception as e:
         log.error(f"Error en el gestor al borrar todas las entradas: {e}")
         return False

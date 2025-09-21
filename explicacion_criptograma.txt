@@ -115,12 +115,3 @@ http://localhost:8080/api/solve
 
 ------------------------------------------------------------------------------------------------
 
-2. El Desafío del Proverbio (Rápido y Simple) ✅
-
-    Objetivo: Asegurarse de que el solver resuelve un problema simple y común de forma casi instantánea, sin necesidad de pistas. Es una prueba de "salud" general.
-
-    Frase Original: "El saber no ocupa lugar."
-
-    
-
-

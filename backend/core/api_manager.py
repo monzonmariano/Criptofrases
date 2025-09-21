@@ -44,7 +44,7 @@ async def get_history_by_user(user_id):
         return {'error': 'Failed to retrieve history.'}, 500
 
 async def clear_user_history(user_id):
-    if database_manager.clear_all_user_entries(user_id):
+    if database_manager.clear_all_entries(user_id):
         return {'message': 'History cleared successfully.'}, 200
     else:
         return {'error': 'Failed to clear history.'}, 500

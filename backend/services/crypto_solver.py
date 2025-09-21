@@ -163,6 +163,9 @@ class _BacktrackingSolver:
 solver_instance = _BacktrackingSolver()
 
 async def solve_and_save(data: dict):
+    """
+    Función de servicio asíncrona. Orquesta la resolución y el guardado en BD.
+    """
     user_id = data.get('user_id')
     cryptogram_str = data.get('cryptogram', '')
     clues = data.get('clues', {})
@@ -178,18 +181,30 @@ async def solve_and_save(data: dict):
     logging.info(f"Servicio crypto_solver: Intentando resolver para el usuario {user_id}")
     solutions_list = solver_instance.solve(cryptogram_words, clues)
     
+    db_data = {
+        'content': cryptogram_str,
+        'result': 'NO-SOLUTION',
+        'author': None,
+        'is_cryptogram': True,
+        'user_id': user_id
+    }
+    
     if solutions_list:
         best_mapping = solutions_list[0]
         solved_words = ["".join([best_mapping.get(num, '?') for num in word_nums]) for word_nums in cryptogram_words]
         final_solution_str = " ".join(solved_words)
+        
+        db_data['result'] = final_solution_str
         logging.info(f"Servicio crypto_solver: Solución encontrada: {final_solution_str}")
         
-        # En el futuro, podríamos devolver la lista completa
         response_data = {"solution": final_solution_str, "mapping": best_mapping}
         status = 200
     else:
         logging.warning(f"Servicio crypto_solver: No se encontró solución para el usuario {user_id}")
         response_data = {"error": "No se pudo encontrar una solución."}
         status = 404
+
+    # Aquí es donde se conecta con la base de datos
+    database_manager.create_new_entry(db_data)
     
     return response_data, status

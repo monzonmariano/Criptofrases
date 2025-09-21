@@ -1,0 +1,121 @@
+Suite de Pruebas Final para la Versión 1.0
+
+Ejecuta estos comandos en orden desde tu terminal.
+
+Paso 1: Generar un Nuevo Criptograma (/api/generate)
+
+    Objetivo: Probar el servicio de generación y crear nuestra primera entrada en la base de datos.
+
+Bash
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "v1_test_user",
+    "theme": "tecnologia"
+}' \
+http://localhost:8080/api/generate
+
+    Resultado Esperado: Un JSON con una frase sobre tecnología, su criptograma y algunas pistas. Guarda el cryptogram y las clues que recibas para el siguiente paso.
+
+Paso 2: Resolver el Criptograma Generado (/api/solve)
+
+    Objetivo: Probar el solver con los datos del paso anterior y crear una segunda entrada en la BD.
+
+    Acción: Copia el cryptogram y las clues de la respuesta anterior y pégalos en este comando.
+
+Bash
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "v1_test_user",
+    "cryptogram": "<PEGA_EL_CRIPTOGRAMA_AQUI>",
+    "clues": <PEGA_LAS_PISTAS_AQUI_EJ:{"12":"a"}>
+}' \
+http://localhost:8080/api/solve
+
+    Resultado Esperado: Un JSON con la solución correcta a la frase generada.
+
+Paso 3: Encontrar un Autor (/api/author)
+
+    Objetivo: Probar el último servicio de creación y generar una tercera entrada en la BD.
+
+Bash
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "v1_test_user",
+    "phrase": "La imaginacion es mas importante que el conocimiento."
+}' \
+http://localhost:8080/api/author
+
+    Resultado Esperado: Un JSON con el autor {"author": "Albert Einstein"}.
+
+Paso 4: Leer el Historial Completo (/api/history)
+
+    Objetivo: Probar que las tres operaciones anteriores se guardaron correctamente.
+
+Bash
+
+curl -X GET http://localhost:8080/api/history?user_id=v1_test_user
+
+    Resultado Esperado: Un JSON con una lista que contiene tres objetos: la generación, la resolución y la búsqueda de autor. Fíjate en el id de una de ellas para el siguiente paso.
+
+Paso 5: Borrar una Entrada Específica (/api/delete-entry)
+
+    Objetivo: Probar el borrado seguro de una sola entrada.
+
+    Acción: Elige un id del historial del paso anterior y ponlo en el comando.
+
+Bash
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "v1_test_user",
+    "entry_id": <ID_DE_LA_ENTRADA_A_BORRAR>
+}' \
+http://localhost:8080/api/delete-entry
+
+    Resultado Esperado: Un mensaje de éxito.
+
+Paso 6: Verificar el Borrado Parcial
+
+    Objetivo: Confirmar que la entrada del paso 5 realmente se ha eliminado.
+
+Bash
+
+curl -X GET http://localhost:8080/api/history?user_id=v1_test_user
+
+    Resultado Esperado: Un JSON con una lista que ahora solo contiene dos objetos.
+
+Paso 7: Limpiar Todo el Historial (/api/clear-history)
+
+    Objetivo: Probar la función de borrado completo para un usuario.
+
+Bash
+
+curl -X POST \
+-H "Content-Type: application/json" \
+-d '{
+    "user_id": "v1_test_user"
+}' \
+http://localhost:8080/api/clear-history
+
+    Resultado Esperado: Un mensaje de éxito indicando cuántas entradas se borraron.
+
+Paso 8: Verificación Final
+
+    Objetivo: Confirmar que el historial del usuario está vacío.
+
+Bash
+
+curl -X GET http://localhost:8080/api/history?user_id=v1_test_user
+
+    Resultado Esperado: Un JSON con una lista vacía [].
+
+Si todas estas pruebas se completan con éxito, puedes estar 100% seguro de que tu backend es robusto, seguro y funcional.
+
+

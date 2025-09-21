@@ -111,3 +111,30 @@ async def generate_cryptogram(original_text: str):
         return cryptogram.strip(), status
     except Exception as e:
         return {"error": str(e)}, 500
+    
+async def generate_phrase_by_theme(theme: str):
+    """
+    Usa la IA para generar una única frase o cita célebre sobre un tema específico.
+    """
+    prompt = f"""
+Actúa como un curador de sabiduría. Tu única tarea es proporcionar una única frase célebre o un proverbio inspirador sobre el siguiente tema: **{theme}**.
+
+**Instrucciones de Salida Obligatorias:**
+- Responde **ÚNICAMENTE con la frase**.
+- No incluyas el autor.
+- No incluyas comillas ni ningún otro texto explicativo.
+- La frase debe ser concisa, idealmente de entre 10 y 20 palabras.
+"""
+    safety_settings = [{"category": c, "threshold": "BLOCK_NONE"} for c in ["HARM_CATEGORY_HARASSMENT", "HARM_CATEGORY_HATE_SPEECH", "HARM_CATEGORY_SEXUALLY_EXPLICIT", "HARM_CATEGORY_DANGEROUS_CONTENT"]]
+    generation_config = {"temperature": 0.9, "maxOutputTokens": 256}
+    payload = { "contents": [{"parts": [{"text": prompt}]}], "generationConfig": generation_config, "safetySettings": safety_settings }
+    
+    try:
+        # Usamos el modelo Flash que es más rápido para esta tarea creativa simple
+        phrase, status = await _call_gemini_api_internal(payload, FLASH_API_URL)
+        # Limpiamos la respuesta para quitar comillas o espacios extra
+        cleaned_phrase = phrase.strip().strip('"')
+        return cleaned_phrase, status
+    except Exception as e:
+        log.error(f"Excepción en generate_phrase_by_theme: {e}")
+        return f"Error al procesar la solicitud: {e}", 500    

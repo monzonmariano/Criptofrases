@@ -6,11 +6,14 @@ from backend import api
 import debugpy
 
 async def start_server():
-    # --- INICIO DEL CÓDIGO DE DEPURACIÓN ---
-    debugpy.listen(("0.0.0.0", 5678))
-    log.info("✅ Depurador escuchando en el puerto 5678. Esperando conexión...")
-    debugpy.wait_for_client()
-    log.info("🔌 Depurador conectado.")
+    # --- INICIO DEL CÓDIGO DE DEPURACIÓN -------
+    
+    #---- Descomentar las siguientes 4 lineas de codigo para el modo depuracion ----
+    #debugpy.listen(("0.0.0.0", 5678))
+    #log.info("✅ Depurador escuchando en el puerto 5678. Esperando conexión...")
+    #debugpy.wait_for_client()
+    #log.info("🔌 Depurador conectado.")
+
     # --- FIN DEL CÓDIGO DE DEPURACIÓN ---
     try:
         app = web.Application()
