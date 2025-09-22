@@ -291,6 +291,4 @@ def _is_consistent(self, crypto_word, plain_word, mapping):
 
     Aquí, el uso de un set (conjunto) para used_letters es clave. Comprobar si un elemento está en un set (letter in used_letters) es una operación extremadamente rápida (O(1)), mucho más que buscar en una list. Es el equivalente directo a usar un HashSet en Java para comprobaciones de pertenencia rápidas.
 
-## Resumen y Siguiente Paso
 
-¡Felicidades! Ahora has recorrido todo el flujo de la aplicación, desde la infraestructura de Docker hasta las entrañas del algoritmo de backtracking. Entiendes las dos heurísticas clave que hacen que tu solver sea inteligente: atacar las palabras largas primero y probar los candidatos estadísticamente más probables primero.

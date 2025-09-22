@@ -31,8 +31,7 @@ async def generate_cryptogram(data):
     log.info("API Manager: Petición de generación recibida. Delegando a crypto_generator.")
     return await crypto_generator.generate_and_save(data)
 
-# --- El resto de tus funciones de api_manager se mantienen igual ---
-# ... (mantén aquí tus funciones get_history_by_user, clear_user_history, etc., tal como estaban)
+
 async def get_history_by_user(user_id):
     entries = database_manager.get_user_history(user_id)
     if entries is not None:

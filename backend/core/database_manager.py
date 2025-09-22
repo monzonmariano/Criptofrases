@@ -1,6 +1,6 @@
 #-------------------- Archivo: "database_manager.py" -----------------------
 #-------------------- Este archivo es el Gestionador de Base de Datos ----------------------------
-#-------------------- Llama a los archivos create.py update.py y delete.py -------------------------
+#-------------------- Llama a los archivos create.py update.py , read.py y delete.py -------------------------
 # backend/core/database_manager.py (Versión Final Corregida)
 
 from backend.core.crud import create, read, delete, update
