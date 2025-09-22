@@ -1,6 +1,6 @@
 # Documento 0: Introducción a los Criptogramas y Nuestro Solver
 
-¡Bienvenido al corazón de "Criptofrases & Autores"! Antes de sumergirnos en el código, es fundamental entender el desafío que nuestro backend está diseñado para conquistar: los criptogramas.
+¡Bienvenido al corazón de "Criptofrases"! Antes de sumergirnos en el código, es fundamental entender el desafío que nuestro backend está diseñado para conquistar: los criptogramas.
 
 ## Parte 1: ¿Qué es un Criptograma?
 

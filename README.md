@@ -1,4 +1,4 @@
-# Proyecto: Criptofrases & Autores v1.0
+# Proyecto: Criptofrases v1.0
 
 ¡Bienvenido a Criptofrases & Autores! Este es un proyecto full-stack diseñado no solo como una aplicación funcional para resolver y generar criptogramas, sino también como un recurso de aprendizaje de código abierto para desarrolladores.
 
