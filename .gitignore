@@ -4,3 +4,5 @@
 # Archivos de Python generados
 __pycache__/
 *.pyc
+
+/frontend/node_modules/
