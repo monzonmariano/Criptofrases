@@ -56,10 +56,15 @@ def get_entries_by_user(user_id):
         if conn is None:
             return []
         with conn.cursor() as cur:
-            cur.execute(
-                "SELECT id, content, result, author, is_cryptogram, timestamp, user_id FROM entries WHERE user_id = %s;",
-                (user_id,)
-            )
+            # 1. Nos aseguramos de pedir la columna 'timestamp'.
+            # 2. Ordenamos por 'timestamp DESC' para que las entradas más nuevas aparezcan primero.
+            query = """
+                SELECT id, content, result, author, is_cryptogram, timestamp, user_id 
+                FROM entries 
+                WHERE user_id = %s 
+                ORDER BY timestamp DESC;
+            """
+            cur.execute(query, (user_id,))
             entries = cur.fetchall()
         conn.close()
         return [{
@@ -68,7 +73,9 @@ def get_entries_by_user(user_id):
             'result': entry[2],
             'author': entry[3],
             'is_cryptogram': entry[4],
-            'timestamp': entry[5],
+            # 1. Verificamos si la fecha (entry[5]) existe.
+            # 2. Si existe, la convertimos a un string en formato ISO 8601.
+            'created_at': entry[5].isoformat() if entry[5] else None,
             'user_id': entry[6]
         } for entry in entries]
     except psycopg2.Error as e:

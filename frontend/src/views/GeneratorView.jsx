@@ -1,68 +1,45 @@
-// src/views/GeneratorView.jsx
-import React, { useState } from 'react';
-import { generateCryptogram } from '../services/apiClient';
+import React from 'react';
 
-function GeneratorView() {
-  const [theme, setTheme] = useState('filosofia'); // Tema por defecto
-  const [generatedData, setGeneratedData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-
-  const themes = ['filosofia', 'ciencia', 'arte', 'tecnologia', 'sabiduria', 'historia'];
-
-  const handleSubmit = async (e) => {
+function GeneratorView({ state, setState, onSubmit }) {
+  const themes = ['filosofia', 'ciencia', 'arte', 'tecnologia', 'sabiduria', 'historia', 'naturaleza', 'amor', 'amistad', 'motivacion', 'literatura', 'viajes'];
+  
+  const handleThemeChange = (e) => setState(prev => ({ ...prev, theme: e.target.value }));
+  const handleShowAnswer = () => setState(prev => ({ ...prev, isAnswerVisible: true }));
+  
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError('');
-    setGeneratedData(null);
-    try {
-      const response = await generateCryptogram(theme);
-      setGeneratedData(response.data);
-    } catch (err) {
-      setError(err.response?.data?.error || 'Ocurrió un error.');
-    } finally {
-      setIsLoading(false);
-    }
+    onSubmit();
   };
 
   return (
-    <div className="p-8 max-w-2xl mx-auto bg-gray-50 rounded-xl shadow-md">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Generador de Criptofrases</h1>
+    <div>
+      <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Generador de Criptofrases</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="theme-select" className="block text-gray-700 font-bold mb-2">
-            Elige un Tema
-          </label>
-          <select
-            id="theme-select"
-            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
-            value={theme}
-            onChange={(e) => setTheme(e.target.value)}
-          >
+          <label htmlFor="theme-select" className="block text-gray-300 font-bold mb-2">Elige un Tema</label>
+          <select id="theme-select" className="theme-select w-full p-3 border border-slate-600 bg-slate-800/50 text-white rounded-md focus:ring-2 focus:ring-blue-500" value={state.theme} onChange={handleThemeChange}>
             {themes.map(t => <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>)}
           </select>
         </div>
-        <button type="submit" disabled={isLoading} className="w-full px-6 py-3 bg-green-600 text-white font-bold rounded-md hover:bg-green-700 disabled:bg-green-300 transition-all">
-          {isLoading ? 'Generando...' : 'Generar Nuevo Criptograma'}
+        <button type="submit" disabled={state.isLoading} className="w-full px-6 py-3 bg-green-600 text-white font-bold rounded-md hover:bg-green-700 disabled:bg-green-300 transition-all">
+          {state.isLoading ? 'Generando...' : 'Generar Nuevo Criptograma'}
         </button>
       </form>
-
-      {/* Área de Resultados */}
       <div className="mt-8">
-        {error && <div className="p-4 bg-red-100 text-red-700 rounded-md">{error}</div>}
-        {generatedData && (
+        {state.error && <div className="p-4 bg-red-500/20 text-red-300 rounded-md">{state.error}</div>}
+        {state.generatedData && (
           <div className="space-y-4">
             <div>
-              <h3 className="font-bold text-gray-700">Frase Original:</h3>
-              <p className="p-2 bg-gray-100 rounded-md italic">"{generatedData.original_phrase}"</p>
+              <h3 className="font-bold text-gray-300">Frase Original:</h3>
+              {state.isAnswerVisible ? ( <p className="p-2 bg-slate-800/50 rounded-md italic">"{state.generatedData.original_phrase}"</p> ) : ( <button onClick={handleShowAnswer} className="w-full p-2 bg-yellow-500/20 text-yellow-300 rounded-md hover:bg-yellow-500/30">Mostrar Respuesta</button> )}
             </div>
             <div>
-              <h3 className="font-bold text-gray-700">Criptograma Generado:</h3>
-              <p className="p-2 bg-gray-100 rounded-md font-mono break-words">{generatedData.cryptogram}</p>
+              <h3 className="font-bold text-gray-300">Criptograma Generado:</h3>
+              <p className="p-4 bg-green-500/10 text-green-300 rounded-md font-mono break-words">{state.generatedData.cryptogram}</p>
             </div>
-             <div>
-              <h3 className="font-bold text-gray-700">Pistas:</h3>
-              <p className="p-2 bg-yellow-100 rounded-md font-mono">{JSON.stringify(generatedData.clues)}</p>
+            <div>
+              <h3 className="font-bold text-gray-300">Pistas:</h3>
+              <p className="p-4 bg-green-500/10 text-green-300 rounded-md font-mono">{JSON.stringify(state.generatedData.clues)}</p>
             </div>
           </div>
         )}

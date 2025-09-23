@@ -37,3 +37,23 @@ Para levantar el entorno de desarrollo, el primer paso es clonar el repositorio.
 ## 📄 Licencia
 
 Este proyecto está licenciado bajo la **GNU General Public License v3.0**. Esto asegura que el proyecto y cualquiera de sus derivados siempre permanecerán de código abierto.
+ 
+ '/music/dancing-saxophone-dark-jazz-388468.mp3',
+  '/music/free-jazz-404471.mp3',
+  '/music/jazz-397948.mp3',
+  '/music/jazz-background-music-338663.mp3',
+  '/music/jazz-background-music-379027.mp3',
+  '/music/jazz-lounge-elevator-music-322314.mp3',
+  '/music/jazz-lounge-elevator-music-332339.mp3',
+  '/music/jazz-lounge-elevator-music-403470.mp3',
+  'music/jazz-music-379565.mp3',
+  '/music/jazz-restaurant-cafe-music-407555.mp3',
+  '/music/lounge-jazz-elevator-music-324902.mp3',
+  '/music/lounge-jazz-elevator-music-342629.mp3',
+  '/music/romantic-jazz-374120.mp3',
+  '/music/romantic-jazz-404462.mp3',
+  '/music/romantic-jazz-mocha-midnight-360708.mp3',
+  '/music/romantic-love-jazz-348895.mp3',
+  '/music/romantic-saxophone-244539.mp3',
+  '/music/sax-and-guitar-duet-dark-jazz-387688.mp3',
+  '/music/the-jazz-cafe-404470.mp3'

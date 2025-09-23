@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* --- Animación de Marquee para la música --- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Aplicamos la animación */
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+
+/* --- Estilos personalizados para el slider de volumen --- */
+.volume-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1rem; /* 16px */
+  height: 1rem; /* 16px */
+  background-color: rgba(255, 255, 255, 0.7); /* Blanco semitransparente */
+  border-radius: 9999px; /* Círculo perfecto */
+  cursor: pointer;
+  margin-top: -4px; /* Ajuste vertical para centrarlo */
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 1rem;
+  height: 1rem;
+  background-color: rgba(255, 255, 255, 0.7);
+  border-radius: 9999px;
+  cursor: pointer;
+}

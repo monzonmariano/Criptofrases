@@ -25,3 +25,80 @@ Característica de Frontend: Selector de Modo de Solver
     Descripción: Se añadirá un componente en la interfaz de usuario (ej: un interruptor o selector) que permita al usuario elegir entre el "Solver v1.0 (Clásico)" y el "Solver v2.0 (Moderno)".
 
     Beneficio: Ofrece una experiencia personalizada. Un usuario que intente resolver una cita de un texto antiguo podría preferir la precisión del diccionario clásico, mientras que alguien que resuelva un mensaje moderno se beneficiaría de la flexibilidad del solver de "lenguaje vivo".
+
+
+    Otra mejora : 
+
+    Documento 9: Evolución del Corpus y Mantenimiento del Sistema
+
+Este documento describe una futura mejora estratégica para el proyecto: la creación de un sistema de retroalimentación automatizado que utiliza las frases generadas por la IA para enriquecer continuamente nuestro modelo estadístico de lenguaje español, mejorando así la precisión del crypto_solver.
+
+1. La Visión: Un Solver que Aprende
+
+El objetivo es transformar nuestro solver de un sistema estático a uno dinámico que se auto-mejora. Actualmente, nuestro corpus de frecuencia de palabras se genera una sola vez. La idea es "alimentar" este corpus de forma periódica con las frases de alta calidad generadas a través de la API de Gemini, manteniéndolo fresco, relevante y en constante crecimiento.
+
+Beneficios Clave:
+
+    Mejora Continua: A más frases generadas, más datos tiene el solver sobre el uso común del lenguaje, lo que aumenta su precisión.
+
+    Datos de Alta Calidad: Las frases de Gemini son gramaticalmente correctas y coherentes, lo que las hace perfectas para el análisis estadístico.
+
+    Proceso Automatizado: Una vez implementado, el sistema no requiere intervención manual, creando un ciclo de mejora virtuoso.
+
+2. La Arquitectura de la Solución
+
+La implementación se divide en tres pasos clave, diseñados para separar las responsabilidades y mantener el sistema robusto.
+
+Paso 2.1: Modificación del Backend (Almacenamiento)
+
+El primer paso es asegurar que las frases generadas se guarden en la base de datos, pero de una forma que las distinga de la actividad del historial del usuario.
+
+    Acción: Modificar el endpoint POST /api/generate.
+
+    Lógica:
+
+        Después de recibir la respuesta de la API de Gemini con la frase original, el backend la guardará en la base de datos.
+
+        Se recomienda crear una nueva tabla, por ejemplo generated_phrases, con columnas como id, phrase, theme, y created_at.
+
+        Importante: Esta operación es independiente de la tabla history. Esto cumple el requisito de que estas frases no deben aparecer en el historial del usuario, ya que sirven un propósito puramente interno del sistema.
+
+Paso 2.2: Creación de un Proceso Batch (El Alimentador)
+
+Se creará un script de Python independiente, por ejemplo update_corpus.py, que se ejecutará fuera del ciclo de la aplicación web. Este script será el corazón del sistema de retroalimentación.
+
+    Nombre del Script: update_corpus.py
+
+    Ubicación: En el directorio raíz del proyecto.
+
+    Pasos que ejecutará el script:
+
+        Conectar a la Base de Datos: Se conectará a la base de datos PostgreSQL.
+
+        Exportar Frases Nuevas: Seleccionará todas las frases de la tabla generated_phrases que no hayan sido procesadas aún (se puede usar una columna is_processed para marcar las que ya se usaron).
+
+        Alimentar el Corpus: Añadirá estas nuevas frases al final del archivo backend/data/corpus.txt.
+
+        Regenerar Estadísticas: Ejecutará la lógica que ya existe en backend/services/solver_utils.py para recalcular todos los archivos .json (unigramas, bigramas, trigramas) a partir del corpus.txt actualizado.
+
+        Marcar como Procesadas: Actualizará las filas en la tabla generated_phrases para marcarlas como is_processed = true, evitando que se procesen de nuevo en la siguiente ejecución.
+
+Paso 2.3: Automatización (El Piloto Automático)
+
+El último paso es hacer que este proceso se ejecute automáticamente sin intervención humana.
+
+    Herramienta: Un programador de tareas como Cron (en sistemas Linux/macOS) o el Programador de Tareas de Windows.
+
+    Configuración: Se crearía un cron job en el servidor donde se despliegue la aplicación.
+
+    Ejemplo de Cron Job (para ejecutar el script todos los domingos a las 3 AM):
+    Bash
+
+    0 3 * * 0 /usr/bin/python3 /ruta/a/tu/proyecto/update_corpus.py
+
+    Reinicio del Servicio: Después de que el script actualice los archivos .json, el servicio del backend debería reiniciarse para cargar los nuevos datos en memoria. Esto se puede lograr con un comando al final del script de Python o reiniciando el contenedor de Docker.
+
+3. Conclusión
+
+Esta implementación representa la siguiente etapa en la madurez del proyecto. Transforma una herramienta de alta calidad en un sistema inteligente y auto-suficiente, asegurando que su eficacia no solo se mantenga, sino que aumente con el tiempo y el uso. Es el paso perfecto para una versión 2.0.
+

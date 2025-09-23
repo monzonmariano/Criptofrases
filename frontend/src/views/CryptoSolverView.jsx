@@ -1,116 +1,84 @@
 // src/views/CryptoSolverView.jsx
-import React, { useState } from 'react';
-import { solveCryptogram } from '../services/apiClient';
+import React from 'react';
 
-function CryptoSolverView() {
-  // --- ESTADOS DEL COMPONENTE ---
-  const [cryptogram, setCryptogram] = useState('');
-  const [clues, setClues] = useState([{ num: '', letter: '' }]);
-  const [solutions, setSolutions] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [activeIndex, setActiveIndex] = useState(0); // NUEVO: El índice de la solución que estamos viendo
+function CryptoSolverView({ state, setState, onSubmit }) {
+  const handleCryptogramChange = (e) => setState(prev => ({ ...prev, cryptogram: e.target.value }));
 
-  // --- MANEJADORES DE EVENTOS ---
   const handleClueChange = (index, field, value) => {
-    const newClues = [...clues];
-    newClues[index][field] = value;
-    setClues(newClues);
-  };
-
-  const handleAddClue = () => {
-    setClues([...clues, { num: '', letter: '' }]);
-  };
-
-  const handleRemoveClue = (index) => {
-    const newClues = clues.filter((_, i) => i !== index);
-    setClues(newClues);
-  };
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setIsLoading(true);
-    setError('');
-    setSolutions([]);
-    setActiveIndex(0); // NUEVO: Reseteamos el índice en cada nueva búsqueda
-
-    const cluesObject = clues.reduce((acc, clue) => {
-      if (clue.num && clue.letter) {
-        acc[clue.num] = clue.letter;
+    const newClues = state.clues.map((clue, i) => {
+      // Si este es el elemento que queremos cambiar...
+      if (i === index) {
+        // ...devolvemos un objeto COMPLETAMENTE NUEVO con el valor actualizado.
+        return { ...clue, [field]: value };
       }
-      return acc;
-    }, {});
-
-    try {
-      const response = await solveCryptogram(cryptogram, cluesObject);
-      setSolutions(response.data.solutions || []);
-    } catch (err) {
-      setError(err.response?.data?.error || 'Ocurrió un error al contactar al servidor.');
-      setSolutions([]);
-    } finally {
-      setIsLoading(false);
-    }
+      // Para todos los demás, los devolvemos sin cambios.
+      return clue;
+    });
+    // Ahora le pasamos a React un array 100% nuevo, y detectará el cambio sin problemas.
+    setState(prev => ({ ...prev, clues: newClues }));
   };
   
-  // NUEVO: Funciones para navegar entre soluciones
-  const handlePrevSolution = () => {
-    setActiveIndex((prevIndex) => Math.max(0, prevIndex - 1));
+  const handleAddClue = () => setState(prev => ({ ...prev, clues: [...prev.clues, { num: '', letter: '' }] }));
+  const handleRemoveClue = (index) => setState(prev => ({ ...prev, clues: prev.clues.filter((_, i) => i !== index) }));
+  const handlePrevSolution = () => setState(prev => ({ ...prev, activeIndex: Math.max(0, prev.activeIndex - 1) }));
+  const handleNextSolution = () => setState(prev => ({ ...prev, activeIndex: Math.min(prev.solutions.length - 1, prev.activeIndex + 1) }));
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // --- EXPRESIÓN REGULAR MEJORADA ---
+    // Esta nueva regla es mucho más estricta y valida la estructura "número-número".
+    const validPattern = /^\d+(-\d+)*(\s\d+(-\d+)*)*$/;
+
+    // La lógica de validación ahora usa el nuevo patrón.
+    if (state.cryptogram.trim() === '' || validPattern.test(state.cryptogram)) {
+      onSubmit();
+    } else {
+      setState(prev => ({ ...prev, error: 'Formato inválido. Usa un formato como "1-2 3-4-5".' }));
+    }
   };
 
-  const handleNextSolution = () => {
-    setActiveIndex((prevIndex) => Math.min(solutions.length - 1, prevIndex + 1));
-  };
-
-  // --- RENDERIZADO (LO QUE SE VE EN PANTALLA) ---
   return (
-    <div className="p-8 max-w-4xl mx-auto bg-gray-50 rounded-xl shadow-md">
-      <h1 className="text-4xl font-bold text-gray-800 mb-6">Crypto Solver v1.0</h1>
-      
+    <div>
+      <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Crypto Solver</h1>
       <form onSubmit={handleSubmit}>
-        {/* ... (el formulario de cryptogram y clues se mantiene igual) ... */}
+        {/* ... (resto del JSX sin cambios) ... */}
         <div className="mb-4">
-          <label htmlFor="cryptogram" className="block text-gray-700 font-bold mb-2">Criptograma</label>
-          <textarea id="cryptogram" className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 transition" rows="5" placeholder="Pega tu criptograma aquí. Ej: 1-2 3-4-5-1-6..." value={cryptogram} onChange={(e) => setCryptogram(e.target.value)} />
+          <label htmlFor="cryptogram" className="block text-gray-300 font-bold mb-2">Criptograma</label>
+          <textarea id="cryptogram" className="w-full p-3 bg-slate-800/50 text-white placeholder-gray-400 border border-slate-600 rounded-md focus:ring-2 focus:ring-blue-500 transition" rows="5" placeholder="Pega tu criptograma aquí. Ej: 1-2 3-4-5-1-6..." value={state.cryptogram} onChange={handleCryptogramChange} />
         </div>
         <div className="mb-6">
-          <label className="block text-gray-700 font-bold mb-2">Pistas (Opcional)</label>
-          {clues.map((clue, index) => (
+          <label className="block text-gray-300 font-bold mb-2">Pistas (Opcional)</label>
+          {state.clues.map((clue, index) => (
             <div key={index} className="flex items-center space-x-2 mb-2">
-              <input type="text" placeholder="Nº" className="w-16 p-2 border rounded-md text-center" value={clue.num} onChange={(e) => handleClueChange(index, 'num', e.target.value)} />
-              <span className="font-bold">=</span>
-              <input type="text" placeholder="Letra" maxLength="1" className="w-16 p-2 border rounded-md text-center" value={clue.letter} onChange={(e) => handleClueChange(index, 'letter', e.target.value)} />
-              <button type="button" onClick={() => handleRemoveClue(index)} className="text-red-500 font-bold">X</button>
+              <input type="text" placeholder="Nº" className="w-16 p-2 bg-slate-800/50 text-white text-center border border-slate-600 rounded-md" value={clue.num} onChange={(e) => handleClueChange(index, 'num', e.target.value)} />
+              <span className="font-bold text-gray-300">=</span>
+              <input type="text" placeholder="Letra" maxLength="1" className="w-16 p-2 bg-slate-800/50 text-white text-center border border-slate-600 rounded-md" value={clue.letter} onChange={(e) => handleClueChange(index, 'letter', e.target.value)} />
+              <button type="button" onClick={() => handleRemoveClue(index)} className="text-red-500 font-bold hover:text-red-400">X</button>
             </div>
           ))}
-          <button type="button" onClick={handleAddClue} className="mt-2 px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300">+</button>
+          <button type="button" onClick={handleAddClue} className="mt-2 px-4 py-2 bg-slate-600/50 text-gray-200 rounded-md hover:bg-slate-700/70">+</button>
         </div>
-        <button type="submit" disabled={isLoading} className="w-full px-6 py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 disabled:bg-blue-300 transition-all">
-          {isLoading ? 'Resolviendo...' : 'Resolver'}
+        <button type="submit" disabled={state.isLoading} className="w-full px-6 py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 disabled:bg-blue-300 transition-all">
+          {state.isLoading ? 'Resolviendo...' : 'Resolver'}
         </button>
       </form>
-
-      {/* --- ÁREA DE RESULTADOS MEJORADA --- */}
       <div className="mt-8">
-        {error && <div className="p-4 bg-red-100 text-red-700 rounded-md">{error}</div>}
-        
-        {solutions.length > 0 && (
-          <div>
+        {state.error && <div className="p-4 bg-red-500/20 text-red-300 rounded-md">{state.error}</div>}
+        {state.solutions.length > 0 && (
+           <div>
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-gray-800">Soluciones Encontradas</h2>
-              
-              {/* NUEVO: Navegador de soluciones */}
-              {solutions.length > 1 && (
+              <h2 className="text-2xl font-bold text-gray-200">Soluciones Encontradas</h2>
+              {state.solutions.length > 1 && (
                 <div className="flex items-center space-x-4">
-                  <button onClick={handlePrevSolution} disabled={activeIndex === 0} className="px-4 py-2 bg-gray-300 rounded-md disabled:opacity-50">Anterior</button>
-                  <span className="font-semibold text-gray-700">{activeIndex + 1} / {solutions.length}</span>
-                  <button onClick={handleNextSolution} disabled={activeIndex === solutions.length - 1} className="px-4 py-2 bg-gray-300 rounded-md disabled:opacity-50">Siguiente</button>
+                  <button onClick={handlePrevSolution} disabled={state.activeIndex === 0} className="px-4 py-2 bg-slate-600/50 text-gray-200 rounded-md disabled:opacity-50 hover:bg-slate-700/70">Anterior</button>
+                  <span className="font-semibold text-gray-300">{state.activeIndex + 1} / {state.solutions.length}</span>
+                  <button onClick={handleNextSolution} disabled={state.activeIndex === state.solutions.length - 1} className="px-4 py-2 bg-slate-600/50 text-gray-200 rounded-md disabled:opacity-50 hover:bg-slate-700/70">Siguiente</button>
                 </div>
               )}
             </div>
-
-            {/* NUEVO: La solución mostrada ahora depende del activeIndex */}
-            <div className="p-4 bg-green-100 text-green-800 rounded-md font-mono text-lg break-words">
-              {solutions[activeIndex].solution}
+            <div className="p-4 bg-green-500/10 text-green-300 rounded-md font-mono text-lg break-words">
+              {state.solutions[state.activeIndex].solution}
             </div>
           </div>
         )}

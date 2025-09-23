@@ -114,13 +114,18 @@ async def generate_cryptogram(original_text: str):
     
 async def generate_phrase_by_theme(theme: str):
     """
-    Usa la IA para generar una única frase o cita célebre sobre un tema específico.
+    Usa la IA para generar una única frase o cita célebre sobre un tema específico,
+    añadiendo instrucciones para aumentar la variedad.
     """
+    # Prompt mejorado para forzar la creatividad y evitar repeticiones
     prompt = f"""
-Actúa como un curador de sabiduría. Tu única tarea es proporcionar una única frase célebre o un proverbio inspirador sobre el siguiente tema: **{theme}**.
+Actúa como un curador de sabiduría y un coleccionista de citas raras e interesantes. 
+Tu única tarea es proporcionar una única frase célebre o un proverbio inspirador sobre el siguiente tema: **{theme}**.
 
 **Instrucciones de Salida Obligatorias:**
 - Responde **ÚNICAMENTE con la frase**.
+- **Evita frases extremadamente famosas o clichés** (por ejemplo, si el tema es filosofía, evita "Solo sé que no sé nada").
+- Busca una cita que sea profunda pero quizás menos conocida.
 - No incluyas el autor.
 - No incluyas comillas ni ningún otro texto explicativo.
 - La frase debe ser concisa, idealmente de entre 10 y 20 palabras.
@@ -130,11 +135,10 @@ Actúa como un curador de sabiduría. Tu única tarea es proporcionar una única
     payload = { "contents": [{"parts": [{"text": prompt}]}], "generationConfig": generation_config, "safetySettings": safety_settings }
     
     try:
-        # Usamos el modelo Flash que es más rápido para esta tarea creativa simple
         phrase, status = await _call_gemini_api_internal(payload, FLASH_API_URL)
-        # Limpiamos la respuesta para quitar comillas o espacios extra
         cleaned_phrase = phrase.strip().strip('"')
         return cleaned_phrase, status
     except Exception as e:
         log.error(f"Excepción en generate_phrase_by_theme: {e}")
-        return f"Error al procesar la solicitud: {e}", 500    
+        return f"Error al procesar la solicitud: {e}", 500
+
