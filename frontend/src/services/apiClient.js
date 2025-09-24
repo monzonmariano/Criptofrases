@@ -1,8 +1,8 @@
 // src/services/apiClient.js
 import axios from 'axios';
 import { getUserId } from './userService'; 
-const API_BASE_URL = 'http://localhost:8080/api';
-
+//const API_BASE_URL = 'http://localhost:8080/api';
+const API_BASE_URL = 'https://criptofrases-backend-1055609823342.us-central1.run.app/api'; //<--- la url del servidor en google
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
