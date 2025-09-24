@@ -53,26 +53,23 @@ function CryptoSuiteView({ gameState, setGameState, handlers }) {
       case 'solver':
         return <CryptoSolverView 
                  state={gameState.solver}
-                 // Ahora pasamos la nueva función, más segura
                  setState={setSolverState}
                  onSubmit={handlers.onSolve}
                />;
       case 'generator':
         return <GeneratorView
                  state={gameState.generator}
-                 // Ahora pasamos la nueva función, más segura
                  setState={setGeneratorState}
-                 onSubmit={handlers.onGenerate}
+                 onGenerateByTheme={handlers.onGenerateByTheme}
+                 onGenerateCustom={handlers.onGenerateCustom}
                />;
       case 'author':
         return <AuthorFinderView
                  state={gameState.authorFinder}
-                 // Ahora pasamos la nueva función, más segura
                  setState={setAuthorFinderState}
                  onSubmit={handlers.onFindAuthor}
                />;
-      default:
-        return null;
+      default: return null;
     }
   };
 

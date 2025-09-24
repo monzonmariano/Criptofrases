@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BACKGROUND_IMAGES } from './config';
-import { solveCryptogram, generateCryptogram, findAuthorOfPhrase, getUserHistory } from './services/apiClient';
+import { solveCryptogram, generateCryptogram, generateCryptogramFromUser, findAuthorOfPhrase, getUserHistory } from './services/apiClient';
 
 // --- NUEVOS COMPONENTES ---
 import LogicGamesView from './views/LogicGamesView';
@@ -11,6 +11,7 @@ import CryptoSuiteView from './views/CryptoSuiteView';
 import HistoryView from './views/HistoryView';
 import BackgroundMusic from './components/BackgroundMusic';
 import Attribution from './components/Attribution';
+import HistoryDetailModal from './components/HistoryDetailModal';
 
 const ChangeImageIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>;
 const HomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>;
@@ -21,19 +22,22 @@ function App() {
   const [activeGame, setActiveGame] = useState('menu'); // 'menu', 'cryptogram', 'history'
   const [isLoaded, setIsLoaded] = useState(false);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
-
+  const [modalData, setModalData] = useState(null);
   // --- NUEVO ESTADO CENTRALIZADO Y ANIDADO ---
+  // Actualizamos la forma (shape) del estado inicial para el generador.
   const [gameState, setGameState] = useState({
     cryptogram: {
       solver: { cryptogram: '', clues: [{ num: '', letter: '' }], solutions: [], activeIndex: 0, isLoading: false, error: '' },
-      generator: { theme: 'filosofia', generatedData: null, isAnswerVisible: false, isLoading: false, error: '' },
+      generator: {
+        // Ahora está dividido en dos sub-estados, uno para cada modo.
+        ia: { theme: 'filosofia', generatedData: null, isLoading: false, error: '', isAnswerVisible: false },
+        custom: { text: '', generatedData: null, isLoading: false, error: '' }
+      },
       authorFinder: { phrase: '', author: '', isLoading: false, error: '' },
     },
     history: {
       items: [], isLoading: true, error: ''
     }
-    // Futuros juegos irían aquí:
-    // sudoku: { board: null, difficulty: 'easy', ... }
   });
 
   // --- LÓGICA DE NEGOCIO (HANDLERS) ---
@@ -58,20 +62,39 @@ function App() {
     }
   };
 
-  const handleGenerateSubmit = async () => {
-    const { theme } = gameState.cryptogram.generator;
-    setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, isLoading: true, error: '', generatedData: null, isAnswerVisible: false }}}));
+  const handleGenerateByTheme = async () => {
+    const { theme } = gameState.cryptogram.generator.ia;
+    // La ruta correcta es 'prev.cryptogram.generator'
+    setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, isLoading: true, error: '', generatedData: null } } } }));
     try {
       const response = await generateCryptogram(theme);
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, generatedData: response.data }}}));
-      
+      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, generatedData: response.data } } } }));
     } catch (err) {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, error: err.response?.data?.error || 'Ocurrió un error.' }}}));
+      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, error: err.response?.data?.error || 'Ocurrió un error.' } } } }));
     } finally {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, isLoading: false }}}));
+      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, isLoading: false } } } }));
     }
   };
 
+
+  const handleGenerateCustom = async () => {
+    const { text } = gameState.cryptogram.generator.custom;
+    if (!text.trim()) {
+      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, error: 'El texto no puede estar vacío.' } } } }));
+      return;
+    }
+    // La ruta correcta es 'prev.cryptogram.generator'
+    setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, isLoading: true, error: '', generatedData: null } } } }));
+    try {
+      const response = await generateCryptogramFromUser(text);
+      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, generatedData: response.data } } } }));
+      fetchHistory();
+    } catch (err) {
+      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, error: err.response?.data?.error || 'Ocurrió un error.' } } } }));
+    } finally {
+      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, isLoading: false } } } }));
+    }
+  };
   const handleAuthorSubmit = async () => {
     const { phrase } = gameState.cryptogram.authorFinder;
     setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, isLoading: true, error: '', author: '' }}}));
@@ -118,33 +141,26 @@ function App() {
   // --- RENDERIZADO CONDICIONAL ---
   const renderActiveView = () => {
     switch(activeGame) {
-      case 'menu':
-        return <LogicGamesView onSelectGame={setActiveGame} />;
+      case 'menu': return <LogicGamesView onSelectGame={setActiveGame} />;
       case 'cryptogram':
         return <CryptoSuiteView 
-                 // Pasamos todo el estado del juego y los handlers específicos
                  gameState={gameState.cryptogram}
                  setGameState={(newState) => setGameState(prev => ({...prev, cryptogram: newState}))}
                  handlers={{
                    onSolve: handleSolveSubmit,
-                   onGenerate: handleGenerateSubmit,
+                   onGenerateByTheme: handleGenerateByTheme,
+                   onGenerateCustom: handleGenerateCustom, // Pasamos el nuevo handler
                    onFindAuthor: handleAuthorSubmit
                  }}
                />;
       case 'history':
-        // Corregimos los nombres de los props:
-        // 'historyState' pasa a ser 'state'
-        // 'setHistoryState' pasa a ser 'setState'
         return <HistoryView 
                  state={{...gameState.history, history: gameState.history.items}}
-                 setState={(updater) => {
-                    const newState = typeof updater === 'function' ? updater(gameState.history) : updater;
-                    setGameState(prev => ({...prev, history: {...prev.history, items: newState.history}}));
-                 }}
                  fetchHistory={fetchHistory}
+                 // La clave es pasar onShowDetails como prop
+                 onShowDetails={(entry) => setModalData(entry.details)}
                />;
-      default:
-        return <LogicGamesView onSelectGame={setActiveGame} />;
+      default: return <LogicGamesView onSelectGame={setActiveGame} />;
     }
   };
 
@@ -180,7 +196,10 @@ function App() {
             {renderActiveView()}
           </div>
         </main>
-        
+
+        {/* Renderiza el modal CONDICIONALMENTE al final */}
+        {modalData && <HistoryDetailModal data={modalData} onClose={() => setModalData(null)} />}
+
         <BackgroundMusic />
         
         <div className="fixed bottom-4 right-4 flex items-center space-x-4">

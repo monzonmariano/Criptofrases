@@ -3,6 +3,7 @@
 import logging
 import unidecode
 import random # <--- 1. Importamos la librería random
+import json
 from . import gemini
 from backend.core import database_manager
 from backend.logger_config import log
@@ -74,11 +75,9 @@ async def generate_and_save(data: dict):
     log.info(f"Pistas generadas: {random_clues}")
 
     db_data = {
-        'user_id': user_id,
-        'content': original_phrase,
-        'is_cryptogram': True,
-        'result': new_cryptogram,
-        'author': "Generado por IA"
+    'user_id': user_id,
+    'entry_type': 'ai_generator', # Nuevo tipo
+    'content': original_phrase # Solo guardamos la frase
     }
     database_manager.create_new_entry(db_data)
     
@@ -92,3 +91,36 @@ async def generate_and_save(data: dict):
     }
     
     return response_data, 200
+
+async def generate_from_user_input(data: dict):
+    """
+    Servicio para crear un criptograma a partir del texto y pistas
+    proporcionados por el usuario y guardarlo en su historial.
+    """
+    user_id = data.get('user_id')
+    text = data.get('text', '')
+    
+    if not all([user_id, text]):
+        return {"error": "user_id y text son requeridos."}, 400
+
+    log.info(f"Servicio crypto_generator: Creando criptograma personalizado para el usuario {user_id}")
+
+    # Reutilizamos la lógica interna que ya teníamos
+    new_cryptogram, solution_mapping, _ = _create_cryptogram_from_text(text)
+
+    # Creamos el objeto de detalles para guardarlo y devolverlo
+    details_object = {
+        "original_phrase": text,
+        "cryptogram": new_cryptogram,
+        "solution_key": solution_mapping
+    }
+
+    db_data = {
+        'user_id': user_id,
+        'entry_type': 'user_generator', # Un tipo específico para esta acción
+        'details': json.dumps(details_object)
+    }
+    database_manager.create_new_entry(db_data)
+    
+    # Devolvemos el mismo objeto de detalles al frontend
+    return details_object, 200

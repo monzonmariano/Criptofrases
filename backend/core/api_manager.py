@@ -53,3 +53,10 @@ async def delete_entry_from_history(entry_id, user_id):
         return {'message': 'Entry deleted successfully.'}, 200
     else:
         return {'error': 'Failed to delete entry.'}, 500
+    
+async def generate_cryptogram_from_user(data):
+    """
+    ORQUESTADOR: Delega la creación de un criptograma personalizado.
+    """
+    log.info("API Manager: Petición de generación personalizada recibida.")
+    return await crypto_generator.generate_from_user_input(data)    

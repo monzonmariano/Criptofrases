@@ -46,7 +46,7 @@ async def find_and_save(data: dict):
             response_status = status
 
         # 3. Guardamos la interacción en la base de datos (descomentar cuando esté lista)
-        database_manager.create_new_entry(db_data)
+        #database_manager.create_new_entry(db_data)
         
         return response_data, response_status
 

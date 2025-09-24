@@ -35,6 +35,17 @@ export const generateCryptogram = (theme) => {
     return apiClient.post('/generate', payload);
 };
 
+// --- ¡NUEVA FUNCIÓN AÑADIDA! ---
+export const generateCryptogramFromUser = (text) => {
+    const payload = {
+        user_id: getUserId(),
+        text,
+    };
+    // Llama al nuevo endpoint que creamos en el backend
+    return apiClient.post('/generate/custom', payload);
+};
+// --- FIN DE LA NUEVA FUNCIÓN ---
+
 export const getUserHistory = () => {
   const userId = getUserId(); 
   return apiClient.get(`/history?user_id=${userId}`);
@@ -48,10 +59,6 @@ export const deleteHistoryEntry = (entryId) => {
   return apiClient.post('/delete-entry', payload);
 };
 
-/**
- * Llama al endpoint POST /clear-history del backend.
- * @returns {Promise<object>} La respuesta de la API.
- */
 export const clearUserHistory = () => {
   const payload = {
     user_id: getUserId(),

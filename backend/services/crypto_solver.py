@@ -158,12 +158,17 @@ async def solve_and_save(data: dict):
 
         # Para la base de datos, guardamos solo la MEJOR solución encontrada
         best_solution_str = response_solutions[0]["solution"]
+        
+         # 1. Preparamos el objeto JSON completo para la base de datos
+        details_object = {
+        "cryptogram_str": cryptogram_str,
+        "clues_used": clues,
+        "solutions": response_solutions
+        }
         db_data = {
-            'user_id': user_id,
-            'content': cryptogram_str,
-            'result': best_solution_str,
-            'author': None,
-            'is_cryptogram': True
+        'user_id': user_id,
+        'entry_type': 'solver', # Nuevo tipo de entrada
+        'details': json.dumps(details_object)
         }
         database_manager.create_new_entry(db_data)
         

@@ -81,6 +81,17 @@ async def delete_entry(request):
         log.exception("Error en la ruta /api/delete-entry.")
         return web.json_response({'error': str(e)}, status=500, dumps=pretty_json)
 
+async def handle_generate_custom(request):
+    """Maneja las solicitudes para generar un criptograma personalizado."""
+    try:
+        data = await request.json()
+        response_data, status = await api_manager.generate_cryptogram_from_user(data)
+        return web.json_response(response_data, status=status, dumps=pretty_json)
+    except Exception as e:
+        log.exception("Error en la ruta /api/generate/custom.")
+        return web.json_response({'error': str(e)}, status=500, dumps=pretty_json)
+
+
 def setup_routes(app):
     """Configura las rutas para la aplicación web."""
     app.router.add_post('/api/solve', handle_solve)
@@ -89,3 +100,4 @@ def setup_routes(app):
     app.router.add_get('/api/history', get_history)
     app.router.add_post('/api/clear-history', clear_history)
     app.router.add_post('/api/delete-entry', delete_entry)
+    app.router.add_post('/api/generate/custom', handle_generate_custom)
