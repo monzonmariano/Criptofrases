@@ -1,67 +1,56 @@
-# Documento 7: Guía del Frontend - Cómo "Piensa" una Aplicación en React
+Este documento es una inmersión profunda en el código del frontend, explicando los conceptos de React y las decisiones de diseño línea por línea.
 
-Este documento desglosa los conceptos clave de React y las decisiones de arquitectura que hemos tomado para crear una interfaz de usuario interactiva y robusta.
+## 1. El Cerebro: `App.jsx`
 
-## 1. El Corazón de React: Los Componentes
+`App.jsx` es el componente raíz. No renderiza mucha UI directamente, pero actúa como el **cerebro central** que orquesta todo.
 
-Piensa en una aplicación de React como una construcción hecha con **piezas de Lego**. Cada pieza es un **Componente**: una porción de la interfaz (un botón, un formulario, una página entera) que encapsula su propia lógica, estilo y estado.
+* **Gestión de Estado (`useState`)**: Aquí vive el `useState` principal, llamado `gameState`. Es un gran objeto que contiene toda la "memoria" de la aplicación: los datos del solver, los datos de los dos modos del generador, el historial, etc. Centralizarlo aquí evita que los datos se pierdan al cambiar de vista.
+    ```javascript
+    const [gameState, setGameState] = useState({
+      cryptogram: {
+        solver: { ... },
+        generator: {
+          ia: { ... },
+          custom: { ... }
+        }
+      },
+      history: { ... }
+    });
+    ```
+* **Handlers de Lógica (`handleSolveSubmit`, etc.)**: Estas son funciones `async` que viven en `App.jsx`. Son las únicas que pueden llamar al `apiClient` para hablar con el backend. Cuando se completan, usan `setGameState` para actualizar la memoria central con los nuevos datos.
+* **Renderizado Condicional (`renderActiveView`)**: Esta función actúa como un controlador de tráfico. Mira la variable de estado `activeGame` (`'menu'`, `'cryptogram'`, `'history'`) y decide qué componente de vista principal debe mostrarse en la pantalla.
+* **Props (El Flujo de Datos)**: `App.jsx` pasa porciones del `gameState` y los `handlers` a sus hijos (`CryptoSuiteView`, `HistoryView`) como **props**. Este es el flujo de datos unidireccional que hace a React predecible: los datos siempre fluyen de padres a hijos.
 
-En nuestro proyecto, `CryptoSolverView.jsx` es un componente grande (una "página"), mientras que `BackgroundMusic.jsx` es un componente más pequeño y especializado.
+## 2. El Orquestador de Pestañas: `CryptoSuiteView.jsx`
 
-## 2. La "Memoria" de la Aplicación: El Estado Centralizado
+Este componente es un "gerente de nivel medio". Su única responsabilidad es gestionar las pestañas internas (Solver, Generador, Buscador de Autor) y mostrar la vista correcta.
 
-Uno de los mayores desafíos en una aplicación compleja es gestionar la "memoria" (el **estado**). Si un usuario genera un criptograma en una vista, ¿cómo hacemos para que esa información no se pierda al cambiar a otra vista?
+* **Estado Local (`useState`)**: Tiene un `useState` propio y simple, `const [activeTab, setActiveTab] = useState('solver');`, porque qué pestaña está activa es un detalle que solo le importa a él.
+* **Paso de Props**: Recibe el `gameState.cryptogram` completo y los `handlers` de `App.jsx`, y se los pasa al hijo correcto. Por ejemplo, a `GeneratorView` le pasa el `state.generator` y los `handlers` `onGenerateByTheme` y `onGenerateCustom`.
 
-### El Problema: La "Amnesia" de los Componentes
+## 3. Las Vistas "Tontas": `GeneratorView.jsx`, `CryptoSolverView.jsx`
 
-Por defecto, cada componente tiene su propia memoria interna (`useState`). Cuando cambias de una vista a otra, React **destruye** el componente anterior y toda su memoria se pierde.
+Estos son los componentes que el usuario ve y con los que interactúa. Se les llama "tontos" o "presentacionales" porque no tienen cerebro propio.
 
-### La Solución: "Levantar el Estado" (Lifting State Up)
+* **Reciben Props**: No tienen `useState` para sus datos. Todo lo que necesitan saber (el tema actual, el texto del criptograma) les llega como un prop `state` desde su padre.
+* **Muestran la UI**: Usan los datos de los props para renderizar los formularios, botones y resultados.
+* **Avisan Hacia Arriba**: Cuando un usuario escribe en un `textarea` o hace clic en un botón, el componente llama a una función que recibió como prop (ej: `onChange` llama a `setState`, `onSubmit` llama a un `handler`). Nunca modifican los datos directamente.
 
-Hemos resuelto este problema con el patrón de diseño más importante de React: **centralizar el estado en el ancestro común más cercano**.
+## 4. El Historial Inteligente: `HistoryView.jsx`
 
-En nuestro caso, el componente `App.jsx` actúa como el **cerebro central** de la aplicación. Él es el único que tiene la memoria (`useState`) de lo que está pasando en el Solver, en el Generador, en el Buscador de Autor y en el Historial.
+* **Filtrado de Datos**: Antes de mostrar nada, este componente aplica una lógica de negocio clave:
+    ```javascript
+    const filteredHistory = state.history.filter(entry => 
+      ['solver', 'user_generator'].includes(entry.entry_type)
+    );
+    ```
+    Esto asegura que la vista del usuario sea limpia y relevante, mostrando solo sus resoluciones y creaciones, pero ocultando las generaciones de la IA que se guardan para uso interno del sistema.
+* **Timestamps Dinámicos (`date-fns`)**: Utiliza la librería `date-fns` para mostrar fechas relativas y amigables (ej: "hace 5 minutos"), convirtiendo los strings de fecha ISO que envía el backend.
+* **Componentes de Iconos**: Define pequeños componentes internos (ej: `<GameIcon>`) para renderizar diferentes iconos según el `entry_type`, haciendo el código más limpio y escalable.
 
-```javascript
-// Dentro de App.jsx
-const [solverState, setSolverState] = useState({ cryptogram: '', clues: [], ... });
-const [generatorState, setGeneratorState] = useState({ theme: 'filosofia', ... });
-// ... y así para cada vista
-```
+## 5. El Modal Interactivo: `HistoryDetailModal.jsx`
 
-`App.jsx` luego pasa esta información y las funciones para modificarla a las vistas hijas a través de los **props**.
-
-## 3. La Comunicación: Props y Componentes "Tontos"
-
-Nuestras vistas (`CryptoSolverView`, etc.) ahora son componentes "presentacionales" o "tontos". No tienen memoria propia. Su trabajo es:
-1.  **Recibir datos y funciones** desde `App.jsx` a través de los `props` (ej: `<CryptoSolverView state={solverState} setState={setSolverState} />`).
-2.  **Mostrar la interfaz** basándose en los datos que reciben (`state.cryptogram`).
-3.  Cuando el usuario hace algo (escribir, hacer clic), **avisar a `App.jsx`** llamando a la función que recibieron (`setState(...)` u `onSubmit()`).
-
-Este flujo de datos unidireccional (de arriba hacia abajo) hace que la aplicación sea predecible, fácil de depurar y muy robusta.
-
-## 4. "Efectos Secundarios" y Llamadas a API: El Hook `useEffect`
-
-¿Cómo hacemos para que la vista de "Historial" pida los datos a la API justo cuando aparece en pantalla? Para esto, usamos el hook `useEffect`.
-
-`useEffect` nos permite ejecutar código en respuesta a eventos del "ciclo de vida" de un componente.
-
-**El Desencadenador "Cuando..." (`useEffect`)**
-```javascript
-// Dentro de App.jsx
-useEffect(() => {
-  if (activeView === 'history') {
-    fetchHistory();
-  }
-}, [activeView]);
-```
-Esto se traduce como:
-> "**Cuando** la variable `activeView` cambie, ejecuta este código. Si el nuevo valor es `'history'`, entonces llama a la función para cargar el historial."
-
-Es la forma correcta de manejar operaciones asíncronas como las llamadas a la API sin interferir con el renderizado de la interfaz.
-
-## 5. La Conexión con el Backend: `apiClient.js`
-
-Para mantener el código limpio, toda la lógica de comunicación con el backend está centralizada en `src/services/apiClient.js`. Este archivo usa la librería **Axios** para crear un "cliente" preconfigurado.
-
-Cuando una función en `App.jsx` necesita un dato, llama a una función de `apiClient` (ej: `solveCryptogram(...)`), que se encarga de construir la petición HTTP, enviarla y devolver la respuesta. Esta separación nos permite cambiar la URL del backend o la forma de comunicación en un solo lugar sin tener que modificar el resto de la aplicación.
+* **Animación de Entrada y Salida**: Este componente utiliza `useState` y `useEffect` para crear una animación de "fade" suave.
+    * `const [isMounted, setIsMounted] = useState(false);`: Se usa para activar la animación de entrada un instante después de que el componente aparece.
+    * `const [isClosing, setIsClosing] = useState(false);`: Se usa para activar la animación de salida y esperar a que termine antes de que el componente se destruya.
+* **Propagación de Eventos (`e.stopPropagation()`)**: El `div` principal del modal tiene un `onClick` que detiene la propagación del evento. Esto es crucial para evitar que al hacer clic *dentro* del modal, también se active el `onClick` del fondo oscuro que cierra el modal.

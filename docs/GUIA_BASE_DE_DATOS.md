@@ -11,38 +11,39 @@ La base de datos se define como un servicio llamado db en el archivo docker-comp
 
     Credenciales: El usuario, la contraseña y el nombre de la base de datos se configuran a través de variables de entorno leídas desde tu archivo .env, garantizando que no haya información sensible en el código.
 
-2. Estructura de la Base de Datos
+## 2. Estructura de la Base de Datos
 
-Actualmente, el proyecto utiliza una única tabla principal para almacenar toda la actividad.
-Tabla: entries
+El proyecto utiliza una única tabla flexible para almacenar la actividad.
 
-Esta tabla guarda un registro de cada operación realizada por un usuario.
+### Tabla: `entries`
 
-Columna	Tipo de Dato	Descripción
-id	SERIAL PRIMARY KEY	Identificador único autoincremental para cada entrada.
-user_id	TEXT NOT NULL	El identificador único del usuario que realizó la acción.
-content	TEXT NOT NULL	Los datos de entrada, como el criptograma o la frase a analizar.
-result	TEXT NOT NULL	El resultado de la operación, como la frase resuelta o el autor encontrado.
-author	TEXT	El autor de la frase (si aplica). Puede ser nulo.
-is_cryptogram	BOOLEAN NOT NULL	true si la entrada fue una operación de criptograma, false en caso contrario.
-timestamp	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP	La fecha y hora exactas en que se creó el registro. Se inserta automáticamente.
+| Columna | Tipo de Dato | Descripción |
+| :--- | :--- | :--- |
+| `id` | `SERIAL PRIMARY KEY` | Identificador único autoincremental. |
+| `user_id` | `TEXT NOT NULL` | Identificador único del usuario. |
+| `entry_type` | `VARCHAR(50) NOT NULL` | **Clave principal.** Define el tipo de entrada: `solver`, `ai_generator`, `user_generator`. |
+| `content` | `TEXT` | **(Para Corpus)**. Guarda la frase generada por IA para futuro análisis. Puede ser `NULL`. |
+| `result` | `TEXT` | **(Legado/Resumen)**. Guarda un resumen del resultado. Puede ser `NULL`. |
+| `author` | `TEXT` | Guarda el autor de una frase. Puede ser `NULL`. |
+| `timestamp` | `TIMESTAMPTZ` | Fecha y hora exactas del registro. Se inserta automáticamente. |
+| `details` | `JSONB` | **El corazón de los datos.** Guarda un objeto JSON con toda la información de una sesión de `solver` o `user_generator`. Puede ser `NULL`. |
 
-Para asegurar que la tabla entries se cree automáticamente la primera vez que se levanta la base de datos, se puede usar un script de inicialización.
+### Script de Inicialización (`database/init.sql`)
 
-    Crear el script SQL:
-    Crea un archivo llamado init.sql en un nuevo directorio, por ejemplo database/init.sql.
+```sql
+-- Archivo: database/init.sql
+DROP TABLE IF EXISTS entries; -- Reinicia la tabla para aplicar cambios
 
-    --- Archivo: database/init.sql
-    CREATE TABLE IF NOT EXISTS entries (
+CREATE TABLE IF NOT EXISTS entries (
     id SERIAL PRIMARY KEY,
     user_id TEXT NOT NULL,
-    content TEXT NOT NULL,
-    result TEXT NOT NULL,
+    entry_type VARCHAR(50) NOT NULL,
+    content TEXT,
+    result TEXT,
     author TEXT,
-    is_cryptogram BOOLEAN NOT NULL,
-    timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
+    timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+    details JSONB
 );
-
 
     Montar el script en docker-compose.yml:
     Modifica el servicio db para que ejecute este script al iniciar.

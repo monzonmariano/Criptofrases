@@ -1,25 +1,53 @@
-# Criptofrases & Logic Hub - Frontend
+# Criptofrases & Logic Hub - Frontend (v1.0)
 
-¡Bienvenido al frontend de Criptofrases & Logic Hub! Esta es una aplicación web moderna construida con [React](https.reactjs.org/) y estilizada con [Tailwind CSS](https.tailwindcss.com/). Está diseñada para ser una interfaz de usuario interactiva, atractiva y fácil de usar para una variedad de juegos de lógica, comunicándose con un potente backend de Python.
+¡Bienvenido al frontend de Criptofrases & Logic Hub! Esta es una aplicación web moderna construida con **React** y estilizada con **Tailwind CSS**. Está diseñada como una interfaz de usuario interactiva, atractiva y escalable para una variedad of de juegos de lógica, comunicándose con un potente backend de Python.
 
 ## Características
 
-* **Hub de Juegos**: Una pantalla de bienvenida para seleccionar entre diferentes juegos de lógica.
-* **Suite de Criptogramas**: Incluye un Solver, un Generador de frases por IA y un Buscador de Autores.
-* **Experiencia Inmersiva**: Con música de fondo ambiental y un carrusel de imágenes para crear una atmósfera de "café de jazz".
-* **Persistencia de Usuario**: Guarda el historial de tus partidas en una base de datos.
+* **Hub de Juegos**: Una pantalla de bienvenida para seleccionar entre diferentes juegos de lógica, preparada para futuras expansiones.
+* **Suite de Criptogramas Completa**:
+    * **Solver**: Resuelve criptogramas complejos usando pistas.
+    * **Generador Dual**: Permite generar criptogramas con IA (por temas) o crear uno personalizado a partir de tu propio texto.
+* **Historial de Actividad Inteligente**:
+    * Guarda un registro de los criptogramas resueltos y creados por el usuario.
+    * Filtra automáticamente la actividad para mostrar solo lo relevante para el usuario.
+    * **Vista de Detalles**: Un modal animado que muestra la información completa de una actividad, incluyendo todas las soluciones posibles.
+* **Experiencia Inmersiva**: Música de fondo ambiental, carrusel de imágenes y una interfaz de usuario pulida con animaciones suaves.
 * **Diseño Responsivo**: Se adapta perfectamente a dispositivos móviles y de escritorio.
 
-## ¿Cómo funciona? La Arquitectura de React
+## ¿Cómo "Piensa" la Aplicación? La Arquitectura de React
 
-Esta aplicación sigue un patrón de diseño profesional y fácil de entender:
+[cite_start]Esta aplicación sigue un patrón de diseño profesional y fácil de entender, basado en el flujo de datos unidireccional. [cite: 7]
 
-1.  **El Cerebro (`App.jsx`)**: Este es el componente principal. Mantiene en su "memoria" (el estado) toda la información importante: qué juego está activo, los datos del criptograma, el historial, etc..
-2.  **Los Contenedores (`CryptoSuiteView.jsx`)**: Son como "gerentes de departamento". Organizan un conjunto de herramientas relacionadas. Por ejemplo, `CryptoSuiteView` gestiona las pestañas del Solver, Generador y Buscador de Autores.
-3.  **Las Vistas ("Tontas") (`CryptoSolverView.jsx`, etc.)**: Son los "trabajadores". No tienen memoria propia. Su único trabajo es mostrar la información que les da su gerente y avisarle cuando el usuario hace algo (como hacer clic en un botón).
-4.  **El Mensajero (`apiClient.js`)**: Es el único archivo que tiene permitido hablar con el servidor (el backend). Cuando el "Cerebro" necesita datos, le pide al "Mensajero" que los vaya a buscar.
+1.  **El Cerebro (`App.jsx`)**: Es el componente principal que orquesta todo. [cite_start]Mantiene en su "memoria" (el estado `gameState`) toda la información importante: qué juego está activo, los datos del solver, los datos de los dos modos del generador, el historial, y si el modal de detalles está abierto. [cite: 7]
+2.  **Los Gerentes (`CryptoSuiteView.jsx`)**: Son componentes que gestionan un área específica. [cite_start]`CryptoSuiteView` controla las pestañas del Solver, Generador y Buscador de Autor, mostrando el componente correcto según la selección del usuario. [cite: 1]
+3.  **Las Vistas ("Tontas" o Presentacionales)**: Componentes como `CryptoSolverView.jsx` o `GeneratorView.jsx` son los "trabajadores". No tienen memoria propia sobre los datos de la aplicación. Su único trabajo es:
+    * [cite_start]Mostrar la información que reciben de su gerente (vía **props**). [cite: 7]
+    * [cite_start]Avisar al gerente cuando el usuario hace algo (como hacer clic en un botón), llamando a una función que también recibieron por **props**. [cite: 7]
+4.  [cite_start]**El Mensajero (`apiClient.js`)**: Es el único archivo que tiene permitido hablar con el servidor. [cite: 7] [cite_start]Cuando el "Cerebro" necesita datos (como cargar el historial), le pide al "Mensajero" que haga la llamada a la API. [cite: 7]
 
-Este flujo de datos, siempre desde arriba hacia abajo, hace que la aplicación sea predecible y fácil de ampliar con nuevos juegos.
+[cite_start]Este flujo, siempre de padres a hijos, hace que la aplicación sea predecible, robusta y fácil de ampliar. [cite: 1]
+
+## Conceptos Clave de React Utilizados
+
+* **`useState` (La Memoria)**: Usamos este "Hook" para darle memoria a los componentes. Lo ves en `App.jsx` para el estado global de la aplicación, pero también localmente en componentes como `GeneratorView.jsx` (para recordar qué pestaña está activa) o `HistoryDetailModal.jsx` (para controlar las animaciones de entrada y salida).
+* **`useEffect` (El Temporizador/Vigilante)**: Este "Hook" nos permite ejecutar código *después* de que algo se haya renderizado. Lo usamos para:
+    * [cite_start]**Cargar datos**: En `App.jsx`, vigila la variable `activeGame` y, si cambia a `'history'`, dispara la llamada a la API para cargar el historial. [cite: 7]
+    * **Animaciones**: En `HistoryDetailModal.jsx`, lo usamos para crear las animaciones de entrada y salida, esperando a que las transiciones CSS terminen.
+* **Props (La Comunicación)**: Son la forma en que los componentes padres se comunican con sus hijos, pasándoles tanto datos para mostrar como funciones para ejecutar. [cite_start]Es la base del flujo unidireccional. [cite: 7]
+
+## Estructura de Archivos
+
+frontend/
+├── src/
+│   ├── components/       # Piezas de UI reutilizables (Modal, Música, Atribución)
+│   ├── services/         # Lógica no visual (apiClient.js, userService.js)
+│   ├── views/            # Componentes principales que representan "páginas" o secciones
+│   ├── App.jsx           # El componente raíz que une todo
+│   └── index.css         # Estilos globales y custom de Tailwind
+│
+├── public/               # Archivos estáticos (imágenes, música, favicon)
+└── index.html            # El punto de entrada de la aplicación
 
 ## Instalación y Puesta en Marcha
 
@@ -40,4 +68,5 @@ Este frontend está diseñado para funcionar en conjunto con el backend del proy
     npm run dev
     ```
 
-¡Y listo! Asegúrate de que el backend también esté corriendo (con `docker compose up --build`) para que la aplicación sea completamente funcional.
+¡Y listo! Asegúrate de que el backend también esté corriendo (`docker compose up --build`) para que la aplicación sea completamente funcional.
+

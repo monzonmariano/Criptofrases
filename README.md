@@ -1,59 +1,35 @@
-# Proyecto: Criptofrases v1.0
+# Criptofrases & Logic Hub (v1.0)
 
-¡Bienvenido a Criptofrases & Autores! Este es un proyecto full-stack diseñado no solo como una aplicación funcional para resolver y generar criptogramas, sino también como un recurso de aprendizaje de código abierto para desarrolladores.
+¡Bienvenido a Criptofrases & Logic Hub! Una aplicación web completa y de código abierto diseñada para resolver, generar y disfrutar de juegos de lógica, empezando por los criptogramas.
 
-El backend está construido con una arquitectura moderna, modular y completamente contenerizada, sirviendo como una base escalable para futuros juegos y servicios.
+[cite_start]Este proyecto sirve como un ejemplo práctico y profundamente documentado de cómo construir una aplicación web moderna, desde un backend asíncrono con Python y Docker hasta un frontend interactivo con React[cite: 4, 11].
 
-## ✨ Visión del Proyecto
+## Características Principales
 
-El objetivo principal es crear una plataforma real y escalable que sea:
-* **Funcional**: Ofrece herramientas potentes y entretenidas para los entusiastas de los criptogramas.
-* **Educativa**: Sirve como un ejemplo claro y bien documentado de cómo construir una aplicación web moderna, desde el backend hasta el frontend.
-* **Abierta**: Fomenta el aprendizaje y la colaboración, con una estructura de código diseñada para ser estudiada, reutilizada y mejorada por la comunidad.
+* [cite_start]**Solver de Criptogramas Avanzado**: Utiliza un modelo estadístico del español (n-gramas) y un algoritmo de backtracking para encontrar las soluciones más probables a cualquier criptograma de sustitución[cite: 14].
+* **Hub de Juegos Escalable**: Una interfaz centralizada diseñada para incorporar fácilmente nuevos puzzles en el futuro (Sudoku, Pictologic, etc.).
+* **Generador Dual de Criptogramas**:
+    * [cite_start]**Generación por IA**: Crea frases únicas sobre diversos temas usando la API de Google Gemini[cite: 2].
+    * **Creación Personalizada**: Permite a los usuarios encriptar sus propias frases.
+* **Historial de Actividad**: Guarda un registro de los criptogramas resueltos y creados por el usuario, con una vista de detalles completa.
+* [cite_start]**Arquitectura Profesional**: Construido con Python `aiohttp` para un alto rendimiento, `PostgreSQL` para una base de datos robusta, y `Docker` para una puesta en marcha simple y consistente[cite: 4, 11].
+* [cite_start]**Frontend Moderno**: Interfaz de usuario reactiva y pulida construida con `React` y `Tailwind CSS`, incluyendo animaciones suaves y una experiencia de usuario cuidada[cite: 15].
 
-## 🚀 Funcionalidades Principales (Backend v1.0)
+## Documentación Esencial
 
-* **Crypto Solver**: Resuelve criptogramas de sustitución complejos usando un algoritmo de backtracking enriquecido con un modelo estadístico de lenguaje (n-gramas).
-* **Crypto Generator**: Genera criptogramas únicos a partir de frases sobre temas específicos (filosofía, tecnología, etc.), utilizando la API de Google Gemini para la creatividad y un motor local para la encriptación.
-* **Author Finder**: Identifica al autor probable de una frase célebre usando la API de Google Gemini.
-* **Persistencia de Datos**: Todas las interacciones se guardan en una base de datos PostgreSQL.
-* **API Completa**: Seis endpoints bien definidos para gestionar todo el ciclo de vida de los datos (Crear, Leer, Borrar).
+Hemos puesto un gran esfuerzo en documentar cada aspecto del proyecto.
 
-## 🛠️ Arquitectura Tecnológica
+* **Visión y Arquitectura General**: [docs/01_Vision_y_Arquitectura.md](./docs/01_Vision_y_Arquitectura.md)
+* **Guía de Puesta en Marcha (¡Empieza aquí!)**: [docs/02_Puesta_en_Marcha.md](./docs/02_Puesta_en_Marcha.md)
+* **Guía del Frontend (Cómo "Piensa" React)**: [docs/07_Guia_del_Frontend.md](./docs/07_Guia_del_Frontend.md)
+* **Referencia Completa de la API**: [docs/05_API_Endpoints.md](./docs/05_API_Endpoints.md)
+* **Guía de la Base de Datos**: [docs/GUIA_BASE_DE_DATOS.md](./docs/GUIA_BASE_DE_DATOS.md)
 
-| Componente | Tecnología / Librería | Propósito |
-| :--- | :--- | :--- |
-| **Backend** | Python 3.10, aiohttp | Servidor web asíncrono de alto rendimiento. |
-| **Base de Datos** | PostgreSQL 14 | Almacenamiento de datos robusto y persistente. |
-| **IA & Servicios** | Google Gemini API | Asistente para tareas creativas y de lenguaje natural. |
-| **Contenerización** | Docker & Docker Compose | Orquestación y reproducibilidad del entorno. |
+## Puesta en Marcha Rápida
 
-## 🏁 Puesta en Marcha
+1.  **Clona el repositorio**: `git clone <url-del-repositorio>`
+2.  **Configura tus credenciales**: `cp .env.example .env` y edita el archivo `.env`.
+3.  **Prepara los datos del solver**: `python3 consolidate_corpus.py` y `python3 backend/services/solver_utils.py`.
+4.  **Levanta todo el entorno**: `docker compose up --build`.
 
-Para levantar el entorno de desarrollo, el primer paso es clonar el repositorio. Para una guía detallada y paso a paso, por favor consulta nuestra **[Guía de Puesta en Marcha](docs/02_Puesta_en_Marcha.md)**.
-
-*(Nota: En el futuro, aquí crearemos las guías detalladas)*
-
-## 📄 Licencia
-
-Este proyecto está licenciado bajo la **GNU General Public License v3.0**. Esto asegura que el proyecto y cualquiera de sus derivados siempre permanecerán de código abierto.
- 
- '/music/dancing-saxophone-dark-jazz-388468.mp3',
-  '/music/free-jazz-404471.mp3',
-  '/music/jazz-397948.mp3',
-  '/music/jazz-background-music-338663.mp3',
-  '/music/jazz-background-music-379027.mp3',
-  '/music/jazz-lounge-elevator-music-322314.mp3',
-  '/music/jazz-lounge-elevator-music-332339.mp3',
-  '/music/jazz-lounge-elevator-music-403470.mp3',
-  'music/jazz-music-379565.mp3',
-  '/music/jazz-restaurant-cafe-music-407555.mp3',
-  '/music/lounge-jazz-elevator-music-324902.mp3',
-  '/music/lounge-jazz-elevator-music-342629.mp3',
-  '/music/romantic-jazz-374120.mp3',
-  '/music/romantic-jazz-404462.mp3',
-  '/music/romantic-jazz-mocha-midnight-360708.mp3',
-  '/music/romantic-love-jazz-348895.mp3',
-  '/music/romantic-saxophone-244539.mp3',
-  '/music/sax-and-guitar-duet-dark-jazz-387688.mp3',
-  '/music/the-jazz-cafe-404470.mp3'
+[cite_start]Para más detalles, consulta la **[Guía de Puesta en Marcha](./docs/02_Puesta_en_Marcha.md)**[cite: 1].

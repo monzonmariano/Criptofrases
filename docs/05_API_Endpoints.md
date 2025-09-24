@@ -40,22 +40,28 @@ Esta es la guía completa para interactuar con el backend.
     ```
 
 ---
-### 3. Generar Criptograma
+### 3. Generar Criptograma (con IA)
 * **Endpoint**: `POST /api/generate`
-* **Descripción**: Pide a la IA que genere una frase sobre un tema y la convierte en un criptograma.
-* **Ejemplo `curl`**:
-    ```bash
-    curl -X POST -H "Content-Type: application/json" -d '{"user_id":"test","theme":"ciencia"}' http://localhost:8080/api/generate
-    ```
+* **Descripción**: Pide a la IA que genere una frase sobre un tema y la convierte en un criptograma. **Esta acción se guarda internamente para mejorar el sistema, pero no aparece en el historial del usuario.**
 * **Respuesta Exitosa (200 OK)**:
     ```json
     {
         "theme": "ciencia",
         "original_phrase": "La ciencia es la poesía de la realidad.",
-        "cryptogram": "1-2 3-4-5-6-3-4-2 5-7 1-2 8-9-5-7-10-2 11-5 1-2 12-5-2-1-4-5-2-11",
+        "cryptogram": "1-2 3-4-5-6-3-4-2...",
         "clues": {"4": "n", "5": "c"},
         "solution_key": { ... }
     }
     ```
 
-*(Y así sucesivamente para los otros tres endpoints: `history`, `clear-history` y `delete-entry`)*
+### 4. Generar Criptograma (Personalizado)
+* **Endpoint**: `POST /api/generate/custom`
+* **Descripción**: Convierte un texto proporcionado por el usuario en un criptograma. **Esta acción SÍ se guarda y aparece en el historial del usuario.**
+* **Respuesta Exitosa (200 OK)**:
+    ```json
+    {
+        "original_phrase": "Hola mundo",
+        "cryptogram": "1-2-3-2 4-5-6-7-2",
+        "solution_key": { "1":"H", "2":"O", ... }
+    }
+    ```
