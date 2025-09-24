@@ -30,6 +30,13 @@ async def start_server():
                 # Añadimos "OPTIONS" a la lista de métodos permitidos.
                 allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
             ),
+            # ¡AÑADE TU URL DE NETLIFY AQUÍ!
+            "https://criptofrases.netlify.app": aiohttp_cors.ResourceOptions(
+                allow_credentials=True,
+                expose_headers="*",
+                allow_headers="*",
+                allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            ),
         })
 
         for route in list(app.router.routes()):
