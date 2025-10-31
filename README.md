@@ -2,11 +2,11 @@
 
 ¡Bienvenido a Criptofrases & Logic Hub! Una aplicación web completa y de código abierto diseñada para resolver, generar y disfrutar de juegos de lógica, empezando por los criptogramas.
 
-[cite_start]Este proyecto sirve como un ejemplo práctico y profundamente documentado de cómo construir una aplicación web moderna, desde un backend asíncrono con Python y Docker hasta un frontend interactivo con React[cite: 4, 11].
+Este proyecto sirve como un ejemplo práctico y profundamente documentado de cómo construir una aplicación web moderna, desde un backend asíncrono con Python y Docker hasta un frontend interactivo con React[cite: 4, 11].
 
 ## Características Principales
 
-* [cite_start]**Solver de Criptogramas Avanzado**: Utiliza un modelo estadístico del español (n-gramas) y un algoritmo de backtracking para encontrar las soluciones más probables a cualquier criptograma de sustitución[cite: 14].
+* Solver de Criptogramas Avanzado**: Utiliza un modelo estadístico del español (n-gramas) y un algoritmo de backtracking para encontrar las soluciones más probables a cualquier criptograma de sustitución.
 * **Hub de Juegos Escalable**: Una interfaz centralizada diseñada para incorporar fácilmente nuevos puzzles en el futuro (Sudoku, Pictologic, etc.).
 * **Generador Dual de Criptogramas**:
     * [cite_start]**Generación por IA**: Crea frases únicas sobre diversos temas usando la API de Google Gemini[cite: 2].
