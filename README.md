@@ -32,4 +32,4 @@ Hemos puesto un gran esfuerzo en documentar cada aspecto del proyecto.
 3.  **Prepara los datos del solver**: `python3 consolidate_corpus.py` y `python3 backend/services/solver_utils.py`.
 4.  **Levanta todo el entorno**: `docker compose up --build`.
 
-Para más detalles, consulta la **[Guía de Puesta en Marcha](./docs/02_Puesta_en_Marcha.md)**[cite: 1].
+Para más detalles, consulta la **[Guía de Puesta en Marcha](./docs/02_Puesta_en_Marcha.md)**.
