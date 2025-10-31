@@ -9,7 +9,7 @@ Este proyecto sirve como un ejemplo práctico y profundamente documentado de có
 * Solver de Criptogramas Avanzado**: Utiliza un modelo estadístico del español (n-gramas) y un algoritmo de backtracking para encontrar las soluciones más probables a cualquier criptograma de sustitución.
 * **Hub de Juegos Escalable**: Una interfaz centralizada diseñada para incorporar fácilmente nuevos puzzles en el futuro (Sudoku, Pictologic, etc.).
 * **Generador Dual de Criptogramas**:
-    * [cite_start]**Generación por IA**: Crea frases únicas sobre diversos temas usando la API de Google Gemini.
+    * **Generación por IA**: Crea frases únicas sobre diversos temas usando la API de Google Gemini.
     * **Creación Personalizada**: Permite a los usuarios encriptar sus propias frases.
 * **Historial de Actividad**: Guarda un registro de los criptogramas resueltos y creados por el usuario, con una vista de detalles completa.
 * **Arquitectura Profesional**: Construido con Python `aiohttp` para un alto rendimiento, `PostgreSQL` para una base de datos robusta, y `Docker` para una puesta en marcha simple y consistente
