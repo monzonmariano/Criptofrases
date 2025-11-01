@@ -43,7 +43,7 @@ async def handle_get_author(request):
 async def handle_generate(request):
     try:
         data = await request.json()
-        response_data, status = await api_manager.generate_cryptogram(data)
+        response_data, status =  api_manager.generate_cryptogram(data)
         return web.json_response(response_data, status=status, dumps=pretty_json)
     except Exception as e:
         # ¡CORREGIDO!

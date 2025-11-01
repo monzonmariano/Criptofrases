@@ -1,21 +1,46 @@
-# backend/services/crypto_generator.py (Versión 3.0 con Pistas Aleatorias)
+# backend/services/crypto_generator.py (Versión Híbrida con Temas)
 
 import logging
 import unidecode
-import random # <--- 1. Importamos la librería random
+import random
 import json
-from . import gemini
+import os
 from backend.core import database_manager
 from backend.logger_config import log
 
+# --- 1. Apuntamos al nuevo archivo JSON ---
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_DIR = os.path.join(os.path.dirname(SCRIPT_DIR), 'data')
+PHRASE_FILE_PATH = os.path.join(DATA_DIR, 'frases_por_tema.json')
+
+# --- 2. Cargamos las frases UNA SOLA VEZ al iniciar el servidor ---
+# Esto es mucho más eficiente que leer el archivo en cada petición.
+try:
+    with open(PHRASE_FILE_PATH, 'r', encoding='utf-8') as f:
+        FRASES_POR_TEMA = json.load(f)
+    log.info(f"Cargadas {len(FRASES_POR_TEMA)} categorías de frases desde JSON.")
+    
+    # Creamos una lista "comodín" con todas las frases por si el tema no se encuentra
+    FALLBACK_PHRASES = [phrase for sublist in FRASES_POR_TEMA.values() for phrase in sublist]
+    if not FALLBACK_PHRASES:
+        log.warning("El archivo de frases JSON está vacío.")
+        
+except FileNotFoundError:
+    log.error(f"¡Archivo de frases no encontrado en {PHRASE_FILE_PATH}! El generador local fallará.")
+    FRASES_POR_TEMA = {}
+    FALLBACK_PHRASES = []
+except json.JSONDecodeError:
+    log.error(f"Error al decodificar el JSON en {PHRASE_FILE_PATH}.")
+    FRASES_POR_TEMA = {}
+    FALLBACK_PHRASES = []
+
+
 def _create_cryptogram_from_text(text: str):
     """
-    Convierte un texto en un criptograma, su mapeo de solución completo,
-    y un conjunto aleatorio de pistas.
+    (Esta función no cambia en absoluto)
     """
     normalized_text = unidecode.unidecode(text.upper())
     words = normalized_text.split()
-    
     mapping = {}
     char_counter = 1
     crypted_words = []
@@ -34,68 +59,84 @@ def _create_cryptogram_from_text(text: str):
     cryptogram_str = " ".join(crypted_words)
     solution_mapping = {v: k for k, v in mapping.items()}
     
-    # --- 2. Lógica para Pistas Aleatorias ---
     clues = {}
-    # Decidimos una cantidad aleatoria de pistas (entre 1 y 3, por ejemplo)
-    # Nos aseguramos de no pedir más pistas que las letras disponibles
     if len(solution_mapping) > 3:
         num_clues = random.randint(1, 3)
-        # Elegimos al azar algunos números del mapa de la solución para dar como pista
         clue_keys = random.sample(list(solution_mapping.keys()), num_clues)
         for key in clue_keys:
             clues[key] = solution_mapping[key].lower()
 
-    # Devolvemos los tres resultados
     return cryptogram_str, solution_mapping, clues
 
-async def generate_and_save(data: dict):
+# --- 3. Nueva función para obtener la frase POR TEMA ---
+def _get_random_phrase_by_theme(theme: str):
     """
-    Servicio orquestador:
-    1. Pide una frase a Gemini según un tema.
-    2. Convierte esa frase en un criptograma localmente, generando pistas.
+    Obtiene una frase aleatoria de la categoría correcta.
+    Si la categoría no existe, usa una frase de la lista de fallback.
+    """
+    if not FRASES_POR_TEMA or not FALLBACK_PHRASES:
+        return "Error interno: No hay frases cargadas.", False
+
+    # Buscamos la lista de frases para el tema solicitado
+    phrases_for_theme = FRASES_POR_TEMA.get(theme)
+    
+    if phrases_for_theme:
+        # Si encontramos el tema y tiene frases, elegimos una de esa lista
+        return random.choice(phrases_for_theme).strip(), True
+    else:
+        # Si el tema no existe (o es "aleatorio"), elegimos de la lista de fallback
+        return random.choice(FALLBACK_PHRASES).strip(), True
+
+# --- 4. Modificamos la función principal del servicio ---
+# (Esta función sigue siendo síncrona, 'def')
+def generate_and_save(data: dict):
+    """
+    Servicio orquestador (Modo Local con Temas):
+    1. Obtiene una frase aleatoria del archivo local según el tema.
+    2. Convierte esa frase en un criptograma.
     """
     user_id = data.get('user_id')
-    theme = data.get('theme', 'sabiduría')
+    # [cite_start]Usamos 'sabiduria' como tema por defecto si no se proporciona [cite: 2]
+    theme = data.get('theme', 'sabiduria') 
     
     if not user_id:
         return {"error": "user_id es requerido."}, 400
 
-    log.info(f"Servicio crypto_generator: Petición para generar frase del tema '{theme}' para el usuario {user_id}")
+    log.info(f"Servicio crypto_generator: Petición para generar frase local del tema '{theme}'")
 
-    original_phrase, status = await gemini.generate_phrase_by_theme(theme)
-    if status != 200:
-        log.warning(f"No se pudo obtener la frase de Gemini. Razón: {original_phrase}")
-        return {"error": original_phrase}, status
+    # --- 5. Reemplazamos la llamada a la función anterior ---
+    original_phrase, success = _get_random_phrase_by_theme(theme)
+    
+    if not success:
+        return {"error": original_phrase}, 500
 
-    log.info(f"Frase obtenida de Gemini: '{original_phrase}'")
+    log.info(f"Frase obtenida (Tema: {theme}): '{original_phrase}'")
 
-    # --- 3. Obtenemos los 3 valores de nuestra función mejorada ---
     new_cryptogram, solution_mapping, random_clues = _create_cryptogram_from_text(original_phrase)
     log.info(f"Criptograma generado localmente: {new_cryptogram}")
-    log.info(f"Pistas generadas: {random_clues}")
 
+    # (La lógica de guardado en la BD y de respuesta no cambia)
     db_data = {
-    'user_id': user_id,
-    'entry_type': 'ai_generator', # Nuevo tipo
-    'content': original_phrase # Solo guardamos la frase
+        'user_id': user_id,
+        'entry_type': 'local_generator',
+        'content': original_phrase
     }
     database_manager.create_new_entry(db_data)
     
-    # --- 4. Añadimos las pistas a la respuesta ---
     response_data = {
         "theme": theme,
         "original_phrase": original_phrase,
         "cryptogram": new_cryptogram,
-        "clues": random_clues, # <--- La nueva información
+        "clues": random_clues,
         "solution_key": solution_mapping
     }
     
     return response_data, 200
 
+# --- La función de 'generate_from_user_input' no cambia ---
 async def generate_from_user_input(data: dict):
     """
-    Servicio para crear un criptograma a partir del texto y pistas
-    proporcionados por el usuario y guardarlo en su historial.
+    (Esta función se queda como estaba)
     """
     user_id = data.get('user_id')
     text = data.get('text', '')
@@ -104,23 +145,17 @@ async def generate_from_user_input(data: dict):
         return {"error": "user_id y text son requeridos."}, 400
 
     log.info(f"Servicio crypto_generator: Creando criptograma personalizado para el usuario {user_id}")
-
-    # Reutilizamos la lógica interna que ya teníamos
     new_cryptogram, solution_mapping, _ = _create_cryptogram_from_text(text)
-
-    # Creamos el objeto de detalles para guardarlo y devolverlo
     details_object = {
         "original_phrase": text,
         "cryptogram": new_cryptogram,
         "solution_key": solution_mapping
     }
-
     db_data = {
         'user_id': user_id,
-        'entry_type': 'user_generator', # Un tipo específico para esta acción
+        'entry_type': 'user_generator',
         'details': json.dumps(details_object)
     }
     database_manager.create_new_entry(db_data)
     
-    # Devolvemos el mismo objeto de detalles al frontend
     return details_object, 200

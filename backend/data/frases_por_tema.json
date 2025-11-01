@@ -1,0 +1,31 @@
+{
+  "filosofia": [
+    "Pienso, luego existo.",
+    "El respeto al derecho ajeno es la paz.",
+    "El corazon tiene razones que la razon ignora."
+  ],
+  "historia": [
+    "Visteme despacio que estoy apurado.",
+    "El hombre es el lobo del hombre."
+  ],
+  "ciencia": [
+    "La ciencia es la poesia de la realidad.",
+    "La imaginacion es mas importante que el conocimiento."
+  ],
+  "arte": [
+    "El arte de vencer se aprende en las derrotas.",
+    "La pintura es poesia muda; la poesia, pintura ciega."
+  ],
+  "tecnologia": [
+    "La tecnologia es solo una herramienta.",
+    "El espiritu humano debe prevalecer sobre la tecnologia."
+  ],
+  "sabiduria": [
+    "No por mucho madrugar amanece mas temprano.",
+    "El que lee mucho y anda mucho, ve mucho y sabe mucho."
+  ],
+  "naturaleza": [
+    "La naturaleza nunca se apresura, pero todo lo logra.",
+    "Mira profundamente en la naturaleza y entonces comprenderas todo mejor."
+  ]
+}

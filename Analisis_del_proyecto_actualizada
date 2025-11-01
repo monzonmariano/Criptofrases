@@ -1,0 +1,91 @@
+## Análisis Detallado del Proyecto Criptofrases v1.0
+Aquí tienes un desglose de tu ecosistema completo, basado en todos los archivos y documentos que me has proporcionado.
+
+1. La Visión y Arquitectura General
+Tu proyecto es un "Hub de Lógica" full-stack, no solo una simple herramienta. El objetivo es tanto ser una aplicación funcional como un recurso educativo de código abierto, lo cual es evidente por la increíble calidad de tu documentación. 
+
+
+
+La arquitectura se basa en principios modernos:
+
+
+Backend Asíncrono: Usas aiohttp para un alto rendimiento, permitiendo que el servidor maneje muchas peticiones sin bloquearse mientras espera a la base de datos o a la API de Gemini.
+
+
+Contenerización: Docker y docker-compose.yml crean un entorno de desarrollo y producción consistente, predecible y aislado. 
+
+
+Base de Datos Robusta: PostgreSQL es la elección para el almacenamiento de datos, usando psycopg2-binary como conector. 
+
+
+
+Arquitectura en Capas: El backend está perfectamente dividido por responsabilidades (api, core, services, crud), lo que lo hace fácil de mantener y escalar. 
+
+
+2. La Infraestructura: docker-compose.yml y Dockerfile
+Tu docker-compose.yml define dos servicios principales:
+
+db: Levanta un contenedor postgres:14-alpine. Crucialmente, usa volumes para dos cosas:
+
+Persistir los datos de la base de datos en postgres_data.
+
+Ejecutar tu script database/init.sql la primera vez que se crea para definir la estructura de la base de datos.
+
+backend:
+
+Construye la imagen usando tu backend/Dockerfile.
+
+El Dockerfile usa una imagen base de Python (python:3.10-bullseye), instala las dependencias de requirements.txt, y copia tu código. 
+
+Sincroniza tu código local con el contenedor (./backend:/app/backend) para desarrollo en tiempo real.
+
+Carga tus secretos (.env) y el archivo de clave de Google (gcloud-service-key.json) de forma segura. 
+
+Depende de db, asegurando que la base de datos se inicie primero.
+
+3. El Flujo de una Petición (El Viaje de los Datos)
+Siguiendo tus documentos de arquitectura, el flujo es impecable:
+
+
+El Arranque (main.py): Este es el punto de entrada que ejecuta docker. Inicia el servidor aiohttp, configura CORS (¡importante!) y, lo más crítico, llama a api.setup_routes(app).
+
+Capa 1: El Recepcionista (api.py): Define todos los endpoints HTTP (ej: POST /api/solve, POST /api/author). Esta capa está "blindada" con tu función _create_error_response para capturar cualquier error y devolver una respuesta genérica, protegiendo tu backend de fugas de información. Su única misión es validar la entrada y llamar a la siguiente capa.
+
+Capa 2: El Director de Orquesta (api_manager.py): Este archivo es el "cerebro" que sabe a quién llamar. No contiene lógica de negocio, solo delega. Por ejemplo, handle_solve llama a crypto_solver.solve_and_save.
+
+Capa 3: Los Especialistas (services/):
+
+crypto_solver.py: El corazón algorítmico. Su clase _BacktrackingSolver se inicializa una vez y carga todos los archivos .json en memoria (unigrama, bigrama, etc.) para un acceso rápido. El método solve ordena las palabras por longitud (key=len) y luego llama a _backtrack para la búsqueda recursiva.  Finalmente, usa _score_solution para puntuar las soluciones basándose en la coherencia de los n-gramas.
+
+crypto_generator.py: Tiene dos funciones: generate_and_save (que llama a Gemini) y generate_from_user_input (que es local). Utiliza unidecode para normalizar el texto y _create_cryptogram_from_text para la lógica de encriptación.
+
+author_finder.py: Un servicio simple que actúa como intermediario para llamar a gemini.find_author y preparar la respuesta.
+
+gemini.py: Tu cliente de API seguro. Ya no usa API Key. Se autentica explícitamente usando service_account.Credentials.from_service_account_file, obtiene un token de Bearer y llama al endpoint de Vertex AI (aiplatform.googleapis.com) usando aiohttp.
+
+Capa 4: Los Archivistas (Base de Datos):
+
+db.py: Una utilidad simple que usa os.getenv("DB_URL") y psycopg2.connect() para crear y devolver una conexión a la base de datos.
+
+database_manager.py: Un gestor limpio que importa los módulos crud y llama a las funciones específicas (create.create_entry, read.get_entries_by_user, delete.delete_entry).
+
+crud/ (create.py, read.py, update.py, delete.py): Esta es la única capa que escribe SQL. Cada archivo contiene la lógica pura de la base de datos (INSERT, SELECT, UPDATE, DELETE), manteniendo el resto de tu código "agnóstico" al SQL.
+
+init.sql: Tu script de fundación. Define la tabla entries de una manera muy flexible, usando entry_type para diferenciar la lógica de negocio y una columna JSONB para almacenar datos complejos sin necesidad de crear múltiples tablas. 
+
+
+4. Los Scripts de Soporte (El Trabajo "Tras Bambalinas")
+consolidate_corpus.py: Un script de utilidad que lee todos los .txt en corpus_sources y los une en frecuencia_corpus.txt.
+
+solver_utils.py: El motor de preparación de datos. Lee corpus.txt y frecuencia_corpus.txt y usa defaultdict y Counter para generar eficientemente todos los archivos .json (unigramas, bigramas, trigramas, etc.) que el crypto_solver.py necesita para funcionar.
+
+5. Visión Futura (Tus Planes)
+Tu documentación también es clara sobre el futuro:
+
+
+Mejora del Solver (v2.0): Planeas implementar un "Lenguaje Vivo" (un corpus que se auto-mejora) y una "Búsqueda en Haz" (Beam Search) para manejar la ambigüedad, lo cual es un enfoque de IA de nivel avanzado. 
+
+
+
+
+Tu Desafío Actual: Implementar el buscador de autores local, tanto en su versión simple como en la "experta".

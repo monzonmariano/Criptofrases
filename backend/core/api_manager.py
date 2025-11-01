@@ -24,12 +24,12 @@ async def get_author_of_phrase(data):
     log.info("API Manager: Petición de autor recibida. Delegando a author_finder.")
     return await author_finder.find_and_save(data)
 
-async def generate_cryptogram(data):
+def generate_cryptogram(data):
     """
     ORQUESTADOR: Delega la generación de un criptograma al servicio correspondiente.
     """
     log.info("API Manager: Petición de generación recibida. Delegando a crypto_generator.")
-    return await crypto_generator.generate_and_save(data)
+    return  crypto_generator.generate_and_save(data)
 
 
 async def get_history_by_user(user_id):
