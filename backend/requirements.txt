@@ -7,3 +7,4 @@ debugpy
 aiohttp-cors
 google-auth
 requests 
+sudoku

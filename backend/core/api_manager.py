@@ -9,6 +9,7 @@
 from backend.logger_config import log
 from backend.services import crypto_solver, local_author_finder, crypto_generator
 from . import database_manager
+from backend.services import sudoku_service
 
 async def solve_cryptogram(data):
     """
@@ -61,3 +62,18 @@ async def find_local_author(data):
     """
     log.info("API Manager: Petición de autor local recibida. Delegando a local_author_finder.")
     return await local_author_finder.find_author_locally(data)
+
+def generate_sudoku(data):
+    """
+    ORQUESTADOR: Delega la generación de Sudoku.
+    """
+    log.info("API Manager: Petición de generación de Sudoku recibida.")
+    difficulty = data.get('difficulty', 0.5) # Dificultad por defecto
+    return sudoku_service.generate_new_sudoku(difficulty)
+
+async def solve_sudoku(data):
+    """
+    ORQUESTADOR: Delega la resolución de Sudoku (algoritmo propio).
+    """
+    log.info("API Manager: Petición de resolución de Sudoku (propio) recibida.")
+    return await sudoku_service.solve_sudoku_from_scratch(data)
