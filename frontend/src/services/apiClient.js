@@ -1,8 +1,8 @@
 // src/services/apiClient.js
 import axios from 'axios';
 import { getUserId } from './userService'; 
-const API_BASE_URL = 'http://localhost:8080/api';
-//const API_BASE_URL = 'https://criptofrases-backend-1055609823342.us-central1.run.app/api'; //<--- la url del servidor en google
+
+const API_BASE_URL = import.meta.env.VITE_API_URL;
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -24,7 +24,7 @@ export const findAuthorOfPhrase = (phrase) => {
     user_id: getUserId(),
     phrase,
   };
-  return apiClient.post('/author', payload);
+  return apiClient.post('/author/local', payload);
 };
 
 export const generateCryptogram = (theme) => {

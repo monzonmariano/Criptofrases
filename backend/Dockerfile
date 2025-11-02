@@ -15,6 +15,7 @@ COPY backend/requirements.txt ./backend/
 # Instala las dependencias
 RUN pip install --no-cache-dir -r backend/requirements.txt
 
+
 # Copia todo el código de la aplicación a su destino final
 COPY backend/ ./backend/
 

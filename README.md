@@ -8,8 +8,7 @@
 
 * [cite_start]**Solver de Criptogramas Avanzado**: Utiliza un modelo estadístico del español (n-gramas) y un algoritmo de backtracking para encontrar las soluciones más probables a cualquier criptograma de sustitución[cite: 14].
 * **Hub de Juegos Escalable**: Una interfaz centralizada diseñada para incorporar fácilmente nuevos puzzles en el futuro (Sudoku, Pictologic, etc.).
-* **Generador Dual de Criptogramas**:
-    * [cite_start]**Generación por IA**: Crea frases únicas sobre diversos temas usando la API de Google Gemini[cite: 2].
+* ** Generación por Temas (Local): Utiliza un corpus JSON local, categorizado por temas, para generar criptogramas de forma instantánea y fiable,   sin depender de APIs externas..
     * **Creación Personalizada**: Permite a los usuarios encriptar sus propias frases.
 * **Historial de Actividad**: Guarda un registro de los criptogramas resueltos y creados por el usuario, con una vista de detalles completa.
 * [cite_start]**Arquitectura Profesional**: Construido con Python `aiohttp` para un alto rendimiento, `PostgreSQL` para una base de datos robusta, y `Docker` para una puesta en marcha simple y consistente[cite: 4, 11].

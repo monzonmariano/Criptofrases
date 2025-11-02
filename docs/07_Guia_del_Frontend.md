@@ -10,7 +10,7 @@ Este documento es una inmersión profunda en el código del frontend, explicando
       cryptogram: {
         solver: { ... },
         generator: {
-          ia: { ... },
+          themed: { ... },
           custom: { ... }
         }
       },

@@ -60,15 +60,6 @@ async def _call_gemini_api_internal(payload: dict, url: str):
         raise e
 
 # --- USAREMOS PAYLOADS MINIMALISTAS PARA DESCARTAR ERRORES ---
-async def find_author(phrase: str):
-    full_prompt = f"¿Quién es el autor de la frase: '{phrase}'? Responde solo con el nombre completo."
-    payload = { "contents": [{"role": "user", "parts": [{"text": full_prompt}]}] }
-    try:
-        author, status = await _call_gemini_api_internal(payload, FLASH_API_URL)
-        return author.strip(), status
-    except Exception as e:
-        log.error(f"Excepción en find_author: {e}")
-        return "Error al contactar la API de IA.", 500
 
 async def generate_phrase_by_theme(theme: str):
     # Usaremos un prompt muy simple para la prueba, para evitar cualquier problema con el texto.

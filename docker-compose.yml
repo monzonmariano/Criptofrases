@@ -1,6 +1,6 @@
 # docker-compose.yml (Versión Final con Clave de Servicio)
 
-version: '3.8'
+
 
 services:
   backend:
@@ -14,6 +14,8 @@ services:
       - ./backend:/app/backend
       # --- CAMBIO IMPORTANTE: Montamos el archivo de la clave ---
       - ./gcloud-service-key.json:/app/gcloud-service-key.json:ro
+
+      - ./scripts:/app/scripts
     env_file:
       - .env
     environment:
@@ -21,6 +23,8 @@ services:
       - GOOGLE_APPLICATION_CREDENTIALS=/app/gcloud-service-key.json
     depends_on:
       - db
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   db:
     image: postgres:14-alpine

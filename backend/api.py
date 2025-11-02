@@ -31,14 +31,6 @@ async def handle_solve(request):
         # ¡CORREGIDO!
         return _create_error_response(e, "/api/solve")
 
-async def handle_get_author(request):
-    try:
-        data = await request.json()
-        response_data, status = await api_manager.get_author_of_phrase(data)
-        return web.json_response(response_data, status=status, dumps=pretty_json)
-    except Exception as e:
-        # ¡CORREGIDO!
-        return _create_error_response(e, "/api/author")
 
 async def handle_generate(request):
     try:
@@ -88,12 +80,21 @@ async def handle_generate_custom(request):
         # ¡CORREGIDO!
         return _create_error_response(e, "/api/generate/custom")
 
+async def handle_get_local_author(request):
+    try:
+        data = await request.json()
+        response_data, status = await api_manager.find_local_author(data)
+        return web.json_response(response_data, status=status, dumps=pretty_json)
+    except Exception as e:
+        return _create_error_response(e, "/api/author/local")    
+
 
 def setup_routes(app):
     app.router.add_post('/api/solve', handle_solve)
-    app.router.add_post('/api/author', handle_get_author)
+    app.router.add_post('/api/generate/custom', handle_generate_custom)
+    app.router.add_post('/api/author/local', handle_get_local_author)
     app.router.add_post('/api/generate', handle_generate)
     app.router.add_get('/api/history', get_history)
     app.router.add_post('/api/clear-history', clear_history)
     app.router.add_post('/api/delete-entry', delete_entry)
-    app.router.add_post('/api/generate/custom', handle_generate_custom)
+  

@@ -21,7 +21,7 @@ El proyecto utiliza una única tabla flexible para almacenar la actividad.
 | :--- | :--- | :--- |
 | `id` | `SERIAL PRIMARY KEY` | Identificador único autoincremental. |
 | `user_id` | `TEXT NOT NULL` | Identificador único del usuario. |
-| `entry_type` | `VARCHAR(50) NOT NULL` | **Clave principal.** Define el tipo de entrada: `solver`, `ai_generator`, `user_generator`. |
+| `entry_type` | `VARCHAR(50) NOT NULL` | **Clave principal.** Define el tipo de entrada: `solver`, `local_generator`, `user_generator`. |
 | `content` | `TEXT` | **(Para Corpus)**. Guarda la frase generada por IA para futuro análisis. Puede ser `NULL`. |
 | `result` | `TEXT` | **(Legado/Resumen)**. Guarda un resumen del resultado. Puede ser `NULL`. |
 | `author` | `TEXT` | Guarda el autor de una frase. Puede ser `NULL`. |

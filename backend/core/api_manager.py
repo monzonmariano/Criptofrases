@@ -7,7 +7,7 @@
 
 # backend/core/api_manager.py
 from backend.logger_config import log
-from backend.services import crypto_solver, author_finder, crypto_generator
+from backend.services import crypto_solver, local_author_finder, crypto_generator
 from . import database_manager
 
 async def solve_cryptogram(data):
@@ -17,12 +17,6 @@ async def solve_cryptogram(data):
     log.info("API Manager: Petición de resolución recibida. Delegando a crypto_solver.")
     return await crypto_solver.solve_and_save(data)
 
-async def get_author_of_phrase(data):
-    """
-    ORQUESTADOR: Delega la búsqueda de autor al servicio correspondiente.
-    """
-    log.info("API Manager: Petición de autor recibida. Delegando a author_finder.")
-    return await author_finder.find_and_save(data)
 
 def generate_cryptogram(data):
     """
@@ -60,3 +54,10 @@ async def generate_cryptogram_from_user(data):
     """
     log.info("API Manager: Petición de generación personalizada recibida.")
     return await crypto_generator.generate_from_user_input(data)    
+
+async def find_local_author(data):
+    """
+    ORQUESTADOR: Delega la búsqueda de autor local al servicio correspondiente.
+    """
+    log.info("API Manager: Petición de autor local recibida. Delegando a local_author_finder.")
+    return await local_author_finder.find_author_locally(data)
