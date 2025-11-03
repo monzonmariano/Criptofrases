@@ -1,14 +1,13 @@
-// src/App.jsx
-import React, { useState, useEffect } from 'react';
-import { BACKGROUND_IMAGES } from './config';
+import { useState, useEffect } from 'react';
 
-// ASUMO QUE TUS RUTAS DE IMPORTACIÓN SON CORRECTAS
+// --- CORRECCIÓN DE RUTAS (basado en tu captura de pantalla) ---
+import { BACKGROUND_IMAGES } from './config';
 import { 
   solveCryptogram, generateCryptogram, generateCryptogramFromUser, 
   findAuthorOfPhrase, getUserHistory, deleteHistoryEntry, clearUserHistory,
   generateSudoku, solveSudoku 
 } from './services/apiClient';
-
+import { getUserId } from './services/userService'; 
 
 import LogicGamesView from './views/LogicGamesView';
 import CryptoSuiteView from './views/CryptoSuiteView';
@@ -18,11 +17,9 @@ import HistoryView from './views/HistoryView';
 import BackgroundMusic from './components/BackgroundMusic';
 import Attribution from './components/Attribution';
 import HistoryDetailModal from './components/HistoryDetailModal';
-
-
+// -----------------------------------------------------------
 
 const HomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>;
-
 
 function App() {
   const [activeGame, setActiveGame] = useState('menu');
@@ -52,14 +49,13 @@ function App() {
     }
   });
 
-  // --- HANDLERS DE CRIPTOGRAMAS ---
+  // --- Handlers de Criptogramas (Tu código) ---
   const handleSolveSubmit = async () => {
     const { cryptogram, clues } = gameState.cryptogram.solver;
     const cluesObject = clues.reduce((acc, clue) => {
       if (clue.num && clue.letter) { acc[clue.num] = clue.letter.toLowerCase(); }
       return acc;
     }, {});
-
     setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, isLoading: true, error: '', solutions: [] }}}));
     try {
       const response = await solveCryptogram(cryptogram, cluesObject);
@@ -71,7 +67,6 @@ function App() {
       setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, isLoading: false }}}));
     }
   };
-
   const handleGenerateByTheme = async () => {
     const { theme } = gameState.cryptogram.generator.ia;
     setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, isLoading: true, error: '', generatedData: null } } } }));
@@ -84,8 +79,6 @@ function App() {
       setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, isLoading: false } } } }));
     }
   };
-
-
   const handleGenerateCustom = async () => {
     const { text } = gameState.cryptogram.generator.custom;
     if (!text.trim()) {
@@ -116,19 +109,16 @@ function App() {
     }
   };
   
-  // --- HANDLERS DE SUDOKU ---
-
+  // --- HANDLERS DE SUDOKU (CORREGIDOS) ---
   const handleGenerateSudoku = async (difficulty) => {
     setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isGenerating: true, error: '' }}));
     try {
       const response = await generateSudoku(difficulty);
       const newBoard = response.data.board;
       const newSolution = response.data.solution; 
-
       localStorage.setItem('sudoku_board', JSON.stringify(newBoard));
       localStorage.setItem('sudoku_originalBoard', JSON.stringify(newBoard));
       localStorage.setItem('sudoku_solution', JSON.stringify(newSolution));
-
       setGameState(prev => ({ 
         ...prev, 
         sudoku: { 
@@ -141,7 +131,7 @@ function App() {
       }));
     } catch (err) {
       console.error("Error al procesar el sudoku:", err); 
-      const errorMsg = err.response?.data?.error || 'No se pudo generar el puzzle. Revisa la consola (F12).';
+      const errorMsg = err.response?.data?.error || 'No se pudo generar el puzzle.';
       setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isGenerating: false, error: errorMsg }}));
     }
   };
@@ -168,7 +158,6 @@ function App() {
   
   // --- ARREGLO DEL BUG DE onCellChange ---
   const handleSudokuCellChange = (r, c, value) => {
-    
     // --- CLÁUSULA DE GUARDA (FIX 1) ---
     // Si el tablero no existe (es null), no hagas nada.
     // Esto previene el 'TypeError: Cannot set properties of undefined'
@@ -176,28 +165,20 @@ function App() {
       console.error("onCellChange llamado sin tablero (board)");
       return;
     }
-
     const num = value === '' ? 0 : parseInt(value);
     if (isNaN(num) || num < 0 || num > 9) return;
-
     const newBoard = JSON.parse(JSON.stringify(gameState.sudoku.board));
-    
-    // Esta línea ahora es segura gracias a la cláusula de guarda
     newBoard[r][c] = num;
-
     localStorage.setItem('sudoku_board', JSON.stringify(newBoard));
-
     setGameState(prev => ({
       ...prev,
       sudoku: { ...prev.sudoku, board: newBoard }
     }));
   };
 
-
-const handleSudokuHint = () => {
+  const handleSudokuHint = () => {
     const { board, solution } = gameState.sudoku;
     if (!board || !solution) return;
-
     let found = false;
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {

@@ -62,7 +62,6 @@ const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell })
           
           // Estas líneas ahora son seguras gracias a la cláusula de guarda
           const isGiven = originalBoard[r_idx][c_idx] !== 0;
-          // Comprobación de la validación (tu pregunta)
           const isWrong = cell !== 0 && !isGiven && solution[r_idx][c_idx] !== cell;
           const isActive = activeCell && activeCell[0] === r_idx && activeCell[1] === c_idx;
 
