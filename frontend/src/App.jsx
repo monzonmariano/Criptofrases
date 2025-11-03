@@ -3,15 +3,18 @@ import React, { useState, useEffect } from 'react';
 import { BACKGROUND_IMAGES } from './config';
 import { solveCryptogram, generateCryptogram, generateCryptogramFromUser, findAuthorOfPhrase, getUserHistory } from './services/apiClient';
 
-// --- NUEVOS COMPONENTES ---
+// --- VIEWS---
 import LogicGamesView from './views/LogicGamesView';
 import CryptoSuiteView from './views/CryptoSuiteView';
+import SudokuView from './views/SudokuView';
+import HistoryView from './views/HistoryView';
 // -------------------------
 
-import HistoryView from './views/HistoryView';
+//------ COMPONENTS -------------------
 import BackgroundMusic from './components/BackgroundMusic';
 import Attribution from './components/Attribution';
 import HistoryDetailModal from './components/HistoryDetailModal';
+
 
 const ChangeImageIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>;
 const HomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>;
@@ -37,6 +40,12 @@ function App() {
     },
     history: {
       items: [], isLoading: true, error: ''
+    },
+    sudoku: {
+      board: null,       // El tablero 9x9
+      originalBoard: null, // Para guardar el puzzle inicial
+      isLoading: false,
+      error: ''
     }
   });
 
@@ -107,6 +116,54 @@ function App() {
       setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, isLoading: false }}}));
     }
   };
+  
+  // Dentro de App() en App.jsx
+
+  const handleGenerateSudoku = async (difficulty) => {
+  setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
+  try {
+    const response = await generateSudoku(difficulty);
+    setGameState(prev => ({ 
+      ...prev, 
+      sudoku: { 
+        board: response.data.board, 
+        originalBoard: JSON.parse(JSON.stringify(response.data.board)), // Guardamos una copia profunda
+        isLoading: false 
+      }
+    }));
+  } catch (err) {
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: 'No se pudo generar el puzzle.' }}));
+  }
+};
+
+  const handleSolveSudoku = async () => {
+  const { originalBoard } = gameState.sudoku; // Usamos el original
+  if (!originalBoard) return;
+
+  setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
+  try {
+    const response = await solveSudoku(originalBoard); // Lo resolvemos
+    setGameState(prev => ({ 
+      ...prev, 
+      sudoku: { ...prev.sudoku, board: response.data.solved_board, isLoading: false } // Mostramos el resuelto
+    }));
+  } catch (err) {
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: 'Este puzzle no tiene solución.' }}));
+  }
+};
+  
+  const handleSudokuCellChange = (r, c, value) => {
+  // Solo permite números del 1 al 9 o borrar
+  const num = value === '' ? 0 : parseInt(value);
+  if (isNaN(num) || num < 0 || num > 9) return;
+
+  const newBoard = gameState.sudoku.board.map(row => [...row]);
+  newBoard[r][c] = num;
+  setGameState(prev => ({
+    ...prev,
+    sudoku: { ...prev.sudoku, board: newBoard }
+  }));
+};
 
   const fetchHistory = async () => {
     setGameState(prev => ({ ...prev, history: { ...prev.history, isLoading: true, error: '' }}));
@@ -153,6 +210,15 @@ function App() {
                    onFindAuthor: handleAuthorSubmit
                  }}
                />;
+      case 'sudoku':
+      return <SudokuView
+               gameState={gameState.sudoku}
+               handlers={{
+                 onGenerate: handleGenerateSudoku,
+                 onSolve: handleSolveSudoku,
+                 onCellChange: handleSudokuCellChange
+               }}
+             />;
       case 'history':
         return <HistoryView 
                  state={{...gameState.history, history: gameState.history.items}}

@@ -6,3 +6,4 @@ __pycache__/
 *.pyc
 
 /frontend/node_modules/
+gcloud-service-key.json

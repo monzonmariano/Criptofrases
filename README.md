@@ -2,17 +2,35 @@
 
 ¡Bienvenido a Criptofrases & Logic Hub! Una aplicación web completa y de código abierto diseñada para resolver, generar y disfrutar de juegos de lógica, empezando por los criptogramas.
 
+
 Este proyecto sirve como un ejemplo práctico y profundamente documentado de cómo construir una aplicación web moderna, desde un backend asíncrono con Python y Docker hasta un frontend interactivo con React.
 
 ## Características Principales
 
 * Solver de Criptogramas Avanzado**: Utiliza un modelo estadístico del español (n-gramas) y un algoritmo de backtracking para encontrar las soluciones más probables a cualquier criptograma de sustitución.
+=======
+Este proyecto sirve como un ejemplo práctico y profundamente documentado de cómo construir una aplicación web moderna, desde un backend asíncrono con Python y Docker hasta un frontend interactivo con React
+
+## Características Principales
+
+**Solver de Criptogramas Avanzado**: Utiliza un modelo estadístico del español (n-gramas) y un algoritmo de backtracking para encontrar las soluciones más probables a cualquier criptograma de sustitución.
+
 * **Hub de Juegos Escalable**: Una interfaz centralizada diseñada para incorporar fácilmente nuevos puzzles en el futuro (Sudoku, Pictologic, etc.).
+
+* ** Generación por Temas (Local): Utiliza un corpus JSON local, categorizado por temas, para generar criptogramas de forma instantánea y fiable,   sin depender de APIs externas..
+=======
 * **Generador Dual de Criptogramas**:
     * **Generación por IA**: Crea frases únicas sobre diversos temas usando la API de Google Gemini.
+
     * **Creación Personalizada**: Permite a los usuarios encriptar sus propias frases.
 * **Historial de Actividad**: Guarda un registro de los criptogramas resueltos y creados por el usuario, con una vista de detalles completa.
 * **Arquitectura Profesional**: Construido con Python `aiohttp` para un alto rendimiento, `PostgreSQL` para una base de datos robusta, y `Docker` para una puesta en marcha simple y consistente
+=======
+
+    * **Creación Personalizada**: Permite a los usuarios encriptar sus propias frases.
+* **Historial de Actividad**: Guarda un registro de los criptogramas resueltos y creados por el usuario, con una vista de detalles completa.
+**Arquitectura Profesional**: Construido con Python `aiohttp` para un alto rendimiento, `PostgreSQL` para una base de datos robusta, y `Docker` para una puesta en marcha simple y consistente[cite: 4, 11].
+s
 * **Frontend Moderno**: Interfaz de usuario reactiva y pulida construida con `React` y `Tailwind CSS`, incluyendo animaciones suaves y una experiencia de usuario cuidada.
 
 ## Documentación Esencial

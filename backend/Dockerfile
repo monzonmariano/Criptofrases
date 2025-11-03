@@ -1,5 +1,7 @@
+
 # Usa una imagen de Python
-FROM python:3.10-slim
+# Usar -bullseye es una buena práctica para fijar la versión del sistema operativo subyacente, pero usar solo python:3.10 también funcionaría
+FROM python:3.10-bullseye
 
 # Establece el directorio de trabajo principal
 WORKDIR /app
@@ -12,6 +14,7 @@ COPY backend/requirements.txt ./backend/
 
 # Instala las dependencias
 RUN pip install --no-cache-dir -r backend/requirements.txt
+
 
 # Copia todo el código de la aplicación a su destino final
 COPY backend/ ./backend/

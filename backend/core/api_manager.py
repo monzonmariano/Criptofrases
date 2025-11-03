@@ -7,8 +7,9 @@
 
 # backend/core/api_manager.py
 from backend.logger_config import log
-from backend.services import crypto_solver, author_finder, crypto_generator
+from backend.services import crypto_solver, local_author_finder, crypto_generator
 from . import database_manager
+from backend.services import sudoku_service
 
 async def solve_cryptogram(data):
     """
@@ -17,19 +18,13 @@ async def solve_cryptogram(data):
     log.info("API Manager: Petición de resolución recibida. Delegando a crypto_solver.")
     return await crypto_solver.solve_and_save(data)
 
-async def get_author_of_phrase(data):
-    """
-    ORQUESTADOR: Delega la búsqueda de autor al servicio correspondiente.
-    """
-    log.info("API Manager: Petición de autor recibida. Delegando a author_finder.")
-    return await author_finder.find_and_save(data)
 
-async def generate_cryptogram(data):
+def generate_cryptogram(data):
     """
     ORQUESTADOR: Delega la generación de un criptograma al servicio correspondiente.
     """
     log.info("API Manager: Petición de generación recibida. Delegando a crypto_generator.")
-    return await crypto_generator.generate_and_save(data)
+    return  crypto_generator.generate_and_save(data)
 
 
 async def get_history_by_user(user_id):
@@ -60,3 +55,25 @@ async def generate_cryptogram_from_user(data):
     """
     log.info("API Manager: Petición de generación personalizada recibida.")
     return await crypto_generator.generate_from_user_input(data)    
+
+async def find_local_author(data):
+    """
+    ORQUESTADOR: Delega la búsqueda de autor local al servicio correspondiente.
+    """
+    log.info("API Manager: Petición de autor local recibida. Delegando a local_author_finder.")
+    return await local_author_finder.find_author_locally(data)
+
+def generate_sudoku(data):
+    """
+    ORQUESTADOR: Delega la generación de Sudoku.
+    """
+    log.info("API Manager: Petición de generación de Sudoku recibida.")
+    difficulty = data.get('difficulty', 0.5) # Dificultad por defecto
+    return sudoku_service.generate_new_sudoku(difficulty)
+
+async def solve_sudoku(data):
+    """
+    ORQUESTADOR: Delega la resolución de Sudoku (algoritmo propio).
+    """
+    log.info("API Manager: Petición de resolución de Sudoku (propio) recibida.")
+    return await sudoku_service.solve_sudoku_from_scratch(data)

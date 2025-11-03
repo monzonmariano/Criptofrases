@@ -1,32 +1,34 @@
-# backend/db.py (Versión de Depuración Final)
+# backend/db.py (Versión Robusta)
 
 import os
 import psycopg2
 from backend.logger_config import log
 
 def get_db_connection():
-    """
-    Establece y devuelve una conexión a la base de datos.
-    Incluye logging detallado para depurar problemas de conexión en producción.
-    """
-    log.info("--- [DEBUG] Intentando obtener conexión a la base de datos... ---")
+    log.info("--- [DB] Intentando obtener conexión a la base de datos... ---")
     
     try:
-        db_url = os.getenv("DB_URL")
-        
-        # Imprimimos en los logs el valor que REALMENTE está recibiendo la aplicación.
-        log.info(f"--- [DEBUG] Valor de la variable de entorno DB_URL: '{db_url}' ---")
+        dbname = os.getenv("DB_NAME")
+        user = os.getenv("DB_USER")
+        password = os.getenv("POSTGRES_PASSWORD")
+        host = os.getenv("DB_HOST")
+        port = os.getenv("DB_PORT")
 
-        if db_url:
-            log.info("--- [DB] Conectando a la base de datos usando DB_URL. ---")
-            conn = psycopg2.connect(db_url)
-            log.info("--- [DB] ¡Conexión con DB_URL exitosa! ---")
-            return conn
-        else:
-            # Si DB_URL no existe, el programa fallará aquí y nos lo dirá.
-            log.error("--- [DEBUG] ¡ERROR CRÍTICO! La variable de entorno DB_URL está vacía o no definida. La aplicación no puede continuar. ---")
-            # Devolvemos None para que el resto del código maneje el error de conexión.
+        if not all([dbname, user, password, host, port]):
+            log.error("--- [DB] ¡ERROR CRÍTICO! Faltan variables de entorno de la BD. ---")
             return None
+
+        log.info(f"--- [DB] Conectando a '{dbname}' en {host}:{port}... ---")
+        conn = psycopg2.connect(
+            dbname=dbname,
+            user=user,
+            password=password,
+            host=host,
+            port=port,
+            connect_timeout=10 # <--- Añade un timeout de 10 segundos
+        )
+        log.info("--- [DB] ¡Conexión exitosa! ---")
+        return conn
             
     except psycopg2.Error as e:
         log.error(f"Error fatal al intentar conectar a la base de datos: {e}")

@@ -40,9 +40,9 @@ Esta es la guía completa para interactuar con el backend.
     ```
 
 ---
-### 3. Generar Criptograma (con IA)
+### 3. Generar Criptograma (Local por Tema)
 * **Endpoint**: `POST /api/generate`
-* **Descripción**: Pide a la IA que genere una frase sobre un tema y la convierte en un criptograma. **Esta acción se guarda internamente para mejorar el sistema, pero no aparece en el historial del usuario.**
+* **Descripción: Selecciona una frase aleatoria de un corpus JSON local, basándose en el tema proporcionado. Esta acción se guarda internamente (como 'local_generator') pero no aparece en el historial del usuario.**
 * **Respuesta Exitosa (200 OK)**:
     ```json
     {

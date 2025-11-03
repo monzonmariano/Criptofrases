@@ -81,14 +81,14 @@ Esta estructura hace que el código sea más fácil de entender, mantener y, sob
 
 ### ¿Por qué una Arquitectura en Capas y una Base de Datos Flexible?
 
-Separamos el código en `api`, `core`, `services` y `crud`. [cite_start]Esto se llama **separación de responsabilidades**[cite: 4, 17].
+Separamos el código en `api`, `core`, `services` y `crud`. Esto se llama **separación de responsabilidades**[cite: 4, 17].
 
 * **`api`**: El recepcionista. Solo recibe llamadas y las pasa.
 * **`core`**: El gerente. Orquesta las operaciones, pero no hace el trabajo pesado.
 * **`services`**: Los especialistas. Cada uno tiene una tarea muy específica.
 * **`crud`**: El archivista. Es el único que sabe cómo hablar directamente con el almacén (la base de datos).
 
-Esta estructura hace que el código sea fácil de entender y escalar. Para aumentar esta flexibilidad, nuestra tabla `entries` utiliza una columna **`entry_type`** para distinguir entre diferentes tipos de datos (una resolución, una generación de IA, etc.) y una columna **`details` de tipo JSONB**.
+Esta estructura hace que el código sea fácil de entender y escalar. Para aumentar esta flexibilidad, nuestra tabla `entries` utiliza una columna **`entry_type`** para distinguir entre diferentes tipos de datos (una resolución, una generación local por tema, etc.) y una columna **`details` de tipo JSONB**.
 
 Esto nos permite:
 1.  **Guardar datos estructurados y complejos** para ciertos tipos de entradas (como la lista completa de soluciones de un criptograma).

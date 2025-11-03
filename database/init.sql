@@ -1,16 +1,25 @@
--- Archivo: database/init.sql (Versión 2.0)
--- Eliminamos la tabla anterior si existe para aplicar los cambios limpios.
-DROP TABLE IF EXISTS entries;
+-- database/init.sql
+-- (Versión limpia sin creación de usuario redundante)
+
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
+CREATE TABLE IF NOT EXISTS quotes (
+    id SERIAL PRIMARY KEY,
+    text TEXT NOT NULL UNIQUE,
+    author VARCHAR(255) NOT NULL
+);
 
 CREATE TABLE IF NOT EXISTS entries (
     id SERIAL PRIMARY KEY,
-    user_id TEXT NOT NULL,
-    -- 'content', 'result', y 'author' ahora pueden ser NULL
-    content TEXT,
-    result TEXT,
-    author TEXT,
-    -- 'entry_type' es más claro que 'is_cryptogram' para el futuro
-    entry_type VARCHAR(50) NOT NULL, -- Ej: 'solver', 'ai_generator', 'user_generator'
-    timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
-    details JSONB
+    key_phrase VARCHAR(255) UNIQUE NOT NULL,
+    wallet_address VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE INDEX IF NOT EXISTS quotes_search_idx 
+ON quotes 
+USING GIN (to_tsvector('spanish', unaccent(text)));
+
+-- ¡La sección de GRANT (permisos) SÍ debe quedarse! --
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO criptofrases_user;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO criptofrases_user;

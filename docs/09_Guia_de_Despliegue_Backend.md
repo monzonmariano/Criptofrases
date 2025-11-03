@@ -39,29 +39,51 @@ El proceso consiste en empaquetar tu código en una "caja" de Docker y enviarla 
 * **Comando de Ejemplo**: `docker push us-central1-docker.pkg.dev/criptofrases/criptofrases-repo/criptofrases-backend:v1.0`
 * **¿Qué hace?**: Es el camión de reparto. Toma la caja con la etiqueta postal correcta y la **envía por Internet** hasta el almacén de Google (Artifact Registry).
 
-## Paso 3: Poner el Backend en Marcha
-
 Una vez que tu caja está en el almacén de Google, le das la orden a Cloud Run para que la recoja y la ponga a funcionar.
 
-* **Comando de Ejemplo**:
-  ```bash
-  gcloud run deploy criptofrases-backend \
-    --image us-central1-docker.pkg.dev/criptofrases/criptofrases-repo/criptofrases-backend:v1.0 \
-    --set-env-vars="DB_URL=...,GEMINI_API_KEY=..." \
-    --region us-central1 \
-    --allow-unauthenticated
+3.1: (IMPORTANTE) Sube tu Clave de Servicio a Secret Manager
+Para el desarrollo local, usamos un archivo gcloud-service-key.json. Nunca debes subir este archivo a Git. Para que Cloud Run lo use de forma segura en producción, debemos subirlo al "administrador de contraseñas" de Google Cloud (Secret Manager).
 
-        ¿Qué hace cada parte?:
+En la consola de Google Cloud, ve a la sección "Secret Manager".
 
-        gcloud run deploy criptofrases-backend: "Oye, Cloud Run, quiero desplegar un servicio llamado criptofrases-backend."
+Haz clic en "Crear Secreto". Dale un nombre (ej: gemini-service-key).
 
-        --image ...: "Usa la caja que está en esta dirección exacta del almacén."
+Sube el contenido (copia y pega el texto) de tu archivo gcloud-service-key.json como el "valor" del secreto.
 
-        --set-env-vars="...": "Cuando enciendas la caja, pégale estas 'notas adhesivas' (variables de entorno) para que sepa cómo conectarse a la base de datos y a la API de Gemini." Esta es la parte más crítica.
+Ve a la pestaña "Permisos" del nuevo secreto y dale permiso a tu cuenta de servicio (criptofrases-runner@...) para que pueda "Acceder" a él.
 
-        --region ...: "Ponlo a funcionar en los servidores de esta región."
+3.2: Despliega en Cloud Run
+Ahora, en el comando de despliegue, le diremos a Cloud Run que use nuestra cuenta de servicio y que "monte" ese secreto como un archivo.
 
-        --allow-unauthenticated: "Permite que la puerta principal de la tienda esté abierta al público (para que tu frontend pueda entrar)."
+Comando de Despliegue (Versión Segura):
+
+Bash
+
+gcloud run deploy criptofrases-backend \
+  --image us-central1-docker.pkg.dev/criptofrases/criptofrases-repo/criptofrases-backend:v1.1 \
+  --service-account criptofrases-runner@criptofrases.iam.gserviceaccount.com \
+  --set-env-vars="DB_URL=TU_URL_DE_BASE_DE_DATOS_NEON,GOOGLE_APPLICATION_CREDENTIALS=/app/gcloud-service-key.json" \
+  --update-secrets="/app/gcloud-service-key.json=gemini-service-key:latest" \
+  --region us-central1 \
+  --allow-unauthenticated
+¿Qué hace cada parte nueva?:
+
+gcloud run deploy ...: "Oye, Cloud Run, quiero desplegar criptofrases-backend."
+
+--image ...: "Usa la caja que está en esta dirección exacta del almacén."
+
+--service-account ...: "Ejecuta este contenedor usando la identidad de criptofrases-runner, la cual ya tiene los permisos de IAM correctos (como Vertex AI User)."
+
+--set-env-vars="...": "Pasa la URL de la base de datos como de costumbre. Y lo más importante, dile a nuestro código Python (que usa os.getenv) que la clave de credenciales se encontrará en la ruta /app/gcloud-service-key.json."
+
+--update-secrets=...: "Esta es la magia. Le dice a Cloud Run: 'Toma el secreto llamado gemini-service-key de Secret Manager y haz que esté disponible (móntalo) dentro del contenedor en la ruta /app/gcloud-service-key.json.'"
+
+--region ...: "Ponlo a funcionar en los servidores de esta región."
+
+--allow-unauthenticated: "Permite que la puerta principal esté abierta al público (para que tu frontend pueda entrar)."
+
+Esto elimina por completo la antigua GEMINI_API_KEY y la reemplaza por un método de autenticación de servidor mucho más seguro y robusto.
+
 
 Anexo: Entendiendo la Facturación de Google
 

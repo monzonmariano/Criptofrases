@@ -1,7 +1,7 @@
-// src/views/LogicGamesView.jsx
 import React from 'react';
 
-// Un componente reutilizable para cada tarjeta de juego
+// --- Este es el componente que me pasaste ---
+// El 'onClick' ya está aquí, llamando a la prop 'onSelectGame'
 const GameCard = ({ title, description, gameId, onSelectGame }) => (
   <div 
     className="bg-slate-800/50 p-6 rounded-lg shadow-lg hover:bg-slate-700/70 hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer"
@@ -12,37 +12,41 @@ const GameCard = ({ title, description, gameId, onSelectGame }) => (
   </div>
 );
 
+
+// --- Este es el componente principal de la vista ---
+// Recibe 'onSelectGame' como prop desde App.jsx
 function LogicGamesView({ onSelectGame }) {
   return (
     <div>
-      <h1 className="text-4xl font-bold text-gray-200 mb-8 text-center">
-        Bienvenido al Hub de Juegos de Lógica
-      </h1>
+      <h1 className="text-4xl font-bold text-gray-200 mb-8 text-center">Juegos de Lógica</h1>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* --- 1. Tarjeta de Criptogramas --- */}
         <GameCard 
-          title="Criptofrases"
-          description="Resuelve, genera y descubre autores de frases encriptadas. Un desafío para tu mente deductiva."
-          gameId="cryptogram"
-          onSelectGame={onSelectGame}
+          title="Crypto Suite"
+          description="Resuelve y genera criptogramas, o encuentra el autor de una frase."
+          gameId="cryptogram" 
+          onSelectGame={onSelectGame} 
         />
+
+        {/* --- 2. Tarjeta de Sudoku --- */}
         <GameCard 
-          title="Sudoku Express (Próximamente)"
-          description="El clásico juego de números. Rellena la cuadrícula sin repetir dígitos. ¡Nuevos puzzles cada día!"
-          gameId="sudoku" // Este ID se usará en el futuro
-          onSelectGame={() => alert('¡Juego en desarrollo! Vuelve pronto.')} // Placeholder
+          title="Sudoku"
+          description="Genera puzzles nuevos o usa nuestro solver de backtracking para resolverlos."
+          gameId="sudoku" 
+          onSelectGame={onSelectGame} 
         />
-        <GameCard 
-          title="¿Quién es Quién? (Próximamente)"
-          description="Adivina el personaje misterioso haciendo preguntas de sí o no. Un test a tu capacidad de descarte."
-          gameId="whoiswho"
-          onSelectGame={() => alert('¡Juego en desarrollo! Vuelve pronto.')}
-        />
-        <GameCard 
-          title="Pictologic (Próximamente)"
-          description="Usa la lógica para revelar una imagen oculta coloreando celdas según los números en los laterales."
-          gameId="pictologic"
-          onSelectGame={() => alert('¡Juego en desarrollo! Vuelve pronto.')}
-        />
+        
+        {/* --- 3. (Próximamente) 'Quién es Quién' --- */}
+        {/* <GameCard 
+            title="¿Quién es Quién?"
+            description="El clásico juego de adivinar el personaje. (Próximamente)"
+            gameId="whoswho" 
+            onSelectGame={onSelectGame} 
+          /> 
+        */}
+
       </div>
     </div>
   );
