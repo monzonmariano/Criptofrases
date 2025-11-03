@@ -3,6 +3,7 @@ import axios from 'axios';
 import { getUserId } from './userService'; 
 
 const API_BASE_URL = import.meta.env.VITE_API_URL;
+console.log("LA API BASE URL ES:", API_BASE_URL);
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
