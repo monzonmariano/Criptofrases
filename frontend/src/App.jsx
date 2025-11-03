@@ -156,24 +156,27 @@ function App() {
   };
 
   const handleSolveSudoku = async () => {
-  const { originalBoard } = gameState.sudoku; // Usamos el original
-  if (!originalBoard) return;
+    const { originalBoard } = gameState.sudoku;
+    if (!originalBoard) return;
 
-  setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: true, error: '' }})); // <-- CORREGIDO
-  try {
-    // ...
-    localStorage.removeItem('sudoku_board');
-    localStorage.removeItem('sudoku_originalBoard');
-    localStorage.removeItem('sudoku_solution');
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: true, error: '' }})); // <-- CORREGIDO
+    try {
+      const response = await solveSudoku(originalBoard); 
+      
+      localStorage.removeItem('sudoku_board');
+      localStorage.removeItem('sudoku_originalBoard');
+      localStorage.removeItem('sudoku_solution');
 
-    setGameState(prev => ({ 
-      ...prev, 
-      sudoku: { ...prev.sudoku, board: response.data.solved_board, isSolving: false } // <-- CORREGIDO
-    }));
-  } catch (err) {
-    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: false, error: 'Este puzzle no tiene solución.' }})); // <-- CORREGIDO
-  }
-};
+      setGameState(prev => ({ 
+        ...prev, 
+        sudoku: { ...prev.sudoku, board: response.data.solved_board, isSolving: false } // <-- CORREGIDO
+      }));
+    } catch (err) {
+      console.error("Error al procesar el sudoku:", err); 
+      const errorMsg = err.response?.data?.error || 'Este puzzle no tiene solución.';
+      setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: false, error: errorMsg }})); // <-- CORREGIDO
+    }
+  };
   
   const handleSudokuCellChange = (r, c, value) => {
   // Solo permite números del 1 al 9 o borrar
