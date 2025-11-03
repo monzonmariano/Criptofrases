@@ -65,3 +65,18 @@ export const clearUserHistory = () => {
   };
   return apiClient.post('/clear-history', payload);
 };
+
+export const generateSudoku = (difficulty) => {
+  const payload = {
+    // La dificultad debe ser un número, p.ej. 0.5
+    difficulty: difficulty || 0.5, 
+  };
+  return apiClient.post('/sudoku/generate', payload);
+};
+
+export const solveSudoku = (board) => {
+  const payload = {
+    board: board,
+  };
+  return apiClient.post('/sudoku/solve', payload);
+};
