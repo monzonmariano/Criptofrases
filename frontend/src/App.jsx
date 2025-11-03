@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useState, useEffect } from 'react';
 import { BACKGROUND_IMAGES } from './config';
-import { solveCryptogram, generateCryptogram, generateCryptogramFromUser, findAuthorOfPhrase, getUserHistory } from './services/apiClient';
+import { solveCryptogram, generateCryptogram, generateCryptogramFromUser, findAuthorOfPhrase, getUserHistory,generateSudoku, solveSudoku } from './services/apiClient';
 
 // --- VIEWS---
 import LogicGamesView from './views/LogicGamesView';
