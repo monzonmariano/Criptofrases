@@ -1,28 +1,77 @@
 // src/views/SudokuView.jsx
 import React, { useState } from 'react';
 
-// --- Componente Interno para la Cuadrícula ---
-const SudokuGrid = ({ board, onCellChange, originalBoard }) => {
+// --- Componente Interno Numpad ---
+// (Este es el teclado 3x3 que pediste)
+const Numpad = ({ onNumberClick, onClear, onClose }) => {
+  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+  
+  return (
+    // Fondo oscuro semi-transparente
+    <div 
+      className="fixed inset-0 bg-black/50 z-40 flex justify-center items-center"
+      onClick={onClose} // Cierra si se hace clic fuera
+    >
+      {/* Contenedor del Numpad (evita que el clic se propague) */}
+      <div 
+        className="bg-slate-800 p-4 rounded-lg shadow-xl grid grid-cols-3 gap-3"
+        onClick={(e) => e.stopPropagation()} 
+      >
+        {numbers.map(num => (
+          <button
+            key={num}
+            onClick={() => onNumberClick(num)}
+            className="w-16 h-16 text-3xl font-bold text-white bg-slate-700 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            {num}
+          </button>
+        ))}
+        {/* Botón de Borrar (X) */}
+        <button
+          onClick={onClear}
+          className="w-16 h-16 text-3xl font-bold text-red-400 bg-slate-700 rounded-md hover:bg-red-600 transition-colors col-span-2"
+        >
+          Borrar (0)
+        </button>
+        {/* Botón de Cerrar */}
+        <button
+          onClick={onClose}
+          className="w-16 h-16 text-xl font-bold text-gray-300 bg-slate-700 rounded-md hover:bg-slate-600 transition-colors"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+  );
+};
+
+
+// --- Componente Interno de la Cuadrícula (MODIFICADO) ---
+const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell }) => {
   if (!board) return null;
 
   return (
     <div className="grid grid-cols-9 gap-px bg-slate-600 w-full max-w-md mx-auto aspect-square rounded-md overflow-hidden shadow-lg">
       {board.map((row, r_idx) =>
         row.map((cell, c_idx) => {
-          // Comprobamos si la celda era parte del puzzle original
           const isGiven = originalBoard[r_idx][c_idx] !== 0;
-          
+          const isWrong = cell !== 0 && !isGiven && solution && cell !== solution[r_idx][c_idx];
+          // Comprueba si esta es la celda activa
+          const isActive = activeCell && activeCell[0] === r_idx && activeCell[1] === c_idx;
+
           return (
             <input
               key={`${r_idx}-${c_idx}`}
-              type="text"
-              maxLength="1"
+              type="text" // Sigue siendo 'text'
               value={cell === 0 ? '' : cell}
-              onChange={(e) => onCellChange(r_idx, c_idx, e.target.value)}
-              disabled={isGiven} // Las celdas del puzzle original no se editan
+              disabled={isGiven} // Las celdas del puzzle no se editan
+              readOnly={!isGiven} // <-- ¡TRUCO! Previene el teclado del SO
+              onClick={() => !isGiven && onCellClick(r_idx, c_idx)} // <-- Llama al handler al hacer clic
               className={`
-                w-full h-full aspect-square text-center text-xl sm:text-3xl font-bold
-                ${isGiven ? 'bg-slate-700 text-green-300' : 'bg-slate-800/80 text-white focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500'}
+                w-full h-full aspect-square text-center text-xl sm:text-3xl font-bold cursor-pointer
+                ${isGiven ? 'bg-slate-700 text-green-300' : 'bg-slate-800/80'}
+                ${isWrong ? 'text-red-500' : 'text-white'}
+                ${isActive ? 'ring-4 ring-blue-500 z-10' : ''} /* <-- Resalta la celda activa */
                 ${(c_idx === 2 || c_idx === 5) ? 'border-r-2 border-slate-500' : ''}
                 ${(r_idx === 2 || r_idx === 5) ? 'border-b-2 border-slate-500' : ''}
               `}
@@ -34,17 +83,50 @@ const SudokuGrid = ({ board, onCellChange, originalBoard }) => {
   );
 };
 
-// --- Componente Principal de la Vista ---
+
+// --- Componente Principal de la Vista (MODIFICADO) ---
 function SudokuView({ gameState, handlers }) {
   const [difficulty, setDifficulty] = useState(0.5);
-  const { board, originalBoard, isLoading, error } = gameState;
+  // Nuevo estado para saber qué celda está activa
+  const [activeCell, setActiveCell] = useState(null); // Ej: [fila, columna]
+
+  const { board, originalBoard, isGenerating, isSolving, error, solution } = gameState;
+
+  // Creamos los handlers para el Numpad
+  const handleNumpadClick = (num) => {
+    if (activeCell) {
+      handlers.onCellChange(activeCell[0], activeCell[1], num);
+      setActiveCell(null); // Cierra el numpad
+    }
+  };
+
+  const handleNumpadClear = () => {
+    if (activeCell) {
+      handlers.onCellChange(activeCell[0], activeCell[1], 0); // Envía un 0 (borrar)
+      setActiveCell(null);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center">
+      {/* El Numpad se renderiza condicionalmente y flota sobre todo */}
+      {activeCell && (
+        <Numpad 
+          onNumberClick={handleNumpadClick}
+          onClear={handleNumpadClear}
+          onClose={() => setActiveCell(null)}
+        />
+      )}
+
       <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Sudoku Solver</h1>
       
-      {/* --- Panel de Control --- */}
-      <div className="flex flex-wrap justify-center gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg w-full max-w-md">
+      <p className="text-gray-300 text-center mb-6 max-w-md">
+        Usa "Nuevo Puzzle" para empezar. Las casillas verdes son fijas.
+        Usa "Resolver" para que nuestro algoritmo de backtracking lo solucione.
+      </p>
+
+      {/* --- Panel de Control (con Botón de Pista) --- */}
+      <div className="flex flex-wrap justify-center gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg w-full max-w-lg">
         <div className="flex-1 min-w-[150px]">
           <label className="block text-xs text-gray-400 mb-1">Dificultad</label>
           <select 
@@ -60,29 +142,39 @@ function SudokuView({ gameState, handlers }) {
         
         <button
           onClick={() => handlers.onGenerate(difficulty)}
-          disabled={isLoading}
+          disabled={isGenerating || isSolving}
           className="px-6 py-3 bg-green-600 text-white font-bold rounded-md hover:bg-green-700 disabled:bg-green-300 transition-all"
         >
-          {isLoading ? 'Generando...' : 'Nuevo Puzzle'}
+          {isGenerating ? 'Generando...' : 'Nuevo Puzzle'}
+        </button>
+
+        <button
+          onClick={handlers.onHint}
+          disabled={isGenerating || isSolving || !board}
+          className="px-4 py-2 bg-yellow-600 text-white font-semibold rounded-md hover:bg-yellow-700 disabled:bg-yellow-300 transition-all"
+        >
+          Pista
         </button>
 
         <button
           onClick={handlers.onSolve}
-          disabled={isLoading || !board}
+          disabled={isGenerating || isSolving || !board}
           className="px-6 py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 disabled:bg-blue-300 transition-all"
         >
-          {isLoading ? 'Resolviendo...' : 'Resolver'}
+          {isSolving ? 'Resolviendo...' : 'Resolver'}
         </button>
       </div>
 
-      {error && <div className="p-4 mb-4 bg-red-500/20 text-red-300 rounded-md w-full max-w-md">{error}</div>}
+      {error && <div className="p-4 mb-4 bg-red-500/20 text-red-300 rounded-md w-full max-w-lg">{error}</div>}
 
-      {/* --- El Tablero --- */}
+      {/* --- El Tablero (Ahora pasa el activeCell) --- */}
       {board && (
         <SudokuGrid 
           board={board}
-          originalBoard={originalBoard} // Pasamos el tablero original para deshabilitar celdas
-          onCellChange={handlers.onCellChange}
+          originalBoard={originalBoard}
+          solution={solution}
+          activeCell={activeCell}
+          onCellClick={setActiveCell} // Pasa el setter para abrir el Numpad
         />
       )}
     </div>
