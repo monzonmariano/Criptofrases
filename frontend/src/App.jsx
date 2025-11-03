@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-
-// --- CORRECCIÓN DE RUTAS (basado en tu captura de pantalla) ---
 import { BACKGROUND_IMAGES } from './config';
 import { 
   solveCryptogram, generateCryptogram, generateCryptogramFromUser, 
   findAuthorOfPhrase, getUserHistory, deleteHistoryEntry, clearUserHistory,
   generateSudoku, solveSudoku 
 } from './services/apiClient';
-import { getUserId } from './services/userService'; 
+// import { getUserId } from './services/userService'; // <--- BORRADO (código muerto)
 
 import LogicGamesView from './views/LogicGamesView';
 import CryptoSuiteView from './views/CryptoSuiteView';
@@ -17,7 +15,6 @@ import HistoryView from './views/HistoryView';
 import BackgroundMusic from './components/BackgroundMusic';
 import Attribution from './components/Attribution';
 import HistoryDetailModal from './components/HistoryDetailModal';
-// -----------------------------------------------------------
 
 const HomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>;
 
@@ -49,7 +46,7 @@ function App() {
     }
   });
 
-  // --- Handlers de Criptogramas (Tu código) ---
+  // --- Handlers de Criptogramas ---
   const handleSolveSubmit = async () => {
     const { cryptogram, clues } = gameState.cryptogram.solver;
     const cluesObject = clues.reduce((acc, clue) => {
@@ -158,6 +155,7 @@ function App() {
   
   // --- ARREGLO DEL BUG DE onCellChange ---
   const handleSudokuCellChange = (r, c, value) => {
+    
     // --- CLÁUSULA DE GUARDA (FIX 1) ---
     // Si el tablero no existe (es null), no hagas nada.
     // Esto previene el 'TypeError: Cannot set properties of undefined'
@@ -165,6 +163,7 @@ function App() {
       console.error("onCellChange llamado sin tablero (board)");
       return;
     }
+
     const num = value === '' ? 0 : parseInt(value);
     if (isNaN(num) || num < 0 || num > 9) return;
     const newBoard = JSON.parse(JSON.stringify(gameState.sudoku.board));

@@ -97,7 +97,7 @@ function SudokuView({ gameState, handlers }) {
 
   const { board, originalBoard, isGenerating, isSolving, error, solution } = gameState;
 
-  const handleNumpadClick = (num) => {
+  const handleNumpadClick = (num). => {
     if (activeCell) {
       handlers.onCellChange(activeCell[0], activeCell[1], num);
       setActiveCell(null); 
@@ -122,7 +122,7 @@ function SudokuView({ gameState, handlers }) {
       )}
 
       {/* Título (he quitado el "v4" para dejarlo limpio) */}
-      <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center bg-yellow-500">Sudoku (¡NUEVO!)</h1>
+      <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Sudoku Solver</h1>
       
       <p className="text-gray-300 text-center mb-6 max-w-md">
         Usa "Nuevo Puzzle" para empezar. Las casillas verdes son fijas.
