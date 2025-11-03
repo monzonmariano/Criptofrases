@@ -179,17 +179,27 @@ function App() {
   };
   
   const handleSudokuCellChange = (r, c, value) => {
-  // Solo permite números del 1 al 9 o borrar
-  const num = value === '' ? 0 : parseInt(value);
-  if (isNaN(num) || num < 0 || num > 9) return;
+    // 1. Validar la entrada (esto ya lo tenías bien)
+    const num = value === '' ? 0 : parseInt(value);
+    if (isNaN(num) || num < 0 || num > 9) return;
 
-  const newBoard = gameState.sudoku.board.map(row => [...row]);
-  newBoard[r][c] = num;
-  setGameState(prev => ({
-    ...prev,
-    sudoku: { ...prev.sudoku, board: newBoard }
-  }));
-};
+    // 2. Crear una copia PROFUNDA y SEGURA del tablero
+    //    (Esto es más robusto que .map(row => [...row]))
+    const newBoard = JSON.parse(JSON.stringify(gameState.sudoku.board));
+    
+    // 3. Modificar la copia
+    newBoard[r][c] = num;
+
+    // 4. --- ¡LA LÍNEA QUE FALTABA! ---
+    //    Actualizamos el localStorage para que guarde el progreso
+    localStorage.setItem('sudoku_board', JSON.stringify(newBoard));
+
+    // 5. Actualizar el estado de React
+    setGameState(prev => ({
+      ...prev,
+      sudoku: { ...prev.sudoku, board: newBoard }
+    }));
+  };
 
 
 const handleSudokuHint = () => {
