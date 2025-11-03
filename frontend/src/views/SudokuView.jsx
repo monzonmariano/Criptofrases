@@ -118,7 +118,7 @@ function SudokuView({ gameState, handlers }) {
         />
       )}
 
-      <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center bg-yellow-500">Sudoku Solver (v2)</h1>
+      <h1 className="text-4xl ...">Sudoku v3 (con Numpad)</h1>
       
       <p className="text-gray-300 text-center mb-6 max-w-md">
         Usa "Nuevo Puzzle" para empezar. Las casillas verdes son fijas.
