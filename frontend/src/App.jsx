@@ -42,9 +42,11 @@ function App() {
       items: [], isLoading: true, error: ''
     },
     sudoku: {
-      board: null,       // El tablero 9x9
-      originalBoard: null, // Para guardar el puzzle inicial
-      isLoading: false,
+      board: JSON.parse(localStorage.getItem('sudoku_board')) || null,
+      originalBoard: JSON.parse(localStorage.getItem('sudoku_originalBoard')) || null,
+      solution: JSON.parse(localStorage.getItem('sudoku_solution')) || null, 
+      isGenerating: false,
+      isSolving: false,
       error: ''
     }
   });
@@ -120,27 +122,38 @@ function App() {
   // Dentro de App() en App.jsx
 
   const handleGenerateSudoku = async (difficulty) => {
-  setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
-  try {
-    const response = await generateSudoku(difficulty);
-    setGameState(prev => ({ 
-      ...prev, 
-      sudoku: { 
-        board: response.data.board, 
-        originalBoard: JSON.parse(JSON.stringify(response.data.board)), // Guardamos una copia profunda
-        isLoading: false 
-      }
-    }));
-  } catch (err) {
-    // --- ESTA ES LA LÍNEA CLAVE ---
-    console.error("Error al procesar el sudoku:", err); 
-    // -----------------------------
     
-    // Ahora comprobamos si el error vino del servidor o fue un error de JS
-    const errorMsg = err.response?.data?.error || 'No se pudo generar el puzzle. Revisa la consola (F12).';
-    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: errorMsg }}));
-  }
-};
+    // --- ¡ESTA ES LA LÍNEA QUE FALTABA! ---
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isGenerating: true, error: '' }}));
+    
+    try {
+      const response = await generateSudoku(difficulty);
+      const newBoard = response.data.board;
+      const newSolution = response.data.solution; 
+
+      localStorage.setItem('sudoku_board', JSON.stringify(newBoard));
+      localStorage.setItem('sudoku_originalBoard', JSON.stringify(newBoard));
+      localStorage.setItem('sudoku_solution', JSON.stringify(newSolution));
+
+      setGameState(prev => ({ 
+        ...prev, 
+        sudoku: { 
+          ...prev.sudoku, 
+          board: newBoard, 
+          originalBoard: newBoard, 
+          solution: newSolution,
+          isGenerating: false // <-- Ya estaba bien aquí
+        }
+      }));
+    } catch (err) {
+      console.error("Error al procesar el sudoku:", err); 
+      const errorMsg = err.response?.data?.error || 'No se pudo generar el puzzle. Revisa la consola (F12).';
+      
+      // --- CORRECCIÓN DEL BUG ---
+      // Estaba poniendo 'isLoading: false' en vez de 'isGenerating: false'
+      setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isGenerating: false, error: errorMsg }}));
+    }
+  };
 
   const handleSolveSudoku = async () => {
   const { originalBoard } = gameState.sudoku; // Usamos el original
@@ -149,6 +162,11 @@ function App() {
   setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
   try {
     const response = await solveSudoku(originalBoard); // Lo resolvemos
+    // Limpiamos todo, el juego terminó
+      localStorage.removeItem('sudoku_board');
+      localStorage.removeItem('sudoku_originalBoard');
+      localStorage.removeItem('sudoku_solution'); // <-- Límpiala
+
     setGameState(prev => ({ 
       ...prev, 
       sudoku: { ...prev.sudoku, board: response.data.solved_board, isLoading: false } // Mostramos el resuelto
@@ -171,6 +189,39 @@ function App() {
   }));
 };
 
+
+const handleSudokuHint = () => {
+    const { board, solution } = gameState.sudoku;
+    if (!board || !solution) return;
+
+    // 1. Encontrar la primera celda vacía (un 0)
+    let found = false;
+    for (let r = 0; r < 9; r++) {
+      for (let c = 0; c < 9; c++) {
+        if (board[r][c] === 0) {
+          
+          // 2. Encontramos una! Obtener la respuesta de la solución
+          const hintValue = solution[r][c];
+          
+          // 3. Crear el nuevo tablero con la pista
+          // (Usamos JSON.parse(JSON.stringify(...)) para una copia profunda)
+          const newBoard = JSON.parse(JSON.stringify(board));
+          newBoard[r][c] = hintValue;
+
+          // 4. Actualizar el estado y el localStorage
+          localStorage.setItem('sudoku_board', JSON.stringify(newBoard));
+          setGameState(prev => ({
+            ...prev,
+            sudoku: { ...prev.sudoku, board: newBoard }
+          }));
+          
+          found = true;
+          break;
+        }
+      }
+      if (found) break;
+    }
+  };  
   const fetchHistory = async () => {
     setGameState(prev => ({ ...prev, history: { ...prev.history, isLoading: true, error: '' }}));
     try {
@@ -222,7 +273,8 @@ function App() {
                handlers={{
                  onGenerate: handleGenerateSudoku,
                  onSolve: handleSolveSudoku,
-                 onCellChange: handleSudokuCellChange
+                 onCellChange: handleSudokuCellChange,
+                 onHint: handleSudokuHint // 
                }}
              />;
       case 'history':
@@ -288,3 +340,4 @@ function App() {
 }
 
 export default App;
+// Forzando re-despliegue.

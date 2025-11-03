@@ -5,22 +5,36 @@ from sudoku import Sudoku # Esta es la librería que acabamos de instalar
 # --- FUNCIÓN 1: El Generador (Usando la Librería) ---
 def generate_new_sudoku(difficulty_level: float = 0.5):
     """
-    Genera un nuevo tablero de Sudoku usando la librería.
+    Genera un nuevo tablero de Sudoku Y su solución.
     Dificultad: 0.1 (fácil) a 0.99 (muy difícil)
     """
     log.info(f"Servicio Sudoku: Generando tablero con dificultad {difficulty_level}")
     try:
-        # Genera un puzzle (dificultad 0.5) y lo exporta como una matriz 9x9
-        puzzle = Sudoku(3, 3).difficulty(difficulty_level).board
-        # Reemplazamos 'None' (vacío) por 0 para que sea más fácil de manejar en JSON
-        board = [[(0 if c is None else c) for c in row] for row in puzzle]
+        # 1. Genera un puzzle
+        puzzle_raw = Sudoku(3, 3).difficulty(difficulty_level).board
         
-        return {"board": board}, 200
+        # 2. Prepara el puzzle (con 0s)
+        board = [[(0 if c is None else c) for c in row] for row in puzzle_raw]
+
+        # 3. Crea una copia para resolver
+        #    Usamos [row[:] for row in board] para hacer una copia profunda
+        solved_board = [row[:] for row in board]
+
+        # 4. Resuelve la copia usando NUESTRO PROPIO ALGORITMO
+        if not _nuestro_solver_de_backtracking(solved_board):
+            # Si nuestro solver falla (raro pero posible), usamos el de la librería
+            log.warning("Nuestro solver no pudo, usando el solver de la librería...")
+            solution_raw = Sudoku(3, 3, board=puzzle_raw).solve().board
+            solved_board = [[(0 if c is None else c) for c in row] for row in solution_raw]
+
+        # 5. Devuelve AMBAS cosas: el puzzle y la solución
+        return {"board": board, "solution": solved_board}, 200
 
     except Exception as e:
         log.error(f"Error generando sudoku: {e}")
         return {"error": "No se pudo generar el tablero de Sudoku."}, 500
-
+    
+    
 # --- FUNCIÓN 2: El Solver (NUESTRA LÓGICA DE BACKTRACKING) ---
 async def solve_sudoku_from_scratch(data: dict):
     """
