@@ -1,131 +1,172 @@
-// src/App.jsx
-import React, { useState, useEffect } from 'react';
-import { BACKGROUND_IMAGES } from './config';
-import { solveCryptogram, generateCryptogram, generateCryptogramFromUser, findAuthorOfPhrase, getUserHistory,generateSudoku, solveSudoku } from './services/apiClient';
+import { useState, useEffect } from 'react';
+// ¡Asegúrate de que estas importaciones son correctas!
+import { 
+  solveCryptogram, generateCryptogram, generateCryptogramFromUser, 
+  findAuthorOfPhrase, getUserHistory, deleteHistoryEntry, clearUserHistory,
+  generateSudoku, solveSudoku 
+} from './services/apiClient';
+import { getUserId } from './services/userService'; 
 
-// --- VIEWS---
+import Header from './components/Header';
+import Footer from './components/Footer';
+import MusicPlayer from './components/MusicPlayer';
+import BackgroundSlider from './components/BackgroundSlider';
 import LogicGamesView from './views/LogicGamesView';
 import CryptoSuiteView from './views/CryptoSuiteView';
-import SudokuView from './views/SudokuView';
 import HistoryView from './views/HistoryView';
-// -------------------------
-
-//------ COMPONENTS -------------------
-import BackgroundMusic from './components/BackgroundMusic';
-import Attribution from './components/Attribution';
-import HistoryDetailModal from './components/HistoryDetailModal';
-
-
-const ChangeImageIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" /></svg>;
-const HomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>;
-
+import SudokuView from './views/SudokuView'; // <-- Importación de Sudoku
+import Modal from './components/Modal';
 
 function App() {
-  // --- ESTADO DE NAVEGACIÓN PRINCIPAL ---
-  const [activeGame, setActiveGame] = useState('menu'); // 'menu', 'cryptogram', 'history'
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [currentBgIndex, setCurrentBgIndex] = useState(0);
-  const [modalData, setModalData] = useState(null);
-  // --- NUEVO ESTADO CENTRALIZADO Y ANIDADO ---
-  // Actualizamos la forma (shape) del estado inicial para el generador.
+  const [activeGame, setActiveGame] = useState('menu');
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState(false);
+
+  // --- ESTADO CENTRALIZADO ---
   const [gameState, setGameState] = useState({
     cryptogram: {
       solver: { cryptogram: '', clues: [{ num: '', letter: '' }], solutions: [], activeIndex: 0, isLoading: false, error: '' },
       generator: {
-        // Ahora está dividido en dos sub-estados, uno para cada modo.
-        ia: { theme: 'filosofia', generatedData: null, isLoading: false, error: '', isAnswerVisible: false },
-        custom: { text: '', generatedData: null, isLoading: false, error: '' }
+        ia: { theme: 'filosofia', generatedData: null, isLoading: false, error: null, isAnswerVisible: false },
+        custom: { text: '', generatedData: null, isLoading: false, error: null }
       },
       authorFinder: { phrase: '', author: '', isLoading: false, error: '' },
     },
     history: {
       items: [], isLoading: true, error: ''
     },
+    // --- Estado de Sudoku (Cargado desde localStorage) ---
     sudoku: {
       board: JSON.parse(localStorage.getItem('sudoku_board')) || null,
       originalBoard: JSON.parse(localStorage.getItem('sudoku_originalBoard')) || null,
-      solution: JSON.parse(localStorage.getItem('sudoku_solution')) || null, 
+      solution: JSON.parse(localStorage.getItem('sudoku_solution')) || null,
       isGenerating: false,
       isSolving: false,
       error: ''
     }
   });
 
-  // --- LÓGICA DE NEGOCIO (HANDLERS) ---
-  // Las funciones ahora usan setGameState para actualizar la parte correcta del estado.
-
+  // --- Handlers de Criptogramas (Tu código) ---
   const handleSolveSubmit = async () => {
-    const { cryptogram, clues } = gameState.cryptogram.solver;
-    const cluesObject = clues.reduce((acc, clue) => {
-      if (clue.num && clue.letter) { acc[clue.num] = clue.letter.toLowerCase(); }
-      return acc;
-    }, {});
-
-    setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, isLoading: true, error: '', solutions: [] }}}));
+    setGameState(prev => ({
+      ...prev,
+      cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, isLoading: true, error: '', solutions: [] }}
+    }));
     try {
-      const response = await solveCryptogram(cryptogram, cluesObject);
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, solutions: response.data.solutions || [] }}}));
-      fetchHistory(); // Vuelve a cargar el historial después de un éxito.
+      const { cryptogram, clues } = gameState.cryptogram.solver;
+      const formattedClues = clues.reduce((acc, clue) => {
+        if (clue.num && clue.letter) {
+          acc[clue.num] = clue.letter;
+        }
+        return acc;
+      }, {});
+      
+      const response = await solveCryptogram(cryptogram, formattedClues);
+      
+      setGameState(prev => ({
+        ...prev,
+        cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, solutions: response.data.solutions, activeIndex: 0, isLoading: false }}
+      }));
     } catch (err) {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, error: err.response?.data?.error || 'Ocurrió un error.' }}}));
-    } finally {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, isLoading: false }}}));
+      setGameState(prev => ({
+        ...prev,
+        cryptogram: { ...prev.cryptogram, solver: { ...prev.cryptogram.solver, isLoading: false, error: 'No se pudo encontrar una solución.' }}
+      }));
     }
   };
 
   const handleGenerateByTheme = async () => {
-    const { theme } = gameState.cryptogram.generator.ia;
-    // La ruta correcta es 'prev.cryptogram.generator'
-    setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, isLoading: true, error: '', generatedData: null } } } }));
+    setGameState(prev => ({
+      ...prev,
+      cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, isLoading: true, error: null }}}
+    }));
     try {
-      const response = await generateCryptogram(theme);
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, generatedData: response.data } } } }));
+      const response = await generateCryptogram(gameState.cryptogram.generator.ia.theme);
+      setGameState(prev => ({
+        ...prev,
+        cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, generatedData: response.data, isLoading: false }}}
+      }));
     } catch (err) {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, error: err.response?.data?.error || 'Ocurrió un error.' } } } }));
-    } finally {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, isLoading: false } } } }));
+      setGameState(prev => ({
+        ...prev,
+        cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, ia: { ...prev.cryptogram.generator.ia, isLoading: false, error: 'No se pudo generar el criptograma.' }}}
+      }));
     }
   };
-
 
   const handleGenerateCustom = async () => {
-    const { text } = gameState.cryptogram.generator.custom;
-    if (!text.trim()) {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, error: 'El texto no puede estar vacío.' } } } }));
-      return;
-    }
-    // La ruta correcta es 'prev.cryptogram.generator'
-    setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, isLoading: true, error: '', generatedData: null } } } }));
+    setGameState(prev => ({
+      ...prev,
+      cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, isLoading: true, error: null }}}
+    }));
     try {
-      const response = await generateCryptogramFromUser(text);
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, generatedData: response.data } } } }));
-      fetchHistory();
+      const response = await generateCryptogramFromUser(gameState.cryptogram.generator.custom.text);
+      setGameState(prev => ({
+        ...prev,
+        cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, generatedData: response.data, isLoading: false }}}
+      }));
     } catch (err) {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, error: err.response?.data?.error || 'Ocurrió un error.' } } } }));
-    } finally {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, isLoading: false } } } }));
+      setGameState(prev => ({
+        ...prev,
+        cryptogram: { ...prev.cryptogram, generator: { ...prev.cryptogram.generator, custom: { ...prev.cryptogram.generator.custom, isLoading: false, error: 'No se pudo crear el criptograma.' }}}
+      }));
     }
   };
-  const handleAuthorSubmit = async () => {
-    const { phrase } = gameState.cryptogram.authorFinder;
-    setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, isLoading: true, error: '', author: '' }}}));
-    try {
-      const response = await findAuthorOfPhrase(phrase);
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, author: response.data.author }}}));
-    } catch (err) {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, error: err.response?.data?.error || 'Ocurrió un error.' }}}));
-    } finally {
-      setGameState(prev => ({ ...prev, cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, isLoading: false }}}));
-    }
-  };
-  
-  // Dentro de App() en App.jsx
 
+  const handleFindAuthor = async () => {
+    setGameState(prev => ({
+      ...prev,
+      cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, isLoading: true, error: '' }}
+    }));
+    try {
+      const response = await findAuthorOfPhrase(gameState.cryptogram.authorFinder.phrase);
+      setGameState(prev => ({
+        ...prev,
+        cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, author: response.data.author, isLoading: false }}
+      }));
+    } catch (err) {
+      setGameState(prev => ({
+        ...prev,
+        cryptogram: { ...prev.cryptogram, authorFinder: { ...prev.cryptogram.authorFinder, isLoading: false, error: 'No se pudo encontrar el autor.' }}
+      }));
+    }
+  };
+
+
+  // --- Handlers de Historial (Tu código) ---
+  const loadHistory = async () => {
+    setIsHistoryModalOpen(true);
+    setGameState(prev => ({ ...prev, history: { ...prev.history, isLoading: true, error: '' }}));
+    try {
+      const response = await getUserHistory(getUserId());
+      setGameState(prev => ({ ...prev, history: { ...prev.history, items: response.data.history, isLoading: false }}));
+    } catch (err) {
+      setGameState(prev => ({ ...prev, history: { ...prev.history, isLoading: false, error: 'No se pudo cargar el historial.' }}));
+    }
+  };
+
+  const handleDeleteEntry = async (entryId) => {
+    try {
+      await deleteHistoryEntry(entryId);
+      loadHistory(); // Recarga el historial
+    } catch (err) {
+      setGameState(prev => ({ ...prev, history: { ...prev.history, error: 'No se pudo borrar la entrada.' }}));
+    }
+  };
+
+  const handleClearHistory = async () => {
+    try {
+      await clearUserHistory();
+      loadHistory(); // Recarga el historial (ahora vacío)
+    } catch (err) {
+      setGameState(prev => ({ ...prev, history: { ...prev.history, error: 'No se pudo borrar el historial.' }}));
+    }
+  };
+
+
+  // --- Handlers de Sudoku (Completos y Corregidos) ---
+  
   const handleGenerateSudoku = async (difficulty) => {
-    
-    // --- ¡ESTA ES LA LÍNEA QUE FALTABA! ---
     setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isGenerating: true, error: '' }}));
-    
     try {
       const response = await generateSudoku(difficulty);
       const newBoard = response.data.board;
@@ -142,15 +183,12 @@ function App() {
           board: newBoard, 
           originalBoard: newBoard, 
           solution: newSolution,
-          isGenerating: false // <-- Ya estaba bien aquí
+          isGenerating: false
         }
       }));
     } catch (err) {
       console.error("Error al procesar el sudoku:", err); 
-      const errorMsg = err.response?.data?.error || 'No se pudo generar el puzzle. Revisa la consola (F12).';
-      
-      // --- CORRECCIÓN DEL BUG ---
-      // Estaba poniendo 'isLoading: false' en vez de 'isGenerating: false'
+      const errorMsg = err.response?.data?.error || 'No se pudo generar el puzzle.';
       setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isGenerating: false, error: errorMsg }}));
     }
   };
@@ -159,7 +197,7 @@ function App() {
     const { originalBoard } = gameState.sudoku;
     if (!originalBoard) return;
 
-    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: true, error: '' }})); // <-- CORREGIDO
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: true, error: '' }}));
     try {
       const response = await solveSudoku(originalBoard); 
       
@@ -169,58 +207,59 @@ function App() {
 
       setGameState(prev => ({ 
         ...prev, 
-        sudoku: { ...prev.sudoku, board: response.data.solved_board, isSolving: false } // <-- CORREGIDO
+        sudoku: { 
+          ...prev.sudoku, 
+          board: response.data.solved_board, 
+          originalBoard: null,
+          solution: null,
+          isSolving: false
+        }
       }));
     } catch (err) {
-      console.error("Error al procesar el sudoku:", err); 
+      console.error("Error al procesar el sudoku:", err);
       const errorMsg = err.response?.data?.error || 'Este puzzle no tiene solución.';
-      setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: false, error: errorMsg }})); // <-- CORREGIDO
+      setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: false, error: errorMsg }}));
     }
   };
   
+  // --- ARREGLO DEL BUG DE onCellChange ---
   const handleSudokuCellChange = (r, c, value) => {
-    // 1. Validar la entrada (esto ya lo tenías bien)
+    
+    // --- CLÁUSULA DE GUARDA (FIX 1) ---
+    // Si el tablero no existe, no hagas nada.
+    if (!gameState.sudoku.board) {
+      console.error("onCellChange llamado sin tablero (board)");
+      return;
+    }
+
     const num = value === '' ? 0 : parseInt(value);
     if (isNaN(num) || num < 0 || num > 9) return;
 
-    // 2. Crear una copia PROFUNDA y SEGURA del tablero
-    //    (Esto es más robusto que .map(row => [...row]))
     const newBoard = JSON.parse(JSON.stringify(gameState.sudoku.board));
     
-    // 3. Modificar la copia
+    // Esta línea ahora es segura gracias a la cláusula de guarda
     newBoard[r][c] = num;
 
-    // 4. --- ¡LA LÍNEA QUE FALTABA! ---
-    //    Actualizamos el localStorage para que guarde el progreso
     localStorage.setItem('sudoku_board', JSON.stringify(newBoard));
 
-    // 5. Actualizar el estado de React
     setGameState(prev => ({
       ...prev,
       sudoku: { ...prev.sudoku, board: newBoard }
     }));
   };
 
-
-const handleSudokuHint = () => {
+  const handleSudokuHint = () => {
     const { board, solution } = gameState.sudoku;
     if (!board || !solution) return;
 
-    // 1. Encontrar la primera celda vacía (un 0)
     let found = false;
     for (let r = 0; r < 9; r++) {
       for (let c = 0; c < 9; c++) {
         if (board[r][c] === 0) {
-          
-          // 2. Encontramos una! Obtener la respuesta de la solución
           const hintValue = solution[r][c];
-          
-          // 3. Crear el nuevo tablero con la pista
-          // (Usamos JSON.parse(JSON.stringify(...)) para una copia profunda)
           const newBoard = JSON.parse(JSON.stringify(board));
           newBoard[r][c] = hintValue;
 
-          // 4. Actualizar el estado y el localStorage
           localStorage.setItem('sudoku_board', JSON.stringify(newBoard));
           setGameState(prev => ({
             ...prev,
@@ -233,50 +272,22 @@ const handleSudokuHint = () => {
       }
       if (found) break;
     }
-  };  
-  const fetchHistory = async () => {
-    setGameState(prev => ({ ...prev, history: { ...prev.history, isLoading: true, error: '' }}));
-    try {
-      const response = await getUserHistory();
-      setGameState(prev => ({ ...prev, history: { items: response.data.history || [], isLoading: false, error: '' }}));
-    } catch (err) {
-      setGameState(prev => ({ ...prev, history: { items: [], isLoading: false, error: 'No se pudo cargar el historial.' }}));
-    }
   };
 
-  // --- EFECTOS (SIN CAMBIOS GRANDES) ---
-  useEffect(() => {
-    if (activeGame === 'history') { fetchHistory(); }
-  }, [activeGame]);
 
-  useEffect(() => {
-    if (BACKGROUND_IMAGES.length > 0) {
-      setCurrentBgIndex(Math.floor(Math.random() * BACKGROUND_IMAGES.length));
-    }
-    const timer = setTimeout(() => setIsLoaded(true), 100);
-    const interval = setInterval(() => handleNextImage(), 15000);
-    return () => { clearTimeout(timer); clearInterval(interval); };
-  }, []);
-  
-  const handleNextImage = () => {
-    if (BACKGROUND_IMAGES.length > 1) {
-      setCurrentBgIndex((prevIndex) => (prevIndex + 1) % BACKGROUND_IMAGES.length);
-    }
-  };
-
-  // --- RENDERIZADO CONDICIONAL ---
+  // --- Renderizado y Navegación ---
   const renderActiveView = () => {
     switch(activeGame) {
       case 'menu': return <LogicGamesView onSelectGame={setActiveGame} />;
       case 'cryptogram':
         return <CryptoSuiteView 
                  gameState={gameState.cryptogram}
-                 setGameState={(newState) => setGameState(prev => ({...prev, cryptogram: newState}))}
+                 setGameState={(updater) => setGameState(prev => ({ ...prev, cryptogram: updater(prev.cryptogram) }))}
                  handlers={{
                    onSolve: handleSolveSubmit,
                    onGenerateByTheme: handleGenerateByTheme,
-                   onGenerateCustom: handleGenerateCustom, // Pasamos el nuevo handler
-                   onFindAuthor: handleAuthorSubmit
+                   onGenerateCustom: handleGenerateCustom,
+                   onFindAuthor: handleFindAuthor
                  }}
                />;
       case 'sudoku':
@@ -286,70 +297,38 @@ const handleSudokuHint = () => {
                  onGenerate: handleGenerateSudoku,
                  onSolve: handleSolveSudoku,
                  onCellChange: handleSudokuCellChange,
-                 onHint: handleSudokuHint // 
+                 onHint: handleSudokuHint
                }}
              />;
       case 'history':
         return <HistoryView 
-                 state={{...gameState.history, history: gameState.history.items}}
-                 fetchHistory={fetchHistory}
-                 // La clave es pasar onShowDetails como prop
-                 onShowDetails={(entry) => setModalData(entry.details)}
+                 historyState={gameState.history} 
+                 onDelete={handleDeleteEntry} 
+                 onClear={handleClearHistory} 
                />;
       default: return <LogicGamesView onSelectGame={setActiveGame} />;
     }
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 bg-cover bg-center bg-fixed">
-      {BACKGROUND_IMAGES.length > 0 && (
-        <div className="fixed inset-0 bg-cover bg-center transition-opacity duration-1000" style={{ backgroundImage: `url(${BACKGROUND_IMAGES[currentBgIndex].src})` }} />
-      )}
-      <div className="absolute inset-0 bg-black/50" />
-
-      <div className="relative z-10 max-w-7xl mx-auto p-4 sm:p-8">
-        {/* --- NAVEGACIÓN PRINCIPAL SIMPLIFICADA --- */}
-        <header className={`flex justify-between items-center mb-8 transition-all duration-700 ease-out ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-5'}`}>
-          <button 
-            onClick={() => setActiveGame('menu')} 
-            className="flex items-center gap-2 px-4 py-2 text-base rounded-md font-semibold transition-all duration-300 ease-out bg-white/70 backdrop-blur-sm text-gray-800 hover:bg-white"
-            aria-label="Volver al menú de juegos"
-          >
-            <HomeIcon />
-            <span className="hidden sm:inline">Juegos de Lógica</span>
-          </button>
-          
-          <button 
-            onClick={() => setActiveGame('history')}
-            className={`px-4 py-2 text-base rounded-md font-semibold transition-all duration-300 ease-out ${activeGame === 'history' ? 'bg-blue-600 text-white shadow-lg' : 'bg-white/70 backdrop-blur-sm text-gray-800 hover:bg-white'}`}
-          >
-            Mi Historial
-          </button>
-        </header>
-
-        <main>
-          <div className="bg-white/10 backdrop-blur-md rounded-xl shadow-lg p-4 sm:p-8 text-white">
-            {renderActiveView()}
-          </div>
-        </main>
-
-        {/* Renderiza el modal CONDICIONALMENTE al final */}
-        {modalData && <HistoryDetailModal data={modalData} onClose={() => setModalData(null)} />}
-
-        <BackgroundMusic />
+    <div className="relative min-h-screen w-full bg-slate-900 text-gray-200 font-sans overflow-hidden z-10">
+      <BackgroundSlider />
+      <div className="relative z-10 flex flex-col min-h-screen">
+        <Header onHistoryClick={loadHistory} onHomeClick={() => setActiveGame('menu')} />
         
-        <div className="fixed bottom-4 right-4 flex items-center space-x-4">
-            {/* 1. Pasamos el handler 'handleNextImage' al componente Attribution */}
-            <Attribution 
-              currentImage={BACKGROUND_IMAGES.length > 0 ? BACKGROUND_IMAGES[currentBgIndex] : null} 
-              onNextImage={handleNextImage}
-            />
-            {/* 2. Eliminamos el botón antiguo que estaba aquí */}
-        </div>
+        <main className="flex-grow container mx-auto px-4 py-8">
+          {renderActiveView()}
+        </main>
+        
+        <Footer />
+        <MusicPlayer />
       </div>
+
+      <Modal isOpen={isHistoryModalOpen} onClose={() => setIsHistoryModalOpen(false)}>
+        {renderActiveView()}
+      </Modal>
     </div>
   );
 }
 
 export default App;
-// Forzando reeee-despliegue.

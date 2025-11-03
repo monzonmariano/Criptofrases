@@ -1,8 +1,6 @@
-// src/views/SudokuView.jsx
 import React, { useState } from 'react';
 
 // --- Componente Interno Numpad ---
-// (Este es el teclado 3x3 que pediste)
 const Numpad = ({ onNumberClick, onClear, onClose }) => {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   
@@ -46,32 +44,43 @@ const Numpad = ({ onNumberClick, onClear, onClose }) => {
 };
 
 
-// --- Componente Interno de la Cuadrícula (MODIFICADO) ---
+// --- Componente Interno de la Cuadrícula (MODIFICADO Y ROBUSTECIDO) ---
 const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell }) => {
-  if (!board) return null;
+  
+  // --- CLÁUSULA DE GUARDA (FIX 2) ---
+  // No intentes renderizar la cuadrícula si faltan datos esenciales.
+  // Esto arregla el bug de la "Fila 1" y los fallos al cargar.
+  if (!board || !originalBoard || !solution) {
+    return (
+      <div className="flex justify-center items-center bg-slate-800/50 w-full max-w-md mx-auto aspect-square rounded-md shadow-lg">
+        <p className="text-gray-400 animate-pulse">Genera un nuevo puzzle para empezar...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-9 gap-px bg-slate-600 w-full max-w-md mx-auto aspect-square rounded-md overflow-hidden shadow-lg">
       {board.map((row, r_idx) =>
         row.map((cell, c_idx) => {
+          
+          // Estas líneas ahora son seguras gracias a la cláusula de guarda
           const isGiven = originalBoard[r_idx][c_idx] !== 0;
-          const isWrong = cell !== 0 && !isGiven && solution && cell !== solution[r_idx][c_idx];
-          // Comprueba si esta es la celda activa
+          const isWrong = cell !== 0 && !isGiven && solution[r_idx][c_idx] !== cell;
           const isActive = activeCell && activeCell[0] === r_idx && activeCell[1] === c_idx;
 
           return (
             <input
               key={`${r_idx}-${c_idx}`}
-              type="text" // Sigue siendo 'text'
+              type="text"
               value={cell === 0 ? '' : cell}
-              disabled={isGiven} // Las celdas del puzzle no se editan
-              readOnly={!isGiven} // <-- ¡TRUCO! Previene el teclado del SO
-              onClick={() => !isGiven && onCellClick(r_idx, c_idx)} // <-- Llama al handler al hacer clic
+              disabled={isGiven}
+              readOnly={!isGiven}
+              onClick={() => !isGiven && onCellClick(r_idx, c_idx)}
               className={`
                 w-full h-full aspect-square text-center text-xl sm:text-3xl font-bold cursor-pointer
                 ${isGiven ? 'bg-slate-700 text-green-300' : 'bg-slate-800/80'}
                 ${isWrong ? 'text-red-500' : 'text-white'}
-                ${isActive ? 'ring-4 ring-blue-500 z-10' : ''} /* <-- Resalta la celda activa */
+                ${isActive ? 'ring-4 ring-blue-500 z-10' : ''}
                 ${(c_idx === 2 || c_idx === 5) ? 'border-r-2 border-slate-500' : ''}
                 ${(r_idx === 2 || r_idx === 5) ? 'border-b-2 border-slate-500' : ''}
               `}
@@ -84,7 +93,7 @@ const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell })
 };
 
 
-// --- Componente Principal de la Vista (MODIFICADO) ---
+// --- Componente Principal de la Vista ---
 function SudokuView({ gameState, handlers }) {
   const [difficulty, setDifficulty] = useState(0.5);
   // Nuevo estado para saber qué celda está activa
@@ -118,13 +127,12 @@ function SudokuView({ gameState, handlers }) {
         />
       )}
 
-      <h1 className="text-4xl ...">Sudoku Solver v4</h1>
+      <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Sudoku Solver</h1>
       
       <p className="text-gray-300 text-center mb-6 max-w-md">
         Usa "Nuevo Puzzle" para empezar. Las casillas verdes son fijas.
         Usa "Resolver" para que nuestro algoritmo de backtracking lo solucione.
-      </p>
-
+      </S>
       {/* --- Panel de Control (con Botón de Pista) --- */}
       <div className="flex flex-wrap justify-center gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg w-full max-w-lg">
         <div className="flex-1 min-w-[150px]">
