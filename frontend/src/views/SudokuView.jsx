@@ -2,15 +2,15 @@
 import React, { useState } from 'react';
 
 // --- Componente Interno para la Cuadrícula ---
-// (Lo ponemos aquí mismo para que sea más simple)
-const SudokuGrid = ({ board, onCellChange }) => {
+const SudokuGrid = ({ board, onCellChange, originalBoard }) => {
   if (!board) return null;
 
   return (
-    <div className="grid grid-cols-9 gap-px bg-slate-600 w-full max-w-lg mx-auto aspect-square rounded-md overflow-hidden shadow-lg">
+    <div className="grid grid-cols-9 gap-px bg-slate-600 w-full max-w-md mx-auto aspect-square rounded-md overflow-hidden shadow-lg">
       {board.map((row, r_idx) =>
         row.map((cell, c_idx) => {
-          const isGiven = board[r_idx][c_idx] !== 0; // Celdas del puzzle original
+          // Comprobamos si la celda era parte del puzzle original
+          const isGiven = originalBoard[r_idx][c_idx] !== 0;
           
           return (
             <input
@@ -22,7 +22,7 @@ const SudokuGrid = ({ board, onCellChange }) => {
               disabled={isGiven} // Las celdas del puzzle original no se editan
               className={`
                 w-full h-full aspect-square text-center text-xl sm:text-3xl font-bold
-                ${isGiven ? 'bg-slate-700 text-green-300' : 'bg-slate-800/80 text-white'}
+                ${isGiven ? 'bg-slate-700 text-green-300' : 'bg-slate-800/80 text-white focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500'}
                 ${(c_idx === 2 || c_idx === 5) ? 'border-r-2 border-slate-500' : ''}
                 ${(r_idx === 2 || r_idx === 5) ? 'border-b-2 border-slate-500' : ''}
               `}
@@ -34,20 +34,17 @@ const SudokuGrid = ({ board, onCellChange }) => {
   );
 };
 
-
 // --- Componente Principal de la Vista ---
 function SudokuView({ gameState, handlers }) {
-  // El 'difficulty' es un estado local de esta vista
   const [difficulty, setDifficulty] = useState(0.5);
-
-  const { board, isLoading, error } = gameState;
+  const { board, originalBoard, isLoading, error } = gameState;
 
   return (
     <div className="flex flex-col items-center">
       <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Sudoku Solver</h1>
       
       {/* --- Panel de Control --- */}
-      <div className="flex flex-wrap justify-center gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg w-full max-w-lg">
+      <div className="flex flex-wrap justify-center gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg w-full max-w-md">
         <div className="flex-1 min-w-[150px]">
           <label className="block text-xs text-gray-400 mb-1">Dificultad</label>
           <select 
@@ -78,13 +75,13 @@ function SudokuView({ gameState, handlers }) {
         </button>
       </div>
 
-      {/* --- Mensajes de Error --- */}
-      {error && <div className="p-4 mb-4 bg-red-500/20 text-red-300 rounded-md w-full max-w-lg">{error}</div>}
+      {error && <div className="p-4 mb-4 bg-red-500/20 text-red-300 rounded-md w-full max-w-md">{error}</div>}
 
       {/* --- El Tablero --- */}
       {board && (
         <SudokuGrid 
-          board={board} 
+          board={board}
+          originalBoard={originalBoard} // Pasamos el tablero original para deshabilitar celdas
           onCellChange={handlers.onCellChange}
         />
       )}

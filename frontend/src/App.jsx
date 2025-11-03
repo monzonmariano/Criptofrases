@@ -120,51 +120,50 @@ function App() {
   // Dentro de App() en App.jsx
 
   const handleGenerateSudoku = async (difficulty) => {
-    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
-    try {
-      const response = await generateSudoku(difficulty);
-      setGameState(prev => ({ 
-        ...prev, 
-        sudoku: { 
-          ...prev.sudoku, 
-          board: response.data.board, 
-          originalBoard: response.data.board, // Guardamos el original
-          isLoading: false 
-        }
-      }));
-    } catch (err) {
-      setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: 'No se pudo generar el puzzle.' }}));
-    }
-  };
+  setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
+  try {
+    const response = await generateSudoku(difficulty);
+    setGameState(prev => ({ 
+      ...prev, 
+      sudoku: { 
+        board: response.data.board, 
+        originalBoard: JSON.parse(JSON.stringify(response.data.board)), // Guardamos una copia profunda
+        isLoading: false 
+      }
+    }));
+  } catch (err) {
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: 'No se pudo generar el puzzle.' }}));
+  }
+};
 
   const handleSolveSudoku = async () => {
-    const { board } = gameState.sudoku;
-    if (!board) return;
-    
-    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
-    try {
-      // Usamos el 'originalBoard' para que el solver trabaje sobre el puzzle limpio
-      const response = await solveSudoku(gameState.sudoku.originalBoard);
-      setGameState(prev => ({ 
-        ...prev, 
-        sudoku: { ...prev.sudoku, board: response.data.solved_board, isLoading: false }
-      }));
-    } catch (err) {
-      setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: 'Este puzzle no tiene solución.' }}));
-    }
-  };
+  const { originalBoard } = gameState.sudoku; // Usamos el original
+  if (!originalBoard) return;
+
+  setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
+  try {
+    const response = await solveSudoku(originalBoard); // Lo resolvemos
+    setGameState(prev => ({ 
+      ...prev, 
+      sudoku: { ...prev.sudoku, board: response.data.solved_board, isLoading: false } // Mostramos el resuelto
+    }));
+  } catch (err) {
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: 'Este puzzle no tiene solución.' }}));
+  }
+};
   
   const handleSudokuCellChange = (r, c, value) => {
-    // Actualiza el tablero en el estado cuando el usuario escribe
-    const newBoard = gameState.sudoku.board.map(row => [...row]);
-    newBoard[r][c] = value === '' ? 0 : parseInt(value) || 0;
-    setGameState(prev => ({
-      ...prev,
-      sudoku: { ...prev.sudoku, board: newBoard }
-    }));
-  };
+  // Solo permite números del 1 al 9 o borrar
+  const num = value === '' ? 0 : parseInt(value);
+  if (isNaN(num) || num < 0 || num > 9) return;
 
-
+  const newBoard = gameState.sudoku.board.map(row => [...row]);
+  newBoard[r][c] = num;
+  setGameState(prev => ({
+    ...prev,
+    sudoku: { ...prev.sudoku, board: newBoard }
+  }));
+};
 
   const fetchHistory = async () => {
     setGameState(prev => ({ ...prev, history: { ...prev.history, isLoading: true, error: '' }}));
@@ -212,14 +211,14 @@ function App() {
                  }}
                />;
       case 'sudoku':
-        return <SudokuView
-                 gameState={gameState.sudoku}
-                 handlers={{
-                   onGenerate: handleGenerateSudoku,
-                   onSolve: handleSolveSudoku,
-                   onCellChange: handleSudokuCellChange
-                 }}
-               />;         
+      return <SudokuView
+               gameState={gameState.sudoku}
+               handlers={{
+                 onGenerate: handleGenerateSudoku,
+                 onSolve: handleSolveSudoku,
+                 onCellChange: handleSudokuCellChange
+               }}
+             />;
       case 'history':
         return <HistoryView 
                  state={{...gameState.history, history: gameState.history.items}}
