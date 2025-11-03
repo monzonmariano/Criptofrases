@@ -41,12 +41,10 @@ const Numpad = ({ onNumberClick, onClear, onClose }) => {
 };
 
 
-// --- Componente Interno de la Cuadrícula (MODIFICADO Y ROBUSTECIDO) ---
+// --- Componente Interno de la Cuadrícula (Robustecido) ---
 const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell }) => {
   
-  // --- CLÁUSULA DE GUARDA (FIX 2) ---
-  // No intentes renderizar la cuadrícula si faltan datos esenciales.
-  // Esto arregla el bug de la "Fila 1" y los fallos al cargar.
+  // Cláusula de guarda para arreglar el bug de la "Fila 1"
   if (!board || !originalBoard || !solution) {
     return (
       <div className="flex justify-center items-center bg-slate-800/50 w-full max-w-md mx-auto aspect-square rounded-md shadow-lg">
@@ -60,7 +58,6 @@ const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell })
       {board.map((row, r_idx) =>
         row.map((cell, c_idx) => {
           
-          // Estas líneas ahora son seguras gracias a la cláusula de guarda
           const isGiven = originalBoard[r_idx][c_idx] !== 0;
           const isWrong = cell !== 0 && !isGiven && solution[r_idx][c_idx] !== cell;
           const isActive = activeCell && activeCell[0] === r_idx && activeCell[1] === c_idx;
@@ -97,7 +94,8 @@ function SudokuView({ gameState, handlers }) {
 
   const { board, originalBoard, isGenerating, isSolving, error, solution } = gameState;
 
-  const handleNumpadClick = (num). => {
+  // --- ¡AQUÍ ESTABA EL ERROR! (el punto extra ya no está) ---
+  const handleNumpadClick = (num) => {
     if (activeCell) {
       handlers.onCellChange(activeCell[0], activeCell[1], num);
       setActiveCell(null); 
@@ -121,7 +119,6 @@ function SudokuView({ gameState, handlers }) {
         />
       )}
 
-      {/* Título (he quitado el "v4" para dejarlo limpio) */}
       <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Sudoku Solver</h1>
       
       <p className="text-gray-300 text-center mb-6 max-w-md">
@@ -171,13 +168,13 @@ function SudokuView({ gameState, handlers }) {
 
       {error && <div className="p-4 mb-4 bg-red-500/20 text-red-300 rounded-md w-full max-w-lg">{error}</div>}
 
-      {/* --- El Tablero (Ahora pasa el activeCell) --- */}
+      {/* --- El Tablero --- */}
       <SudokuGrid 
         board={board}
         originalBoard={originalBoard}
         solution={solution}
         activeCell={activeCell}
-        onCellClick={setActiveCell} // Pasa el setter para abrir el Numpad
+        onCellClick={setActiveCell} 
       />
     </div>
   );
