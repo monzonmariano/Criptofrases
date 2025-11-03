@@ -132,7 +132,13 @@ function App() {
       }
     }));
   } catch (err) {
-    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: 'No se pudo generar el puzzle.' }}));
+    // --- ESTA ES LA LÍNEA CLAVE ---
+    console.error("Error al procesar el sudoku:", err); 
+    // -----------------------------
+    
+    // Ahora comprobamos si el error vino del servidor o fue un error de JS
+    const errorMsg = err.response?.data?.error || 'No se pudo generar el puzzle. Revisa la consola (F12).';
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: errorMsg }}));
   }
 };
 
