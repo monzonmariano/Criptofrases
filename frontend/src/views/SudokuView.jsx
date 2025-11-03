@@ -1,3 +1,4 @@
+// src/views/SudokuView.jsx
 import React, { useState } from 'react';
 
 // --- Componente Interno Numpad ---
@@ -5,12 +6,10 @@ const Numpad = ({ onNumberClick, onClear, onClose }) => {
   const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   
   return (
-    // Fondo oscuro semi-transparente
     <div 
       className="fixed inset-0 bg-black/50 z-40 flex justify-center items-center"
-      onClick={onClose} // Cierra si se hace clic fuera
+      onClick={onClose} 
     >
-      {/* Contenedor del Numpad (evita que el clic se propague) */}
       <div 
         className="bg-slate-800 p-4 rounded-lg shadow-xl grid grid-cols-3 gap-3"
         onClick={(e) => e.stopPropagation()} 
@@ -24,14 +23,12 @@ const Numpad = ({ onNumberClick, onClear, onClose }) => {
             {num}
           </button>
         ))}
-        {/* Botón de Borrar (X) */}
         <button
           onClick={onClear}
           className="w-16 h-16 text-3xl font-bold text-red-400 bg-slate-700 rounded-md hover:bg-red-600 transition-colors col-span-2"
         >
           Borrar (0)
         </button>
-        {/* Botón de Cerrar */}
         <button
           onClick={onClose}
           className="w-16 h-16 text-xl font-bold text-gray-300 bg-slate-700 rounded-md hover:bg-slate-600 transition-colors"
@@ -65,6 +62,7 @@ const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell })
           
           // Estas líneas ahora son seguras gracias a la cláusula de guarda
           const isGiven = originalBoard[r_idx][c_idx] !== 0;
+          // Comprobación de la validación (tu pregunta)
           const isWrong = cell !== 0 && !isGiven && solution[r_idx][c_idx] !== cell;
           const isActive = activeCell && activeCell[0] === r_idx && activeCell[1] === c_idx;
 
@@ -96,29 +94,26 @@ const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell })
 // --- Componente Principal de la Vista ---
 function SudokuView({ gameState, handlers }) {
   const [difficulty, setDifficulty] = useState(0.5);
-  // Nuevo estado para saber qué celda está activa
-  const [activeCell, setActiveCell] = useState(null); // Ej: [fila, columna]
+  const [activeCell, setActiveCell] = useState(null); 
 
   const { board, originalBoard, isGenerating, isSolving, error, solution } = gameState;
 
-  // Creamos los handlers para el Numpad
   const handleNumpadClick = (num) => {
     if (activeCell) {
       handlers.onCellChange(activeCell[0], activeCell[1], num);
-      setActiveCell(null); // Cierra el numpad
+      setActiveCell(null); 
     }
   };
 
   const handleNumpadClear = () => {
     if (activeCell) {
-      handlers.onCellChange(activeCell[0], activeCell[1], 0); // Envía un 0 (borrar)
+      handlers.onCellChange(activeCell[0], activeCell[1], 0); 
       setActiveCell(null);
     }
   };
 
   return (
     <div className="flex flex-col items-center">
-      {/* El Numpad se renderiza condicionalmente y flota sobre todo */}
       {activeCell && (
         <Numpad 
           onNumberClick={handleNumpadClick}
@@ -127,13 +122,15 @@ function SudokuView({ gameState, handlers }) {
         />
       )}
 
+      {/* Título (he quitado el "v4" para dejarlo limpio) */}
       <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Sudoku Solver</h1>
       
       <p className="text-gray-300 text-center mb-6 max-w-md">
         Usa "Nuevo Puzzle" para empezar. Las casillas verdes son fijas.
         Usa "Resolver" para que nuestro algoritmo de backtracking lo solucione.
-      </S>
-      {/* --- Panel de Control (con Botón de Pista) --- */}
+      </p>
+
+      {/* --- Panel de Control --- */}
       <div className="flex flex-wrap justify-center gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg w-full max-w-lg">
         <div className="flex-1 min-w-[150px]">
           <label className="block text-xs text-gray-400 mb-1">Dificultad</label>
@@ -176,15 +173,13 @@ function SudokuView({ gameState, handlers }) {
       {error && <div className="p-4 mb-4 bg-red-500/20 text-red-300 rounded-md w-full max-w-lg">{error}</div>}
 
       {/* --- El Tablero (Ahora pasa el activeCell) --- */}
-      {board && (
-        <SudokuGrid 
-          board={board}
-          originalBoard={originalBoard}
-          solution={solution}
-          activeCell={activeCell}
-          onCellClick={setActiveCell} // Pasa el setter para abrir el Numpad
-        />
-      )}
+      <SudokuGrid 
+        board={board}
+        originalBoard={originalBoard}
+        solution={solution}
+        activeCell={activeCell}
+        onCellClick={setActiveCell} // Pasa el setter para abrir el Numpad
+      />
     </div>
   );
 }
