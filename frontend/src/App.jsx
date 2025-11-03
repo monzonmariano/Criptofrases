@@ -159,20 +159,19 @@ function App() {
   const { originalBoard } = gameState.sudoku; // Usamos el original
   if (!originalBoard) return;
 
-  setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: true, error: '' }}));
+  setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: true, error: '' }})); // <-- CORREGIDO
   try {
-    const response = await solveSudoku(originalBoard); // Lo resolvemos
-    // Limpiamos todo, el juego terminó
-      localStorage.removeItem('sudoku_board');
-      localStorage.removeItem('sudoku_originalBoard');
-      localStorage.removeItem('sudoku_solution'); // <-- Límpiala
+    // ...
+    localStorage.removeItem('sudoku_board');
+    localStorage.removeItem('sudoku_originalBoard');
+    localStorage.removeItem('sudoku_solution');
 
     setGameState(prev => ({ 
       ...prev, 
-      sudoku: { ...prev.sudoku, board: response.data.solved_board, isLoading: false } // Mostramos el resuelto
+      sudoku: { ...prev.sudoku, board: response.data.solved_board, isSolving: false } // <-- CORREGIDO
     }));
   } catch (err) {
-    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isLoading: false, error: 'Este puzzle no tiene solución.' }}));
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: false, error: 'Este puzzle no tiene solución.' }})); // <-- CORREGIDO
   }
 };
   
