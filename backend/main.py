@@ -4,7 +4,6 @@ import asyncio
 from aiohttp import web
 from backend import api
 import debugpy
-import aiohttp_cors
 
 
 async def start_server():
@@ -21,21 +20,8 @@ async def start_server():
         app = web.Application()
         api.setup_routes(app)
         
-        # --- CONFIGURACIÓN DE CORS PARA PRODUCCIÓN (*) ---
-        # El comodín (*) es la forma más compatible en la nube.
-        cors = aiohttp_cors.setup(app, defaults={
-            "*": aiohttp_cors.ResourceOptions(
-                allow_credentials=True,
-                expose_headers="*",
-                allow_headers="*",
-                allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            )
-        })
-
-        # Aplicamos la configuración CORS a TODAS las rutas
-        for route in list(app.router.routes()):
-            cors.add(route)
-            
+        # --- ¡BLOQUE CORS ELIMINADO! ---
+        
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, '0.0.0.0', 8080)

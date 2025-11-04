@@ -3,9 +3,11 @@ import React from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
 
-// --- ¡NUEVA TARJETA DE SUDOKU! ---
+// --- Tarjeta de Sudoku en Progreso ---
 const SudokuCard = ({ game, onLoad }) => {
+  // Formateamos la fecha "hace X tiempo"
   const timeAgo = formatDistanceToNow(new Date(game.last_played), { addSuffix: true, locale: es });
+
   return (
     <div className="bg-blue-900/50 p-4 rounded-lg shadow-lg border border-blue-700">
       <h3 className="text-xl font-bold text-blue-300">Sudoku en Progreso</h3>
@@ -20,7 +22,7 @@ const SudokuCard = ({ game, onLoad }) => {
   );
 };
 
-// --- ¡NUEVA TARJETA DE CRIPTOGRAMA! ---
+// --- Tarjeta de Criptograma en Progreso ---
 const CryptogramCard = ({ game, onLoad }) => {
   const timeAgo = formatDistanceToNow(new Date(game.last_played), { addSuffix: true, locale: es });
   return (
@@ -44,33 +46,25 @@ const CryptogramCard = ({ game, onLoad }) => {
 const CryptoEntryCard = ({ entry, onShowDetails }) => {
   const timeAgo = formatDistanceToNow(new Date(entry.timestamp), { addSuffix: true, locale: es });
   
-  let title = entry.key_phrase || 'Entrada Desconocida'; // Título por defecto
-  let description = "Criptograma Completado";
-
+  let title = "Entrada de Criptograma";
   try {
     // Intentamos parsear el campo 'details' (que viene como JSON string)
     const details = entry.details ? JSON.parse(entry.details) : {};
     
     if (details.original_phrase) {
-        // Generador de Usuario: Usamos la frase que generó
         title = `"${details.original_phrase.substring(0, 30)}..."`;
-        description = "Generado por el usuario";
     } else if (details.cryptogram_str && details.solutions && details.solutions.length > 0) {
-        // Solver: Usamos la primera solución
         title = `Resuelto: "${details.solutions[0].solution.substring(0, 30)}..."`;
-        description = "Resuelto por el Solver";
     }
-
   } catch(e) {
-    // Si el JSON falla, usamos el key_phrase feo
-    description = 'Datos Antiguos/Inválidos';
+    title = entry.key_phrase || 'Entrada Antigua';
   }
 
   return (
     <div className="bg-slate-800/50 p-4 rounded-lg shadow-lg border border-slate-700 flex justify-between items-center">
       <div>
         <h3 className="text-lg font-semibold text-gray-200">{title}</h3>
-        <p className="text-sm text-gray-400">{description} - {timeAgo}</p>
+        <p className="text-sm text-gray-400">Completado {timeAgo}</p>
       </div>
       {entry.details && (
          <button
@@ -85,8 +79,7 @@ const CryptoEntryCard = ({ entry, onShowDetails }) => {
 };
 
 
-// --- VISTA PRINCIPAL (MODIFICADA) ---
-// (Recibe 'onLoadCryptogram' desde App.jsx)
+// --- VISTA PRINCIPAL ---
 function HistoryView({ state, fetchHistory, onShowDetails, onLoadSudoku, onLoadCryptogram }) {
   
   // 'state' ahora contiene: items, activeSudoku, activeCryptogram, isLoading, error
