@@ -21,27 +21,33 @@ async def start_server():
         app = web.Application()
         api.setup_routes(app)
 
+        # ------------------------------------------------------------------
+        # --- BLOQUE DE CÓDIGO CORREGIDO PARA EL MANEJO DE CORS ---
+        # ------------------------------------------------------------------
+        cors_options = aiohttp_cors.ResourceOptions(
+            allow_credentials=True,
+            expose_headers="*",
+            allow_headers="*",
+            # Es crucial que OPTIONS esté aquí para el "preflight"
+            allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        )
+
         cors = aiohttp_cors.setup(app, defaults={
-            "http://localhost:5173": aiohttp_cors.ResourceOptions(
-                allow_credentials=True,
-                expose_headers="*",
-                allow_headers="*",
-                # --- ¡AQUÍ ESTÁ LA CORRECCIÓN! ---
-                # Añadimos "OPTIONS" a la lista de métodos permitidos.
-                allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            ),
-            # ¡AÑADE TU URL DE NETLIFY AQUÍ!
-            "https://criptofrases.netlify.app": aiohttp_cors.ResourceOptions(
-                allow_credentials=True,
-                expose_headers="*",
-                allow_headers="*",
-                allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-            ),
+            # 1. Origen local más común (localhost)
+            "http://localhost:5173": cors_options,
+            
+            # 2. Origen local alternativo (127.0.0.1) -> ¡EL ARREGLO CLAVE!
+            "http://127.0.0.1:5173": cors_options, 
+            
+            # 3. Tu dominio de producción
+            "https://criptofrases.netlify.app": cors_options,
         })
 
+        # Aplicamos la configuración CORS a TODAS las rutas registradas
         for route in list(app.router.routes()):
             cors.add(route)
-
+        # ------------------------------------------------------------------
+        
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, '0.0.0.0', 8080)

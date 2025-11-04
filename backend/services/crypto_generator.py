@@ -37,7 +37,7 @@ except json.JSONDecodeError:
 
 def _create_cryptogram_from_text(text: str):
     """
-    (Esta función no cambia en absoluto)
+    (Esta función ahora da un número de pistas más justo)
     """
     normalized_text = unidecode.unidecode(text.upper())
     words = normalized_text.split()
@@ -59,12 +59,31 @@ def _create_cryptogram_from_text(text: str):
     cryptogram_str = " ".join(crypted_words)
     solution_mapping = {v: k for k, v in mapping.items()}
     
+    # --- ¡LÓGICA DE PISTAS MEJORADA! ---
     clues = {}
-    if len(solution_mapping) > 3:
-        num_clues = random.randint(1, 3)
+    num_letras_unicas = len(solution_mapping)
+    
+    if num_letras_unicas > 10:
+        # Frases largas (11+ letras únicas)
+        num_clues = random.randint(3, 4)
+    elif num_letras_unicas > 5:
+        # Frases medias (6-10 letras únicas)
+        num_clues = random.randint(2, 3)
+    elif num_letras_unicas > 3:
+        # Frases cortas (4-5 letras únicas)
+        num_clues = 1 # Solo 1 pista para no regalarlo
+    else:
+        # Demasiado corto
+        num_clues = 0
+
+    if num_clues > 0:
+        # Nos aseguramos de no pedir más pistas de las letras que hay
+        num_clues = min(num_clues, num_letras_unicas) 
+        
         clue_keys = random.sample(list(solution_mapping.keys()), num_clues)
         for key in clue_keys:
             clues[key] = solution_mapping[key].lower()
+    # --- FIN DE LA LÓGICA MEJORADA ---
 
     return cryptogram_str, solution_mapping, clues
 

@@ -112,6 +112,23 @@ async def handle_solve_sudoku(request):
     except Exception as e:
         return _create_error_response(e, "/api/sudoku/solve")
 
+async def handle_save_sudoku(request):
+    try:
+        data = await request.json()
+        response_data, status = await api_manager.save_sudoku_game_data(data)
+        return web.json_response(response_data, status=status, dumps=pretty_json)
+    except Exception as e:
+        return _create_error_response(e, "/api/sudoku/save")
+
+async def handle_clear_sudoku(request):
+    try:
+        data = await request.json()
+        response_data, status = await api_manager.clear_sudoku_game_data(data)
+        return web.json_response(response_data, status=status, dumps=pretty_json)
+    except Exception as e:
+        return _create_error_response(e, "/api/sudoku/clear")    
+
+
 #------------------------------------------------------------------------------------------
 
 def setup_routes(app):
@@ -127,4 +144,6 @@ def setup_routes(app):
     #-------------- RUTEOS PARA SUDOKU -----------------------------
     app.router.add_post('/api/sudoku/generate', handle_generate_sudoku)
     app.router.add_post('/api/sudoku/solve', handle_solve_sudoku)
+    app.router.add_post('/api/sudoku/save', handle_save_sudoku)
+    app.router.add_post('/api/sudoku/clear', handle_clear_sudoku)
   

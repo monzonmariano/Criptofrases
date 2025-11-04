@@ -28,15 +28,26 @@ def generate_cryptogram(data):
 
 
 async def get_history_by_user(user_id):
-    entries = database_manager.get_user_history(user_id)
-    if entries is not None:
-        for entry in entries:
+    """
+    ORQUESTADOR: Obtiene el historial (entradas + sudoku).
+    """
+    history_data = database_manager.get_user_history(user_id)
+    
+    if history_data is not None:
+        # Formateamos las timestamps de las entradas completadas
+        for entry in history_data.get('completed_entries', []):
             if 'timestamp' in entry and hasattr(entry['timestamp'], 'isoformat'):
                 entry['timestamp'] = entry['timestamp'].isoformat()
-        return {'history': entries}, 200
+        
+        # Formateamos la timestamp del Sudoku (si existe)
+        active_sudoku = history_data.get('active_sudoku')
+        if active_sudoku and 'last_played' in active_sudoku and hasattr(active_sudoku['last_played'], 'isoformat'):
+            active_sudoku['last_played'] = active_sudoku['last_played'].isoformat()
+
+        return {'history': history_data}, 200
     else:
         return {'error': 'Failed to retrieve history.'}, 500
-
+    
 async def clear_user_history(user_id):
     if database_manager.clear_all_entries(user_id):
         return {'message': 'History cleared successfully.'}, 200
@@ -77,3 +88,46 @@ async def solve_sudoku(data):
     """
     log.info("API Manager: Petición de resolución de Sudoku (propio) recibida.")
     return await sudoku_service.solve_sudoku_from_scratch(data)
+
+async def save_sudoku_game_data(data):
+    """
+    ORQUESTADOR: Delega el guardado de un juego de Sudoku.
+    """
+    user_id = data.get('user_id')
+    board_state = data.get('game_state') # Esperamos un objeto
+    
+    if not all([user_id, board_state, 
+                'board' in board_state, 
+                'originalBoard' in board_state, 
+                'solution' in board_state]):
+        return {'error': 'Datos de Sudoku incompletos.'}, 400
+
+    log.info(f"API Manager: Petición de guardado de Sudoku para {user_id}")
+    
+    success = database_manager.save_sudoku_game(
+        user_id,
+        board_state['board'],
+        board_state['originalBoard'],
+        board_state['solution']
+    )
+    if success:
+        return {'message': 'Juego guardado.'}, 200
+    else:
+        return {'error': 'No se pudo guardar el juego.'}, 500
+
+async def clear_sudoku_game_data(data):
+    """
+    ORQUESTADOR: Delega el borrado de un juego de Sudoku.
+    """
+    user_id = data.get('user_id')
+    if not user_id:
+        return {'error': 'user_id requerido.'}, 400
+        
+    log.info(f"API Manager: Petición de borrado de Sudoku para {user_id}")
+    success = database_manager.delete_active_sudoku(user_id)
+    if success:
+        return {'message': 'Juego borrado.'}, 200
+    else:
+        return {'error': 'No se pudo borrar el juego.'}, 500
+
+# --- ¡MODIFICACIÓN IMPORTANTE! ---

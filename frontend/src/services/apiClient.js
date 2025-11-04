@@ -13,6 +13,7 @@ const apiClient = axios.create({
   },
 });
 
+// --- CRIPTOGRAMAS ---
 export const solveCryptogram = (cryptogram, clues) => {
   const payload = {
     user_id: getUserId(), 
@@ -38,17 +39,30 @@ export const generateCryptogram = (theme) => {
     return apiClient.post('/generate', payload);
 };
 
-// --- ¡NUEVA FUNCIÓN AÑADIDA! ---
 export const generateCryptogramFromUser = (text) => {
     const payload = {
         user_id: getUserId(),
         text,
     };
-    // Llama al nuevo endpoint que creamos en el backend
     return apiClient.post('/generate/custom', payload);
 };
-// --- FIN DE LA NUEVA FUNCIÓN ---
 
+// --- SUDOKU ---
+export const generateSudoku = (difficulty) => {
+  const payload = {
+    difficulty: difficulty || 0.5, 
+  };
+  return apiClient.post('/sudoku/generate', payload);
+};
+
+export const solveSudoku = (board) => {
+  const payload = {
+    board: board,
+  };
+  return apiClient.post('/sudoku/solve', payload);
+};
+
+// --- HISTORIAL ---
 export const getUserHistory = () => {
   const userId = getUserId(); 
   return apiClient.get(`/history?user_id=${userId}`);
@@ -69,18 +83,36 @@ export const clearUserHistory = () => {
   return apiClient.post('/clear-history', payload);
 };
 
-export const generateSudoku = (difficulty) => {
+// --- ¡NUEVAS FUNCIONES DE GUARDADO DE SUDOKU! ---
+export const saveSudokuGame = (boardState) => {
   const payload = {
-    // La dificultad debe ser un número, p.ej. 0.5
-    difficulty: difficulty || 0.5, 
+    user_id: getUserId(),
+    game_state: boardState // Enviamos el objeto { board, originalBoard, solution }
   };
-  return apiClient.post('/sudoku/generate', payload);
+  return apiClient.post('/sudoku/save', payload);
 };
 
-export const solveSudoku = (board) => {
+export const clearSudokuGame = () => {
   const payload = {
-    board: board,
+    user_id: getUserId(),
   };
-  return apiClient.post('/sudoku/solve', payload);
+  return apiClient.post('/sudoku/clear', payload);
 };
 
+// --- ¡NUEVAS FUNCIONES DE GUARDADO DE CRIPTOGRAMA! ---
+export const saveActiveCryptogram = (gameData) => {
+  const payload = {
+    user_id: getUserId(),
+    game_data: gameData // Enviamos el objeto { theme, cryptogram, ... }
+  };
+  // ¡IMPORTANTE! Asegúrate de que esta ruta coincida con tu api.py
+  // (Mi código de backend usaba /cryptogram/save y /cryptogram/clear)
+  return apiClient.post('/cryptogram/save', payload);
+};
+
+export const clearActiveCryptogram = () => {
+  const payload = {
+    user_id: getUserId(),
+  };
+  return apiClient.post('/cryptogram/clear', payload);
+};
