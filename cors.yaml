@@ -1,0 +1,9 @@
+# cors.yaml
+# Configuración que le dice a Cloud Run que añada encabezados a las respuestas
+metadata:
+  annotations:
+    run.googleapis.com/response-headers: |
+      Access-Control-Allow-Origin: https://criptofrases.netlify.app
+      Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
+      Access-Control-Allow-Headers: Content-Type, Authorization
+      Access-Control-Max-Age: "3600" # Cachear la respuesta OPTIONS por 1 hora

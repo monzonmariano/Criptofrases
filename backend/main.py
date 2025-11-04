@@ -20,34 +20,22 @@ async def start_server():
     try:
         app = web.Application()
         api.setup_routes(app)
-
-        # ------------------------------------------------------------------
-        # --- BLOQUE DE CÓDIGO CORREGIDO PARA EL MANEJO DE CORS ---
-        # ------------------------------------------------------------------
-        cors_options = aiohttp_cors.ResourceOptions(
-            allow_credentials=True,
-            expose_headers="*",
-            allow_headers="*",
-            # Es crucial que OPTIONS esté aquí para el "preflight"
-            allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        )
-
+        
+        # --- CONFIGURACIÓN DE CORS PARA PRODUCCIÓN (*) ---
+        # El comodín (*) es la forma más compatible en la nube.
         cors = aiohttp_cors.setup(app, defaults={
-            # 1. Origen local más común (localhost)
-            "http://localhost:5173": cors_options,
-            
-            # 2. Origen local alternativo (127.0.0.1) -> ¡EL ARREGLO CLAVE!
-            "http://127.0.0.1:5173": cors_options, 
-            
-            # 3. Tu dominio de producción
-            "https://criptofrases.netlify.app": cors_options,
+            "*": aiohttp_cors.ResourceOptions(
+                allow_credentials=True,
+                expose_headers="*",
+                allow_headers="*",
+                allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            )
         })
 
-        # Aplicamos la configuración CORS a TODAS las rutas registradas
+        # Aplicamos la configuración CORS a TODAS las rutas
         for route in list(app.router.routes()):
             cors.add(route)
-        # ------------------------------------------------------------------
-        
+            
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, '0.0.0.0', 8080)
