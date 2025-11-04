@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+
+// --- TUS RUTAS DE IMPORTACIÓN (BASADO EN TU CAPTURA) ---
 import { BACKGROUND_IMAGES } from './config';
 import { 
   solveCryptogram, generateCryptogram, generateCryptogramFromUser, 
@@ -15,6 +17,7 @@ import HistoryView from './views/HistoryView';
 import BackgroundMusic from './components/BackgroundMusic';
 import Attribution from './components/Attribution';
 import HistoryDetailModal from './components/HistoryDetailModal';
+// -----------------------------------------------------------
 
 const HomeIcon = () => <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6"><path strokeLinecap="round" strokeLinejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" /></svg>;
 
@@ -42,11 +45,12 @@ function App() {
       solution: JSON.parse(localStorage.getItem('sudoku_solution')) || null, 
       isGenerating: false,
       isSolving: false,
-      error: ''
+      error: '',
+      successMessage: ''
     }
   });
 
-  // --- Handlers de Criptogramas ---
+  // --- Handlers de Criptogramas (Tu código) ---
   const handleSolveSubmit = async () => {
     const { cryptogram, clues } = gameState.cryptogram.solver;
     const cluesObject = clues.reduce((acc, clue) => {
@@ -108,7 +112,7 @@ function App() {
   
   // --- HANDLERS DE SUDOKU (CORREGIDOS) ---
   const handleGenerateSudoku = async (difficulty) => {
-    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isGenerating: true, error: '' }}));
+    setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isGenerating: true, error: '', successMessage: '' }}));
     try {
       const response = await generateSudoku(difficulty);
       const newBoard = response.data.board;
@@ -138,13 +142,25 @@ function App() {
     if (!originalBoard) return;
     setGameState(prev => ({ ...prev, sudoku: { ...prev.sudoku, isSolving: true, error: '' }}));
     try {
-      const response = await solveSudoku(originalBoard); 
+      const response = await solveSudoku(originalBoard);
+      const solved_board = response.data.solved_board; // Obtenemos el tablero resuelto
+
+      // Limpiamos el localStorage, el juego terminó
       localStorage.removeItem('sudoku_board');
       localStorage.removeItem('sudoku_originalBoard');
       localStorage.removeItem('sudoku_solution');
+
+      // --- ¡ESTE ES EL ARREGLO! ---
       setGameState(prev => ({ 
         ...prev, 
-        sudoku: { ...prev.sudoku, board: response.data.solved_board, originalBoard: null, solution: null, isSolving: false }
+        sudoku: { 
+          ...prev.sudoku, 
+          board: solved_board,         // 1. Muestra el tablero resuelto
+          originalBoard: solved_board, // 2. Lo marca como "original" (deshabilita todo)
+          solution: solved_board,      // 3. Lo pone como solución (consistencia)
+          isSolving: false,
+          successMessage: "¡Sudoku Resuelto por el Solver!" // 4. Mensaje de éxito
+        }
       }));
     } catch (err) {
       console.error("Error al procesar el sudoku:", err); 
@@ -155,23 +171,32 @@ function App() {
   
   // --- ARREGLO DEL BUG DE onCellChange ---
   const handleSudokuCellChange = (r, c, value) => {
-    
-    // --- CLÁUSULA DE GUARDA (FIX 1) ---
-    // Si el tablero no existe (es null), no hagas nada.
-    // Esto previene el 'TypeError: Cannot set properties of undefined'
     if (!gameState.sudoku.board) {
       console.error("onCellChange llamado sin tablero (board)");
       return;
     }
-
     const num = value === '' ? 0 : parseInt(value);
     if (isNaN(num) || num < 0 || num > 9) return;
+    
     const newBoard = JSON.parse(JSON.stringify(gameState.sudoku.board));
     newBoard[r][c] = num;
+
+    // --- ¡LÓGICA DE VICTORIA! ---
+    let gameWon = false;
+    if (num !== 0) { // Solo comprueba si se añadió un número
+       gameWon = checkWinCondition(newBoard, gameState.sudoku.solution);
+    }
+    // -------------------------
+
     localStorage.setItem('sudoku_board', JSON.stringify(newBoard));
     setGameState(prev => ({
       ...prev,
-      sudoku: { ...prev.sudoku, board: newBoard }
+      sudoku: { 
+        ...prev.sudoku, 
+        board: newBoard,
+        // Si 'gameWon' es true, muestra el mensaje de éxito
+        successMessage: gameWon ? "¡Genial! ¡Lo has resuelto!" : prev.sudoku.successMessage
+      }
     }));
   };
 
@@ -197,6 +222,19 @@ function App() {
       if (found) break;
     }
   };  
+
+  const checkWinCondition = (board, solution) => {
+  if (!board || !solution) return false;
+  for (let r = 0; r < 9; r++) {
+    for (let c = 0; c < 9; c++) {
+      // Si una casilla está vacía (0) o no coincide con la solución, no has ganado
+      if (board[r][c] === 0 || board[r][c] !== solution[r][c]) {
+        return false;
+      }
+    }
+  }
+  return true; // ¡Todas las casillas coinciden!
+};
   
   // --- HANDLERS DE HISTORIAL ---
   const fetchHistory = async () => {
@@ -311,4 +349,3 @@ function App() {
 }
 
 export default App;
-// Forzando re-despliegue.

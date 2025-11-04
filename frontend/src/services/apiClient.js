@@ -83,3 +83,4 @@ export const solveSudoku = (board) => {
   };
   return apiClient.post('/sudoku/solve', payload);
 };
+

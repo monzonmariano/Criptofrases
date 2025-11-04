@@ -1,50 +1,13 @@
 // src/views/SudokuView.jsx
 import React, { useState } from 'react';
 
-// --- Componente Interno Numpad ---
-const Numpad = ({ onNumberClick, onClear, onClose }) => {
-  const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-  
-  return (
-    <div 
-      className="fixed inset-0 bg-black/50 z-40 flex justify-center items-center"
-      onClick={onClose} 
-    >
-      <div 
-        className="bg-slate-800 p-4 rounded-lg shadow-xl grid grid-cols-3 gap-3"
-        onClick={(e) => e.stopPropagation()} 
-      >
-        {numbers.map(num => (
-          <button
-            key={num}
-            onClick={() => onNumberClick(num)}
-            className="w-16 h-16 text-3xl font-bold text-white bg-slate-700 rounded-md hover:bg-blue-600 transition-colors"
-          >
-            {num}
-          </button>
-        ))}
-        <button
-          onClick={onClear}
-          className="w-16 h-16 text-3xl font-bold text-red-400 bg-slate-700 rounded-md hover:bg-red-600 transition-colors col-span-2"
-        >
-          Borrar (0)
-        </button>
-        <button
-          onClick={onClose}
-          className="w-16 h-16 text-xl font-bold text-gray-300 bg-slate-700 rounded-md hover:bg-slate-600 transition-colors"
-        >
-          Cerrar
-        </button>
-      </div>
-    </div>
-  );
-};
+// --- (HEMOS BORRADO EL COMPONENTE NUMPAD) ---
 
-
-// --- Componente Interno de la Cuadrícula (Robustecido) ---
-const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell }) => {
+// --- Componente Interno de la Cuadrícula (MODIFICADO Y ROBUSTECIDO) ---
+const SudokuGrid = ({ board, onCellChange, originalBoard, solution }) => {
   
-  // Cláusula de guarda para arreglar el bug de la "Fila 1"
+  // --- CLÁUSULA DE GUARDA (FIX 2) ---
+  // Arregla el bug de la "Fila 1" y los fallos al cargar.
   if (!board || !originalBoard || !solution) {
     return (
       <div className="flex justify-center items-center bg-slate-800/50 w-full max-w-md mx-auto aspect-square rounded-md shadow-lg">
@@ -58,23 +21,29 @@ const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell })
       {board.map((row, r_idx) =>
         row.map((cell, c_idx) => {
           
+          // Estas líneas ahora son seguras gracias a la cláusula de guarda
           const isGiven = originalBoard[r_idx][c_idx] !== 0;
           const isWrong = cell !== 0 && !isGiven && solution[r_idx][c_idx] !== cell;
-          const isActive = activeCell && activeCell[0] === r_idx && activeCell[1] === c_idx;
 
           return (
             <input
               key={`${r_idx}-${c_idx}`}
-              type="text"
+              type="text" // <-- Tipo texto para permitir el teclado numérico del móvil
+              inputMode="numeric" // <-- Sugiere un teclado numérico en móviles
+              pattern="[1-9]*" // <-- Validación HTML
+              maxLength="1"
               value={cell === 0 ? '' : cell}
               disabled={isGiven}
-              readOnly={!isGiven}
-              onClick={() => !isGiven && onCellClick(r_idx, c_idx)}
+              
+              // --- ¡¡¡AQUÍ ESTÁ EL ARREGLO!!! ---
+              // Cambiado de 'handlers.onCellChange' a solo 'onCellChange'
+              onChange={(e) => onCellChange(r_idx, c_idx, e.target.value)}
+              // ----------------------------------
+
               className={`
-                w-full h-full aspect-square text-center text-xl sm:text-3xl font-bold cursor-pointer
-                ${isGiven ? 'bg-slate-700 text-green-300' : 'bg-slate-800/80'}
+                w-full h-full aspect-square text-center text-xl sm:text-3xl font-bold
+                ${isGiven ? 'bg-slate-700 text-green-300' : 'bg-slate-800/80 focus:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500'}
                 ${isWrong ? 'text-red-500' : 'text-white'}
-                ${isActive ? 'ring-4 ring-blue-500 z-10' : ''}
                 ${(c_idx === 2 || c_idx === 5) ? 'border-r-2 border-slate-500' : ''}
                 ${(r_idx === 2 || r_idx === 5) ? 'border-b-2 border-slate-500' : ''}
               `}
@@ -87,37 +56,16 @@ const SudokuGrid = ({ board, onCellClick, originalBoard, solution, activeCell })
 };
 
 
-// --- Componente Principal de la Vista ---
+// --- Componente Principal de la Vista (SIMPLIFICADO) ---
 function SudokuView({ gameState, handlers }) {
   const [difficulty, setDifficulty] = useState(0.5);
-  const [activeCell, setActiveCell] = useState(null); 
+  // --- (HEMOS BORRADO activeCell y los handlers del Numpad) ---
 
-  const { board, originalBoard, isGenerating, isSolving, error, solution } = gameState;
-
-  // --- ¡AQUÍ ESTABA EL ERROR! (el punto extra ya no está) ---
-  const handleNumpadClick = (num) => {
-    if (activeCell) {
-      handlers.onCellChange(activeCell[0], activeCell[1], num);
-      setActiveCell(null); 
-    }
-  };
-
-  const handleNumpadClear = () => {
-    if (activeCell) {
-      handlers.onCellChange(activeCell[0], activeCell[1], 0); 
-      setActiveCell(null);
-    }
-  };
+  const { board, originalBoard, isGenerating, isSolving, error, solution, successMessage } = gameState;
 
   return (
     <div className="flex flex-col items-center">
-      {activeCell && (
-        <Numpad 
-          onNumberClick={handleNumpadClick}
-          onClear={handleNumpadClear}
-          onClose={() => setActiveCell(null)}
-        />
-      )}
+      {/* --- (HEMOS BORRADO EL RENDERIZADO DEL NUMPAD) --- */}
 
       <h1 className="text-4xl font-bold text-gray-200 mb-6 text-center">Sudoku Solver</h1>
       
@@ -125,8 +73,15 @@ function SudokuView({ gameState, handlers }) {
         Usa "Nuevo Puzzle" para empezar. Las casillas verdes son fijas.
         Usa "Resolver" para que nuestro algoritmo de backtracking lo solucione.
       </p>
+      
+      {/* --- MENSAJE DE ÉXITO --- */}
+      {successMessage && (
+        <div className="p-4 mb-4 bg-green-500/20 text-green-300 rounded-md w-full max-w-lg text-center font-bold text-lg animate-pulse">
+          {successMessage}
+        </div>
+      )}
 
-      {/* --- Panel de Control --- */}
+      {/* --- Panel de Control (sin cambios) --- */}
       <div className="flex flex-wrap justify-center gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg w-full max-w-lg">
         <div className="flex-1 min-w-[150px]">
           <label className="block text-xs text-gray-400 mb-1">Dificultad</label>
@@ -168,13 +123,12 @@ function SudokuView({ gameState, handlers }) {
 
       {error && <div className="p-4 mb-4 bg-red-500/20 text-red-300 rounded-md w-full max-w-lg">{error}</div>}
 
-      {/* --- El Tablero --- */}
+      {/* --- El Tablero (Ahora sin lógica de Numpad) --- */}
       <SudokuGrid 
         board={board}
         originalBoard={originalBoard}
         solution={solution}
-        activeCell={activeCell}
-        onCellClick={setActiveCell} 
+        onCellChange={handlers.onCellChange} // <-- Pasamos el handler onCellChange
       />
     </div>
   );
