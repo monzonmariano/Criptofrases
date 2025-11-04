@@ -18,7 +18,7 @@ const GameCard = ({ title, description, gameId, onSelectGame }) => (
 function LogicGamesView({ onSelectGame }) {
   return (
     <div>
-      <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center bg-yellow-400 p-2 rounded">JUEGOS (TEST v5)</h1>
+      <h1 className="text-4xl font-bold text-gray-200 mb-8 text-center">Juegos de Lógica</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
